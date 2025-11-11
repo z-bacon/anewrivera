@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Claire Murphy';
+    src: url('ClaireMurphy-Regular.woff2') format('woff2'),
+        url('ClaireMurphy-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
