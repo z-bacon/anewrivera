@@ -51,6 +51,7 @@ a {
 .container {
   width: min(1120px, calc(100% - 3rem));
   margin: 0 auto;
+  overflow: visible;
 }
 
 .eyebrow {
@@ -90,7 +91,7 @@ a {
   display: flex;
   align-items: center;
   padding: clamp(5rem, 10vw, 8rem) 0;
-  overflow: hidden;
+  overflow: visible;
   background-color: #ffebdc;
 }
 
@@ -165,18 +166,20 @@ a {
 
 .hero__names {
   margin: 0;
-  padding: 1.5rem 2rem;
+  padding: 2rem 3rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   font-family: 'Claire Murphy', 'Source Serif 4', 'Playfair Display', 'Times New Roman', serif;
   font-size: clamp(6rem, 10vw + 2rem, 12rem);
   font-weight: normal;
-  line-height: 0.9;
+  line-height: 1;
   cursor: pointer;
   transition: transform var(--transition);
   will-change: transform;
   overflow: visible;
+  width: auto;
+  max-width: 100%;
 }
 
 .hero__names:hover {
@@ -203,6 +206,8 @@ a {
 
 .hero__name {
   display: inline-block;
+  overflow: visible;
+  white-space: nowrap;
 }
 
 .hero__names .ampersand {
