@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Party Parallax - Demo Instructions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .section {
+            margin: 2rem 0;
+        }
+        
+        h2 {
+            color: #764ba2;
+            font-size: 1.8rem;
+            margin: 1.5rem 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        h3 {
+            color: #555;
+            font-size: 1.3rem;
+            margin: 1rem 0 0.5rem;
+        }
+        
+        .icon {
+            font-size: 2rem;
+        }
+        
+        .step {
+            background: #f8f9ff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 4px solid #667eea;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #ffd700 0%, #ffed4e 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .feature {
+            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid #667eea40;
+        }
+        
+        .feature-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 1rem 0.5rem 1rem 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .checklist li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+        
+        .checklist li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            color: #155724;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Wedding Party Parallax Effect</h1>
+        <p class="subtitle">Your stunning scroll animation is ready to use!</p>
+        
+        <div class="success">
+            <strong>✅ Implementation Complete!</strong><br>
+            The parallax wedding party section has been successfully added to your website with smooth 3D animations, blur effects, and responsive design.
+        </div>
+        
+        <div class="section">
+            <h2><span class="icon">🚀</span> Quick Start (30 Seconds)</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Open your website</strong><br>
+                Double-click <code>index.html</code> to open it in your web browser
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Navigate to Wedding Party</strong><br>
+                Click "Wedding Party" in the navigation menu OR scroll down to that section
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Scroll slowly!</strong><br>
+                Use your mouse wheel or trackpad and scroll <span class="highlight">slowly</span> to see the magic happen
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2><span class="icon">✨</span> What You'll Experience</h2>
+            
+            <div class="feature-grid">
+                <div class="feature">
+                    <div class="feature-title">🌫️ Blur to Focus</div>
+                    Photos start blurred in the background and sharpen as they zoom forward
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-title">🎬 3D Zoom</div>
+                    Images travel through 3D space on the Z-axis, creating depth
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-title">📝 Text Reveal</div>
+                    Names and descriptions fade in at the perfect moment
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-title">🔄 Reversible</div>
+                    Scroll backwards to see everything play in reverse
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-title">👥 Multi-layer</div>
+                    Other party members visible in background at different depths
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-title">📱 Responsive</div>
+                    Works beautifully on desktop, tablet, and mobile
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2><span class="icon">📸</span> Current Setup</h2>
+            
+            <h3>Wedding Party Members (4 People):</h3>
+            <ul class="checklist">
+                <li><strong>Michael Rodriguez</strong> - Groomsman: "Junior's best friend since college and adventure partner."</li>
+                <li><strong>Sarah Chen</strong> - Bridesmaid: "Shaira's sister and lifelong confidante."</li>
+                <li><strong>David Thompson</strong> - Groomsman: "The life of the party and Junior's college roommate."</li>
+                <li><strong>Emma Martinez</strong> - Bridesmaid: "Shaira's best friend from childhood and travel companion."</li>
+            </ul>
+            
+            <div class="warning">
+                <strong>⚠️ Using Placeholder Images</strong><br>
+                The section currently uses stock photos from Unsplash. Replace them with your actual wedding party photos for the final version!
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2><span class="icon">✏️</span> How to Customize</h2>
+            
+            <h3>Replace with Your Photos:</h3>
+            <div class="code-block">
+# 1. Save your photos in assets/images/ folder<br>
+# 2. Name them: groomsman1.jpg, bridesmaid1.jpg, etc.<br>
+# 3. Update index.html, change:<br>
+<br>
+&lt;img src="https://images.unsplash.com/..."&gt;<br>
+# to:<br>
+&lt;img src="assets/images/groomsman1.jpg"&gt;
+            </div>
+            
+            <h3>Change Names & Descriptions:</h3>
+            <p>In <code>index.html</code>, find the wedding party section and update the text inside the <code>&lt;h2&gt;</code> and <code>&lt;p&gt;</code> tags.</p>
+            
+            <h3>Add/Remove People:</h3>
+            <p>Copy or delete entire <code>&lt;div class="wedding-party-block"&gt;</code> sections to add or remove wedding party members.</p>
+        </div>
+        
+        <div class="section">
+            <h2><span class="icon">🎯</span> Pro Tips</h2>
+            
+            <ul>
+                <li><strong>Scroll Speed:</strong> The effect is designed for slow, smooth scrolling - not fast scrolling or dragging the scrollbar</li>
+                <li><strong>Image Quality:</strong> Use high-resolution portrait photos (800x1200px minimum) for best results</li>
+                <li><strong>File Size:</strong> Compress images to under 500KB each for fast loading</li>
+                <li><strong>Aspect Ratio:</strong> Portrait orientation (2:3 or 3:4) works best</li>
+                <li><strong>Desktop First:</strong> The effect is most impressive on desktop/laptop screens</li>
+                <li><strong>Bilingual:</strong> Click "Español" to see Spanish translations!</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2><span class="icon">📚</span> Documentation</h2>
+            
+            <p>Detailed guides have been created for you:</p>
+            
+            <ul class="checklist">
+                <li><code>QUICK_START.md</code> - Simple getting started guide</li>
+                <li><code>WEDDING_PARTY_PARALLAX_README.md</code> - Complete technical documentation</li>
+                <li><code>WEDDING_PARTY_IMAGES_GUIDE.md</code> - How to add your own photos</li>
+                <li><code>DEMO_INSTRUCTIONS.html</code> - This file!</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2><span class="icon">🎨</span> Technical Details</h2>
+            
+            <h3>Technologies Used:</h3>
+            <ul>
+                <li><strong>CSS 3D Transforms:</strong> <code>translate3d()</code> for depth</li>
+                <li><strong>CSS Filters:</strong> Dynamic blur based on distance</li>
+                <li><strong>JavaScript Animations:</strong> <code>requestAnimationFrame()</code> for 60fps</li>
+                <li><strong>Fixed Positioning:</strong> Photos stay anchored during scroll</li>
+                <li><strong>Responsive Design:</strong> Mobile and desktop optimized</li>
+            </ul>
+            
+            <h3>Browser Support:</h3>
+            <ul class="checklist">
+                <li>Chrome/Edge (latest) ✅</li>
+                <li>Firefox (latest) ✅</li>
+                <li>Safari (macOS/iOS) ✅</li>
+                <li>Samsung Internet ✅</li>
+            </ul>
+        </div>
+        
+        <div class="section" style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #f0f0f0;">
+            <h2><span class="icon">🎊</span> Ready to See It?</h2>
+            <p style="margin: 1.5rem 0;">Open your wedding website now and scroll through the Wedding Party section!</p>
+            <a href="index.html" class="cta-button">Open Wedding Website →</a>
+        </div>
+        
+        <div class="section" style="background: #f8f9ff; padding: 2rem; border-radius: 10px; margin-top: 2rem;">
+            <h3 style="margin-top: 0;">💡 Inspiration</h3>
+            <p>This effect is inspired by the beautiful team section on the <a href="https://microsoft.ai/" target="_blank" style="color: #667eea; text-decoration: none; font-weight: bold;">Microsoft AI website</a>. The implementation combines modern web technologies to create a smooth, professional parallax experience.</p>
+        </div>
+        
+        <p style="text-align: center; color: #999; margin-top: 3rem; font-size: 0.9rem;">
+            Created with ❤️ for Junior & Shaira's Wedding<br>
+            November 30, 2025
+        </p>
+    </div>
+</body>
+</html>
+

@@ -10,7 +10,7 @@
 :root {
   color-scheme: light;
   font-size: 16px;
-  --bg-color: #f5f0ec;
+  --bg-color: #F9F4F1;
   --text-color: #2b1d1d;
   --muted-text: rgba(43, 29, 29, 0.65);
   --accent: #c87a57;
@@ -65,6 +65,18 @@ a {
 .section {
   padding: clamp(3.5rem, 7vw, 7.5rem) 0;
   position: relative;
+  background-color: var(--bg-color);
+}
+
+.section__content {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.section__content.fade-in {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .section__content {
@@ -92,7 +104,7 @@ a {
   align-items: center;
   padding: clamp(5rem, 10vw, 8rem) 0;
   overflow: visible;
-  background-color: #ffebdc;
+  background-color: var(--bg-color);
 }
 
 .top-nav {
@@ -162,6 +174,16 @@ a {
   text-align: center;
   padding-top: clamp(4.5rem, 8vw, 6rem);
   overflow: visible;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s ease forwards 0.3s;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hero__names {
@@ -353,6 +375,13 @@ a {
   box-shadow: 0 25px 40px -35px rgba(43, 29, 29, 0.6);
 }
 
+.section--intro {
+  background-color: var(--bg-color);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: opacity, transform;
+  transform-origin: center top;
+}
+
 .split__body h2 {
   margin: 0 0 1rem;
 }
@@ -363,10 +392,178 @@ a {
   max-width: 32ch;
 }
 
+/* Wedding Party Section */
+.section--wedding-party {
+  background-color: var(--bg-color);
+  padding: 0;
+  position: relative;
+  min-height: 300vh; /* Space for title + groomsmen group + bridesmaids group */
+}
+
+.wedding-party-title {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  opacity: 0;
+  will-change: opacity, transform;
+  z-index: 10;
+}
+
+.wedding-party-title__text {
+  font-family: 'Roboto', system-ui, sans-serif;
+  font-size: clamp(4.2rem, 8.4vw, 5.35rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #916dad;
+  margin: 0;
+  text-align: center;
+  will-change: transform, filter, opacity, font-size;
+  transform-origin: center;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.wedding-party-group {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.wedding-party-group__label {
+  font-family: 'Roboto', system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #916dad;
+  margin: 0 0 3rem;
+  text-align: center;
+}
+
+.wedding-party-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1400px;
+  width: 100%;
+  align-items: start;
+}
+
+.wedding-party-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  will-change: transform, filter, opacity;
+  transform-origin: center;
+}
+
+/* Staggered positioning like Figma */
+.wedding-party-card--1 {
+  margin-top: 0;
+}
+
+.wedding-party-card--2 {
+  margin-top: 6rem;
+}
+
+.wedding-party-card--3 {
+  margin-top: -2rem;
+}
+
+.wedding-party-card--4 {
+  margin-top: 9rem;
+}
+
+.wedding-party-card__image-container {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  margin-bottom: 1.5rem;
+}
+
+.wedding-party-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 30px;
+  box-shadow: 0 20px 40px -20px rgba(43, 29, 29, 0.3);
+}
+
+.wedding-party-card__name {
+  font-family: 'Roboto', system-ui, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b2805b;
+  margin: 0 0 0.75rem;
+}
+
+.wedding-party-card__desc {
+  font-family: 'Roboto', system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #b2805b;
+  letter-spacing: 0.01em;
+  margin: 0;
+  max-width: 243px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .wedding-party-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+  }
+  
+  .wedding-party-card--1,
+  .wedding-party-card--3 {
+    margin-top: 0;
+  }
+  
+  .wedding-party-card--2 {
+    margin-top: 3rem;
+  }
+  
+  .wedding-party-card--4 {
+    margin-top: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .wedding-party-grid {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+  
+  .wedding-party-card {
+    align-items: center;
+    text-align: center;
+  }
+  
+  .wedding-party-card--1,
+  .wedding-party-card--2,
+  .wedding-party-card--3,
+  .wedding-party-card--4 {
+    margin-top: 0;
+  }
+  
+  .wedding-party-card__desc {
+    margin: 0 auto;
+  }
+}
+
 .section--events {
-  background-color: var(--surface);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  box-shadow: 0 -24px 35px -32px rgba(43, 29, 29, 0.2);
+  background-color: var(--bg-color);
 }
 
 .card-grid {
@@ -406,15 +603,15 @@ a {
 .section--parallax {
   position: relative;
   overflow: hidden;
-  color: #fff;
+  color: #2b1d1d;
   text-align: center;
+  background-color: var(--bg-color);
 }
 
 .section--parallax__layer {
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(rgba(17, 12, 12, 0.3), rgba(17, 12, 12, 0.75)),
-    url('../images/travel.jpg');
+  background-image: url('../images/travel.jpg');
   background-size: cover;
   background-position: center;
   will-change: transform;
@@ -426,15 +623,15 @@ a {
   z-index: 1;
   max-width: 680px;
   margin: 0 auto;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--text-color);
 }
 
 .section__content--center p {
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--muted-text);
 }
 
 .section--faq {
-  background-color: var(--surface);
+  background-color: var(--bg-color);
 }
 
 .faq-grid {
@@ -471,7 +668,7 @@ a {
 }
 
 .section--rsvp {
-  background-color: var(--surface);
+  background-color: var(--bg-color);
 }
 
 .form {
@@ -520,6 +717,133 @@ a {
   outline: none;
   border-color: rgba(200, 122, 87, 0.6);
   box-shadow: 0 0 0 3px rgba(200, 122, 87, 0.2);
+}
+
+.guest-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid rgba(200, 122, 87, 0.2);
+  border-radius: var(--radius-sm);
+  margin-top: 0.25rem;
+  max-height: 250px;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px -10px rgba(43, 29, 29, 0.3);
+  z-index: 10;
+  display: none;
+}
+
+.guest-dropdown.active {
+  display: block;
+}
+
+.guest-dropdown__item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color var(--transition);
+  border-bottom: 1px solid rgba(43, 29, 29, 0.08);
+}
+
+.guest-dropdown__item:last-child {
+  border-bottom: none;
+}
+
+.guest-dropdown__item:hover {
+  background-color: rgba(200, 122, 87, 0.08);
+}
+
+.guest-dropdown__item-name {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.guest-dropdown__item-party {
+  font-size: 0.85rem;
+  color: var(--muted-text);
+  margin-top: 0.15rem;
+}
+
+.form__field {
+  position: relative;
+}
+
+.guest-info {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.guest-info__header h3 {
+  margin: 0 0 0.5rem;
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: 1.5rem;
+  color: var(--accent);
+}
+
+.guest-info__party-size {
+  margin: 0;
+  color: var(--muted-text);
+  font-weight: 500;
+}
+
+.party-members {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(200, 122, 87, 0.05);
+  border-radius: var(--radius-sm);
+}
+
+.party-member {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: white;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition);
+}
+
+.party-member:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.party-member input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.party-member label {
+  cursor: pointer;
+  flex: 1;
+  font-weight: 500;
+}
+
+.form-status {
+  grid-column: 1 / -1;
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  font-weight: 500;
+  display: none;
+}
+
+.form-status.success {
+  display: block;
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #2e7d32;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.form-status.error {
+  display: block;
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #c62828;
+  border: 1px solid rgba(244, 67, 54, 0.3);
 }
 
 .footer {
