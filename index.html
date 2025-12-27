@@ -7,227 +7,119 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Roboto:wght@300;400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Work+Sans:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Scheherazade+New:wght@400;700&family=Playfair+Display:wght@400;600;700&family=Roboto:wght@300;400;500;800;900&family=Verdana:wght@700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Work+Sans:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
   <body>
-    <header class="hero">
-      <div
-        class="hero__media"
-        data-parallax
-        data-speed="0.35"
-        role="presentation"
-        aria-hidden="true"
-      ></div>
-      <nav class="top-nav">
-        <div class="container top-nav__inner">
-          <a class="brand" href="#">JS</a>
-          <ul class="top-nav__links">
-            <li><a href="#rsvp" data-i18n="nav.rsvp">RSVP</a></li>
-            <li><a href="#location-section" data-i18n="nav.location">Location</a></li>
-            <li><a href="#wedding-party" data-i18n="nav.wedding_party">Wedding Party</a></li>
-            <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
-          </ul>
-          <a class="button button--primary top-nav__cta" href="#rsvp" data-i18n="nav.rsvp">RSVP</a>
-        </div>
-      </nav>
-      <div class="container hero__content">
-        <h1 class="hero__names" data-gradient>
-          <span class="hero__names-line">
-            <span class="hero__name">Junior</span><span class="ampersand">&amp;</span>
-          </span>
-          <span class="hero__names-line">
-            <span class="hero__name">Shaira</span>
-          </span>
-        </h1>
-        <p class="eyebrow hero__eyebrow" data-i18n="hero.subtitle">Are Getting Married</p>
-        <a class="button button--primary" href="#rsvp" data-i18n="hero.cta">RSVP</a>
+    <!-- Sticky Header -->
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a href="#" class="site-logo" data-i18n="logo">JS</a>
+        
+        <nav class="site-nav">
+          <div class="site-nav__glass-container">
+            <ul class="site-nav__links">
+              <li><a href="#" class="active" data-i18n="nav.home">HOME</a></li>
+              <li><a href="#rsvp" data-i18n="nav.rsvp">RSVP</a></li>
+              <li><a href="#bridal-party" data-i18n="nav.bridal_party">BRIDAL PARTY</a></li>
+              <li><a href="#accommodations" data-i18n="nav.accommodations">ACCOMMODATIONS</a></li>
+              <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
+            </ul>
+          </div>
+        </nav>
+        
+        <a href="#rsvp" class="site-header__rsvp-btn" data-i18n="nav.rsvp">RSVP</a>
       </div>
-      <div class="hero__date-badge">
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-new">
+      <!-- Polaroid Stack -->
+      <div class="polaroid-stack">
+        <!-- Polaroid 1 - Back left -->
+        <div class="polaroid polaroid-1" data-polaroid="1">
+          <div class="polaroid__frame">
+            <div class="polaroid__photo">
+              <!-- Add your photo here with: <img src="assets/images/photo1.jpg" alt=""> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Polaroid 2 - Back center-left -->
+        <div class="polaroid polaroid-2" data-polaroid="2">
+          <div class="polaroid__frame">
+            <div class="polaroid__photo">
+              <!-- Add your photo here with: <img src="assets/images/photo2.jpg" alt=""> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Polaroid 3 - Center -->
+        <div class="polaroid polaroid-3" data-polaroid="3">
+          <div class="polaroid__frame">
+            <div class="polaroid__photo">
+              <!-- Add your photo here with: <img src="assets/images/photo3.jpg" alt=""> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Polaroid 4 - Back right -->
+        <div class="polaroid polaroid-4" data-polaroid="4">
+          <div class="polaroid__frame">
+            <div class="polaroid__photo">
+              <!-- Add your photo here with: <img src="assets/images/photo4.jpg" alt=""> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Polaroid 5 - Front left -->
+        <div class="polaroid polaroid-5" data-polaroid="5">
+          <div class="polaroid__frame">
+            <div class="polaroid__photo">
+              <!-- Add your photo here with: <img src="assets/images/photo5.jpg" alt=""> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Polaroid 6 - Front right -->
+        <div class="polaroid polaroid-6" data-polaroid="6">
+          <div class="polaroid__frame">
+            <div class="polaroid__photo">
+              <!-- Add your photo here with: <img src="assets/images/photo6.jpg" alt=""> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Title -->
+      <div class="hero-new__content">
+        <h1 class="hero-new__title" data-i18n="hero.title">JUNIOR & SHAIRA</h1>
+      </div>
+      
+      <div class="hero-new__date-badge">
         <span>03</span>
         <span>21</span>
         <span>26</span>
       </div>
+
       <div class="language-switcher">
         <button class="language-btn active" data-lang="en">English</button>
         <button class="language-btn" data-lang="es">Español</button>
       </div>
-    </header>
+    </section>
 
     <main>
-      <section class="section section--intro" id="location">
-        <div class="container section__content">
-          <div class="split">
-            <div class="split__media" data-parallax data-speed="0.2"></div>
-            <div class="split__body">
-              <h2 data-i18n="story.title">Our Story</h2>
-              <p data-i18n="story.p1">
-               Information coming soon!
-              </p>
-              <p data-i18n="story.p2">
-                TBD
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Wedding Party Section -->
-      <section class="section section--wedding-party" id="wedding-party">
-        <div class="container">
-          
-          <!-- Title -->
-          <div class="wedding-party-title">
-            <h2 class="wedding-party-title__text">BRIDAL PARTY</h2>
-          </div>
-          
-          <!-- All Members Group -->
-          <div class="wedding-party-group">
-            <div class="wedding-party-grid">
-              <!-- Member 1 -->
-              <div class="wedding-party-card wedding-party-card--1">
-                <div class="wedding-party-card__image-container">
-                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=1200&fit=crop" alt="Fabian Sanchez" class="wedding-party-card__image">
-                </div>
-                <h3 class="wedding-party-card__name" data-i18n="wedding_party.groomsman1.name">FABIAN SANCHEZ</h3>
-                <p class="wedding-party-card__desc" data-i18n="wedding_party.groomsman1.desc">Fabian met Junior through a mutual friend on their way to a car event.</p>
-              </div>
-
-              <!-- Member 2 -->
-              <div class="wedding-party-card wedding-party-card--2">
-                <div class="wedding-party-card__image-container">
-                  <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&h=1200&fit=crop" alt="Anthony Castro" class="wedding-party-card__image">
-                </div>
-                <h3 class="wedding-party-card__name" data-i18n="wedding_party.groomsman2.name">ANTHONY CASTRO</h3>
-                <p class="wedding-party-card__desc" data-i18n="wedding_party.groomsman2.desc">Fabian met Junior through a mutual friend on their way to a car event.</p>
-              </div>
-
-              <!-- Member 3 -->
-              <div class="wedding-party-card wedding-party-card--3">
-                <div class="wedding-party-card__image-container">
-                  <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800&h=1200&fit=crop" alt="Eddie Bazan" class="wedding-party-card__image">
-                </div>
-                <h3 class="wedding-party-card__name" data-i18n="wedding_party.groomsman3.name">EDDIE BAZAN</h3>
-                <p class="wedding-party-card__desc" data-i18n="wedding_party.groomsman3.desc">Fabian met Junior through a mutual friend on their way to a car event.</p>
-              </div>
-
-              <!-- Member 4 -->
-              <div class="wedding-party-card wedding-party-card--4">
-                <div class="wedding-party-card__image-container">
-                  <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&h=1200&fit=crop" alt="Juan Carlos Avila" class="wedding-party-card__image">
-                </div>
-                <h3 class="wedding-party-card__name" data-i18n="wedding_party.groomsman4.name">JUAN CARLOS AVILA</h3>
-                <p class="wedding-party-card__desc" data-i18n="wedding_party.groomsman4.desc">Fabian met Junior through a mutual friend on their way to a car event.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bridesmaids Group -->
-          <div class="wedding-party-group">
-            <p class="wedding-party-group__label">BRIDESMAIDS</p>
-            
-            <div class="wedding-party-grid">
-              <!-- Member 1 -->
-              <div class="wedding-party-card wedding-party-card--1">
-                <div class="wedding-party-card__image-container">
-                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&h=1200&fit=crop" alt="Sarah Chen" class="wedding-party-card__image">
-                </div>
-                <h3 class="wedding-party-card__name" data-i18n="wedding_party.bridesmaid1.name">SARAH CHEN</h3>
-                <p class="wedding-party-card__desc" data-i18n="wedding_party.bridesmaid1.desc">Shaira's sister and lifelong confidante.</p>
-              </div>
-
-              <!-- Member 2 -->
-              <div class="wedding-party-card wedding-party-card--2">
-                <div class="wedding-party-card__image-container">
-                  <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800&h=1200&fit=crop" alt="Emma Martinez" class="wedding-party-card__image">
-                </div>
-                <h3 class="wedding-party-card__name" data-i18n="wedding_party.bridesmaid2.name">EMMA MARTINEZ</h3>
-                <p class="wedding-party-card__desc" data-i18n="wedding_party.bridesmaid2.desc">Shaira's best friend from childhood and travel companion.</p>
-              </div>
-
-              <!-- Member 3 -->
-              <div class="wedding-party-card wedding-party-card--3">
-                <div class="wedding-party-card__image-container">
-                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&h=1200&fit=crop" alt="Olivia Park" class="wedding-party-card__image">
-                </div>
-                <h3 class="wedding-party-card__name" data-i18n="wedding_party.bridesmaid3.name">OLIVIA PARK</h3>
-                <p class="wedding-party-card__desc" data-i18n="wedding_party.bridesmaid3.desc">Shaira's college roommate and partner in crime.</p>
-              </div>
-
-              <!-- Member 4 -->
-              <div class="wedding-party-card wedding-party-card--4">
-                <div class="wedding-party-card__image-container">
-                  <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=800&h=1200&fit=crop" alt="Isabella Torres" class="wedding-party-card__image">
-                </div>
-                <h3 class="wedding-party-card__name" data-i18n="wedding_party.bridesmaid4.name">ISABELLA TORRES</h3>
-                <p class="wedding-party-card__desc" data-i18n="wedding_party.bridesmaid4.desc">Shaira's childhood friend and confidante.</p>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <section class="section section--parallax" id="location-section">
-        <div
-          class="section--parallax__layer"
-          data-parallax
-          data-speed="0.25"
-          role="presentation"
-          aria-hidden="true"
-        ></div>
-        <div class="container section__content section__content--center">
-          <h2 data-i18n="location.title">Location</h2>
-          <p data-i18n="location.desc">
-      Grand Tradition in Fallbrook (TBD)
-          </p>
-          <a class="button button--ghost" href="#travel" data-i18n="location.cta">View Guide</a>
-        </div>
-      </section>
-
-      <section class="section section--faq" id="faq">
-        <div class="container section__content">
-          <h2 data-i18n="faq.title">Frequently Asked Questions</h2>
-          <div class="faq-grid">
-            <article class="faq-item">
-              <h3 class="faq-question" data-i18n="faq.q1.question">What should I wear?</h3>
-              <p class="faq-answer" data-i18n="faq.q1.answer">
-                The dress code will be cocktail attire.
-              </p>
-            </article>
-            <article class="faq-item">
-              <h3 class="faq-question" data-i18n="faq.q2.question">Will transportation be provided?</h3>
-              <p class="faq-answer" data-i18n="faq.q2.answer">
-                Yes! We'll arrange shuttles from the main resort to all wedding events. Details will be sent via email.
-              </p>
-            </article>
-            <article class="faq-item">
-              <h3 class="faq-question" data-i18n="faq.q3.question">How far is the venue from the airport?</h3>
-              <p class="faq-answer" data-i18n="faq.q3.answer">
-                The drive from the airport to Fallbrook is approximately 1 hour and 30 minutes.
-              </p>
-            </article>
-            <article class="faq-item">
-              <h3 class="faq-question" data-i18n="faq.q4.question">Do i need to bring a gift?</h3>
-              <p class="faq-answer" data-i18n="faq.q4.answer">
-                No, your company is enough! But we will have a registry available.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
       <section class="section section--rsvp" id="rsvp">
         <div class="container section__content">
           <h2 data-i18n="rsvp.title">RSVP</h2>
           <p data-i18n="rsvp.desc">
-            Let us know if your party will be able to make it to the wedding.
+            Let us know if you'll be able to make it
           </p>
           <form class="form" id="rsvp-form">
             <label class="form__field form__field--full">
-              <span data-i18n="form.search_name">Search for Your Name</span>
+              <span data-i18n="form.search_name">Search for your party name</span>
               <input 
                 type="text" 
                 id="guest-search" 
@@ -242,32 +134,369 @@
             <div id="guest-info" class="guest-info" style="display: none;">
               <div class="guest-info__header">
                 <h3 id="selected-guest-name"></h3>
-                <p class="guest-info__party-size" data-i18n="form.party_label">Your Party:</p>
+              </div>
+
+              <!-- Will you be attending question -->
+              <label class="form__field form__field--full">
+                <span data-i18n="form.will_attend">Will you be attending?</span>
+                <div class="attendance-options">
+                  <label class="attendance-option">
+                    <input type="radio" name="attending" value="yes" id="attending-yes" required>
+                    <span class="attendance-option__label">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <rect width="24" height="24" rx="4" fill="currentColor"/>
+                        <path d="M9 12L11 14L15 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      <span data-i18n="form.yes">Yes</span>
+                    </span>
+                  </label>
+                  <label class="attendance-option">
+                    <input type="radio" name="attending" value="no" id="attending-no" required>
+                    <span class="attendance-option__label">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <rect width="24" height="24" rx="4" fill="currentColor"/>
+                      </svg>
+                      <span data-i18n="form.no">No</span>
+                    </span>
+                  </label>
+                </div>
+              </label>
+
+              <!-- Who will be attending (shown only if Yes) -->
+              <div id="attending-yes-section" style="display: none;">
+                <label class="form__field form__field--full">
+                  <span data-i18n="form.who_attending">Who will be attending</span>
+                  <div id="party-members" class="party-members"></div>
+                </label>
+
+                <label class="form__field form__field--full">
+                  <span data-i18n="form.dietary">Any dietary restrictions? (Optional)</span>
+                  <input
+                    type="text"
+                    id="dietary-restrictions"
+                    name="dietary-restrictions"
+                    data-i18n-placeholder="form.dietary_placeholder"
+                    placeholder="Let us know if anyone has dietary restrictions"
+                  />
+                </label>
               </div>
 
               <label class="form__field form__field--full">
-                <span data-i18n="form.attendance">Who will be attending?</span>
-                <div id="party-members" class="party-members"></div>
-              </label>
-
-              <label class="form__field form__field--full">
-                <span data-i18n="form.message">Message (Optional)</span>
-                <textarea
+                <span data-i18n="form.message">Leave a message or song request (Optional)</span>
+                <input
+                  type="text"
                   id="message"
                   name="message"
-                  rows="4"
                   data-i18n-placeholder="form.message_placeholder"
-                  placeholder="Leave us a note, song request, or dietary restrictions!"
-                ></textarea>
+                  placeholder="Leave us a message or if you have a song request, holler"
+                />
               </label>
 
               <button type="submit" class="button button--primary" data-i18n="form.submit">
-                Send RSVP
+                Submit
               </button>
             </div>
 
             <div id="form-status" class="form-status"></div>
           </form>
+        </div>
+      </section>
+
+      <!-- Bridal Party Section -->
+      <section class="section section--bridal-party" id="bridal-party">
+        <div class="container section__content">
+          <h2 data-i18n="bridal_party.title">BRIDAL PARTY</h2>
+          <p data-i18n="bridal_party.desc">
+            The people that will be here to celebrate it with us
+          </p>
+          
+          <div class="bridal-party-grid">
+            <!-- Member 1 -->
+            <div class="bridal-party-member" 
+                 data-member-name="Fabian Sanchez" 
+                 data-member-role="Groomsmen / Officiant"
+                 data-member-quote-label="How he met the groom"
+                 data-member-quote="He pulled in with his GOLF GTI at a starbucks one day">
+              <div class="bridal-party-member__avatar">
+                <div class="bridal-party-member__placeholder"></div>
+              </div>
+              <div class="bridal-party-member__info">
+                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member1.name">Fabian Sanchez</h3>
+                <p class="bridal-party-member__role" data-i18n="bridal_party.member1.role">Groomsmen / Officiant</p>
+              </div>
+            </div>
+
+            <!-- Member 2 -->
+            <div class="bridal-party-member"
+                 data-member-name="Jennie Yoon"
+                 data-member-role="Bridesmaid"
+                 data-member-quote-label="How she met the bride"
+                 data-member-quote="They met at a coffee shop and bonded over their love for design">
+              <div class="bridal-party-member__avatar">
+                <div class="bridal-party-member__placeholder"></div>
+              </div>
+              <div class="bridal-party-member__info">
+                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member2.name">Jennie Yoon</h3>
+                <p class="bridal-party-member__role" data-i18n="bridal_party.member2.role">Bridesmaid</p>
+              </div>
+            </div>
+
+            <!-- Member 3 -->
+            <div class="bridal-party-member"
+                 data-member-name="Anthony Castro"
+                 data-member-role="Groomsmen"
+                 data-member-quote-label="How he met the groom"
+                 data-member-quote="Best friends since college, always there for each other">
+              <div class="bridal-party-member__avatar">
+                <div class="bridal-party-member__placeholder"></div>
+              </div>
+              <div class="bridal-party-member__info">
+                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member3.name">Anthony Castro</h3>
+                <p class="bridal-party-member__role" data-i18n="bridal_party.member3.role">Groomsmen</p>
+              </div>
+            </div>
+
+            <!-- Member 4 -->
+            <div class="bridal-party-member"
+                 data-member-name="Hannah Lindsey"
+                 data-member-role="Bridesmaid"
+                 data-member-quote-label="How she met the bride"
+                 data-member-quote="Childhood friends who grew up together in the same neighborhood">
+              <div class="bridal-party-member__avatar">
+                <div class="bridal-party-member__placeholder"></div>
+              </div>
+              <div class="bridal-party-member__info">
+                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member4.name">Hannah Lindsey</h3>
+                <p class="bridal-party-member__role" data-i18n="bridal_party.member4.role">Bridesmaid</p>
+              </div>
+            </div>
+
+            <!-- Member 5 -->
+            <div class="bridal-party-member"
+                 data-member-name="Eduardo Bazan"
+                 data-member-role="Groomsmen"
+                 data-member-quote-label="How he met the groom"
+                 data-member-quote="They bonded over their shared passion for cars and late-night adventures">
+              <div class="bridal-party-member__avatar">
+                <div class="bridal-party-member__placeholder"></div>
+              </div>
+              <div class="bridal-party-member__info">
+                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member5.name">Eduardo Bazan</h3>
+                <p class="bridal-party-member__role" data-i18n="bridal_party.member5.role">Groomsmen</p>
+              </div>
+            </div>
+
+            <!-- Member 6 -->
+            <div class="bridal-party-member"
+                 data-member-name="Alana"
+                 data-member-role="Bridesmaid"
+                 data-member-quote-label="How she met the bride"
+                 data-member-quote="College roommates who became inseparable best friends">
+              <div class="bridal-party-member__avatar">
+                <div class="bridal-party-member__placeholder"></div>
+              </div>
+              <div class="bridal-party-member__info">
+                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member6.name">Alana</h3>
+                <p class="bridal-party-member__role" data-i18n="bridal_party.member6.role">Bridesmaid</p>
+              </div>
+            </div>
+
+            <!-- Member 7 -->
+            <div class="bridal-party-member"
+                 data-member-name="Juan Carlos Avila"
+                 data-member-role="Groomsmen"
+                 data-member-quote-label="How he met the groom"
+                 data-member-quote="Lifelong friends since elementary school, brothers from another mother">
+              <div class="bridal-party-member__avatar">
+                <div class="bridal-party-member__placeholder"></div>
+              </div>
+              <div class="bridal-party-member__info">
+                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member7.name">Juan Carlos Avila</h3>
+                <p class="bridal-party-member__role" data-i18n="bridal_party.member7.role">Groomsmen</p>
+              </div>
+            </div>
+
+            <!-- Member 8 -->
+            <div class="bridal-party-member"
+                 data-member-name="Kim"
+                 data-member-role="Bridesmaid"
+                 data-member-quote-label="How she met the bride"
+                 data-member-quote="Work colleagues turned best friends who support each other through everything">
+              <div class="bridal-party-member__avatar">
+                <div class="bridal-party-member__placeholder"></div>
+              </div>
+              <div class="bridal-party-member__info">
+                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member8.name">Kim</h3>
+                <p class="bridal-party-member__role" data-i18n="bridal_party.member8.role">Bridesmaid</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bridal Party Modal Overlay -->
+      <div class="bridal-party-modal" id="bridal-party-modal">
+        <button class="bridal-party-modal__close" aria-label="Close">
+          <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="2" y1="2" x2="23" y2="23" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <line x1="23" y1="2" x2="2" y2="23" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        
+        <div class="bridal-party-modal__content">
+          <div class="bridal-party-modal__header">
+            <div class="bridal-party-modal__avatar">
+              <div class="bridal-party-modal__placeholder"></div>
+            </div>
+            <div class="bridal-party-modal__info">
+              <h3 class="bridal-party-modal__name"></h3>
+              <p class="bridal-party-modal__role"></p>
+            </div>
+          </div>
+          
+          <div class="bridal-party-modal__body">
+            <p class="bridal-party-modal__quote-label"></p>
+            <p class="bridal-party-modal__quote"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accommodations Section -->
+      <section class="section section--accommodations" id="accommodations">
+        <div class="container accommodations-content">
+          <div class="accommodations-left">
+            <p class="accommodations-label" data-typewriter data-i18n="accommodations.label">Where to fly in to:</p>
+          </div>
+          <div class="accommodations-right">
+            <div class="accommodations-info" data-typewriter-delay>
+              <p class="accommodations-airport" data-i18n="accommodations.airport_label">AIRPORT</p>
+              <p class="accommodations-name" data-i18n="accommodations.airport_name">SAN DIEGO INTERNATIONAL AIRPORT (SAN)</p>
+              <p class="accommodations-address" data-i18n="accommodations.airport_address">3225 N. HARBOR DRIVE, SAN DIEGO, CA 92101</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Accommodations Stay Section -->
+      <section class="section section--accommodations-stay" id="accommodations-stay">
+        <div class="container accommodations-stay-content">
+          <div class="accommodations-stay-left">
+            <h3 class="accommodations-stay-title" data-i18n="accommodations_stay.title">Where you can stay:</h3>
+            <p class="accommodations-stay-desc" data-i18n="accommodations_stay.desc">Here's a few places we recommend for you all to stay at, that's close to the venue</p>
+          </div>
+          <div class="accommodations-stay-right">
+            <div class="accommodations-stay-grid">
+              <!-- Card 1 -->
+              <div class="stay-card" data-stay-card>
+                <div class="stay-card__image">
+                  <img src="assets/images/acom01.png" alt="The Welk Resort">
+                </div>
+                <div class="stay-card__content">
+                  <h4 class="stay-card__name" data-i18n="accommodations_stay.welk.name">THE WELK RESORT</h4>
+                  <p class="stay-card__distance" data-i18n="accommodations_stay.welk.distance">22 mins away</p>
+                  <p class="stay-card__description" data-i18n="accommodations_stay.welk.description">A family-friendly resort with a number of pools, golf courses, and a spa, among other amenities.</p>
+                </div>
+              </div>
+
+              <!-- Card 2 -->
+              <div class="stay-card" data-stay-card>
+                <div class="stay-card__image">
+                  <img src="assets/images/acom02.png" alt="Pala Mesa Resort">
+                </div>
+                <div class="stay-card__content">
+                  <h4 class="stay-card__name" data-i18n="accommodations_stay.pala.name">PALA MESA RESORT</h4>
+                  <p class="stay-card__distance" data-i18n="accommodations_stay.pala.distance">15 mins away</p>
+                  <p class="stay-card__description" data-i18n="accommodations_stay.pala.description">Resort known for its golf course. Closest to the venue but is farther from other things to do.</p>
+                </div>
+              </div>
+
+              <!-- Card 3 -->
+              <div class="stay-card" data-stay-card>
+                <div class="stay-card__image">
+                  <img src="assets/images/acom03.png" alt="Springhill Suites">
+                </div>
+                <div class="stay-card__content">
+                  <h4 class="stay-card__name" data-i18n="accommodations_stay.springhill.name">SPRINGHILL SUITES</h4>
+                  <p class="stay-card__distance" data-i18n="accommodations_stay.springhill.distance">22 mins away</p>
+                  <p class="stay-card__description" data-i18n="accommodations_stay.springhill.description">Hotel right on the coast, steps away from the beach. Located in lively downtown Oceanside.</p>
+                </div>
+              </div>
+
+              <!-- Card 4 -->
+              <div class="stay-card" data-stay-card>
+                <div class="stay-card__image">
+                  <img src="assets/images/acom04.png" alt="Airbnb">
+                </div>
+                <div class="stay-card__content">
+                  <h4 class="stay-card__name" data-i18n="accommodations_stay.airbnb.name">AIRBNB</h4>
+                  <p class="stay-card__distance" data-i18n="accommodations_stay.airbnb.distance">22 mins away</p>
+                  <p class="stay-card__description" data-i18n="accommodations_stay.airbnb.description">There are many vacation homes for rent on AirBnb in Fallbrook for proximity to the venue, which you can share with a few others.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <section class="section section--faq" id="faq">
+        <div class="container section__content">
+          <h2 data-i18n="faq.title">FAQ</h2>
+          <p class="faq__desc" data-i18n="faq.desc">Answers to questions you may have</p>
+          
+          <div class="faq__list">
+            <!-- FAQ Item 1 -->
+            <div class="faq__item">
+              <h3 class="faq__question" data-i18n="faq.q1.question">Is there an RSVP deadline?</h3>
+              <p class="faq__answer" data-i18n="faq.q1.answer">Please RSVP by February 14, 2026 via our website or by texting Shaira at (408) 881-4877. We unfortunately can't accommodate RSVPs past this date.</p>
+            </div>
+
+            <!-- FAQ Item 2 -->
+            <div class="faq__item">
+              <h3 class="faq__question" data-i18n="faq.q2.question">Where will the wedding be?</h3>
+              <p class="faq__answer" data-i18n="faq.q2.answer">All wedding events will be at Arbor Terrace at Grand Tradition Estate and Gardens. Be sure to turn left and follow signs for Arbor Terrace once you enter.</p>
+            </div>
+
+            <!-- FAQ Item 3 -->
+            <div class="faq__item">
+              <h3 class="faq__question" data-i18n="faq.q3.question">What time Should I Arrive</h3>
+              <p class="faq__answer" data-i18n="faq.q3.answer">Guests should arrive at 2:30 PM for welcome drinks and seating. The ceremony will begin at 3 PM sharp and we can't accommodate late arrivals.</p>
+            </div>
+
+            <!-- FAQ Item 4 -->
+            <div class="faq__item faq__item--tall">
+              <h3 class="faq__question" data-i18n="faq.q4.question">What should I wear?</h3>
+              <div class="faq__answer">
+                <p>The dress code is cocktail attire. This generally means that knee-length or midi cocktail dresses, evening dresses, sundresses, jumpsuits, casual suits, slacks, button-downs, suits and sports coats with or without ties are perfect for our wedding.</p>
+                <p>The ceremony and cocktail hour will be fully outdoors, and reception will be in a partially outdoor space, so we recommend bringing a layer! It's typically X in Fallbrook in March.</p>
+                <p>While we appreciate everyone's individual style, we kindly request that guests refrain from wearing informal clothing like shirts and jeans. And in case you were curious, <span class="faq__highlight">the wedding party will be wearing lavender</span>.</p>
+              </div>
+            </div>
+
+            <!-- FAQ Item 5 -->
+            <div class="faq__item">
+              <h3 class="faq__question" data-i18n="faq.q5.question">Will there be parking at the venue?</h3>
+              <p class="faq__answer" data-i18n="faq.q5.answer">There's lots of parking available at the venue! If needed, you can leave your vehicle at the venue overnight, as long as it's picked up by noon on Sunday.</p>
+            </div>
+
+            <!-- FAQ Item 6 -->
+            <div class="faq__item">
+              <h3 class="faq__question" data-i18n="faq.q6.question">Will there be transportation provided?</h3>
+              <p class="faq__answer" data-i18n="faq.q6.answer">If you choose not to drive to the venue or plan to drink (it is an open bar after all), we're sponsoring Uber rides to and from the venue. We'll send you codes the day of!</p>
+            </div>
+
+            <!-- FAQ Item 7 -->
+            <div class="faq__item">
+              <h3 class="faq__question" data-i18n="faq.q7.question">Can I bring a Plus One / Date? Can (another person) come?</h3>
+              <p class="faq__answer" data-i18n="faq.q7.answer">The number of seats and names of guests in your party are listed on your invitation. Your invitation will be made out to {Your name} and Guest if a plus one has been added to your party. Unfortunately, we can't accommodate any additional guests.</p>
+            </div>
+
+            <!-- FAQ Item 8 -->
+            <div class="faq__item">
+              <h3 class="faq__question" data-i18n="faq.q8.question">Can I bring my kids?</h3>
+              <p class="faq__answer" data-i18n="faq.q8.answer">We love your little ones, but we have decided to have our wedding be mostly child-free, with the exception of a few select family members. Unless noted on your invite, we kindly ask that only guests aged 12 and up attend.</p>
+            </div>
+          </div>
         </div>
       </section>
     </main>

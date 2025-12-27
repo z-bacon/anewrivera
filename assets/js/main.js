@@ -1,4 +1,273 @@
 (() => {
+  // ============================================
+  // STICKY NAVIGATION SCROLL EFFECT
+  // ============================================
+  const initStickyNav = () => {
+    const nav = document.querySelector('.site-nav');
+    if (!nav) return;
+
+    let ticking = false;
+
+    const updateNav = () => {
+      const scrollY = window.pageYOffset;
+      
+      // Add 'scrolled' class when scrolled down more than 50px
+      if (scrollY > 50) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+      
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateNav);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    updateNav(); // Initial call
+  };
+
+  // Initialize sticky navigation
+  initStickyNav();
+
+  // ============================================
+  // POLAROID STACK ANIMATION ON HERO
+  // ============================================
+  const initPolaroidAnimation = () => {
+    const polaroids = document.querySelectorAll('[data-polaroid]');
+    const heroTitle = document.querySelector('.hero-new__content');
+    
+    if (polaroids.length === 0) return;
+
+    // Stagger delays for each polaroid (in milliseconds)
+    // Increased spacing for falling effect
+    const delays = [0, 150, 300, 450, 600, 750];
+
+    // Animate polaroids in sequence
+    polaroids.forEach((polaroid, index) => {
+      setTimeout(() => {
+        polaroid.classList.add('animate-in');
+      }, delays[index]);
+    });
+
+    // After all polaroids animate in, show the title
+    // Last polaroid delay + animation duration (1000ms) + small buffer
+    const titleDelay = delays[delays.length - 1] + 1000 + 300;
+    
+    setTimeout(() => {
+      if (heroTitle) {
+        heroTitle.style.animation = 'fadeInScale 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+      }
+    }, titleDelay);
+  };
+
+  // Initialize polaroid animation on page load
+  initPolaroidAnimation();
+
+  // ============================================
+  // SCRAMBLE/ROLODEX ANIMATION FOR ACCOMMODATIONS
+  // ============================================
+  const initScrambleAnimation = () => {
+    const accommodationsSection = document.querySelector('.section--accommodations');
+    if (!accommodationsSection) return;
+
+    let hasAnimated = false;
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*().,';
+
+    // Scramble text effect
+    const scrambleText = (element, finalText, duration = 1000) => {
+      return new Promise((resolve) => {
+        element.classList.add('scramble-active');
+        let iteration = 0;
+        const textLength = finalText.length;
+        const frameRate = 30; // ms per frame
+        const totalFrames = duration / frameRate;
+
+        const interval = setInterval(() => {
+          element.textContent = finalText
+            .split('')
+            .map((char, index) => {
+              if (char === ' ') return ' ';
+              if (index < iteration) {
+                return finalText[index];
+              }
+              return chars[Math.floor(Math.random() * chars.length)];
+            })
+            .join('');
+
+          if (iteration >= textLength) {
+            clearInterval(interval);
+            element.textContent = finalText;
+            resolve();
+          }
+
+          iteration += textLength / totalFrames;
+        }, frameRate);
+      });
+    };
+
+    const scrambleObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(async (entry) => {
+          if (entry.isIntersecting && !hasAnimated) {
+            hasAnimated = true;
+            
+            // Animate the left label first
+            const leftLabel = accommodationsSection.querySelector('[data-typewriter]');
+            if (leftLabel) {
+              const originalText = leftLabel.textContent;
+              await new Promise(resolve => setTimeout(resolve, 300));
+              await scrambleText(leftLabel, originalText, 600);
+            }
+
+            // Then animate the right side info sequentially
+            const rightInfo = accommodationsSection.querySelector('[data-typewriter-delay]');
+            if (rightInfo) {
+              const paragraphs = rightInfo.querySelectorAll('p');
+              
+              // Small delay before starting right side
+              await new Promise(resolve => setTimeout(resolve, 300));
+              
+              // Animate each paragraph sequentially
+              for (let i = 0; i < paragraphs.length; i++) {
+                const p = paragraphs[i];
+                const originalText = p.getAttribute('data-i18n') 
+                  ? p.textContent 
+                  : p.textContent;
+                
+                await scrambleText(p, originalText, 800);
+                
+                // Small gap between lines
+                if (i < paragraphs.length - 1) {
+                  await new Promise(resolve => setTimeout(resolve, 150));
+                }
+              }
+            }
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '0px'
+      }
+    );
+
+    scrambleObserver.observe(accommodationsSection);
+  };
+
+  // Initialize scramble animation
+  initScrambleAnimation();
+
+  // ============================================
+  // SEQUENTIAL FADE-IN FOR STAY CARDS
+  // ============================================
+  const initStayCardsFadeIn = () => {
+    const staySection = document.querySelector('.section--accommodations-stay');
+    if (!staySection) return;
+
+    const stayCards = staySection.querySelectorAll('[data-stay-card]');
+    if (stayCards.length === 0) return;
+
+    let hasAnimated = false;
+
+    const stayObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated) {
+            hasAnimated = true;
+            
+            // Fade in each card sequentially
+            stayCards.forEach((card, index) => {
+              setTimeout(() => {
+                card.classList.add('fade-in');
+              }, index * 200); // 200ms delay between each card
+            });
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '0px'
+      }
+    );
+
+    stayObserver.observe(staySection);
+  };
+
+  // Initialize stay cards fade-in
+  initStayCardsFadeIn();
+
+  // ============================================
+  // BRIDAL PARTY MODAL INTERACTIONS
+  // ============================================
+  const initBridalPartyModal = () => {
+    const modal = document.getElementById('bridal-party-modal');
+    const members = document.querySelectorAll('.bridal-party-member[data-member-name]');
+    const closeBtn = modal?.querySelector('.bridal-party-modal__close');
+    
+    if (!modal || members.length === 0) return;
+    
+    // Open modal when clicking on a member
+    members.forEach(member => {
+      member.addEventListener('click', () => {
+        const name = member.dataset.memberName;
+        const role = member.dataset.memberRole;
+        const quoteLabel = member.dataset.memberQuoteLabel;
+        const quote = member.dataset.memberQuote;
+        
+        // Update modal content
+        modal.querySelector('.bridal-party-modal__name').textContent = name;
+        modal.querySelector('.bridal-party-modal__role').textContent = role;
+        modal.querySelector('.bridal-party-modal__quote-label').textContent = quoteLabel;
+        modal.querySelector('.bridal-party-modal__quote').textContent = quote;
+        
+        // Copy the avatar/placeholder
+        const memberAvatar = member.querySelector('.bridal-party-member__placeholder');
+        const modalPlaceholder = modal.querySelector('.bridal-party-modal__placeholder');
+        if (memberAvatar && modalPlaceholder) {
+          // Copy any background or image from the member to modal
+          modalPlaceholder.style.background = window.getComputedStyle(memberAvatar).background;
+          modalPlaceholder.innerHTML = memberAvatar.innerHTML;
+        }
+        
+        // Show modal
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    
+    // Close modal functionality
+    const closeModal = () => {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+    
+    // Close on button click
+    closeBtn?.addEventListener('click', closeModal);
+    
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+    
+    // Close on background click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+  };
+  
+  // Initialize bridal party modal
+  initBridalPartyModal();
+
   const parallaxElements = document.querySelectorAll('[data-parallax]');
 
   const updateParallax = () => {
@@ -92,7 +361,7 @@
   // ============================================
 
   // Configuration: Set your Google Apps Script Web App URL here
-  const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyI-5vuimekZCXbVPtiL2hwSKhH-kd_VDRm53op-MTSS_qoK-M1kTCJd93wj0Iw47KZ/exec';
   
   // This will store the guest data fetched from Google Sheets
   let guestData = [];
@@ -101,17 +370,30 @@
   // Fetch guest list from Google Sheets on page load
   const fetchGuestList = async () => {
     try {
+      console.log('🔍 Fetching guest list from:', GOOGLE_SCRIPT_URL);
       const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getGuests`);
+      console.log('📡 Response status:', response.status, response.statusText);
+      
       if (response.ok) {
-        guestData = await response.json();
-        console.log('Guest list loaded:', guestData.length, 'guests');
+        const data = await response.json();
+        console.log('📊 Raw data received:', data);
+        
+        // Check if it's an error response
+        if (data.error) {
+          console.error('❌ Error from script:', data.error);
+          guestData = getSampleGuestData();
+        } else {
+          guestData = data;
+          console.log('✅ Guest list loaded:', guestData.length, 'guests');
+          console.log('👥 Guest names:', guestData.map(g => g.name));
+        }
       } else {
-        console.error('Failed to load guest list');
+        console.error('❌ Failed to load guest list. Status:', response.status);
         // Fallback to sample data for testing
         guestData = getSampleGuestData();
       }
     } catch (error) {
-      console.error('Error fetching guest list:', error);
+      console.error('❌ Error fetching guest list:', error);
       // Fallback to sample data for testing
       guestData = getSampleGuestData();
     }
@@ -165,7 +447,7 @@
       }
 
       dropdown.innerHTML = filteredGuests.map(guest => `
-        <div class="guest-dropdown__item" data-guest-id="${guest.id}">
+        <div class="guest-dropdown__item" data-guest-id="${guest.id}" data-guest-name="${guest.name}">
           <div class="guest-dropdown__item-name">${guest.name}</div>
           <div class="guest-dropdown__item-party">${guest.party.length} ${guest.party.length === 1 ? 'person' : 'people'}</div>
         </div>
@@ -176,7 +458,9 @@
       // Add click handlers to dropdown items
       dropdown.querySelectorAll('.guest-dropdown__item[data-guest-id]').forEach(item => {
         item.addEventListener('click', () => {
-          const guestId = parseInt(item.dataset.guestId);
+          const guestId = item.dataset.guestId;
+          const guestName = item.dataset.guestName;
+          console.log('🔍 Selected guest ID:', guestId, 'Name:', guestName);
           selectGuest(guestId);
         });
       });
@@ -192,8 +476,19 @@
 
   // Select a guest and show their party members
   const selectGuest = (guestId) => {
-    selectedGuest = guestData.find(g => g.id === guestId);
-    if (!selectedGuest) return;
+    // Convert guestId to number if it's a string number, otherwise keep as is
+    const searchId = isNaN(guestId) ? guestId : Number(guestId);
+    
+    // Find guest by matching ID (handle both string and number comparison)
+    selectedGuest = guestData.find(g => g.id == searchId);
+    
+    if (!selectedGuest) {
+      console.error('❌ Guest not found with ID:', guestId, 'Converted to:', searchId);
+      console.log('📋 Available guests:', guestData.map(g => ({ id: g.id, name: g.name })));
+      return;
+    }
+
+    console.log('✅ Selected guest:', selectedGuest);
 
     const searchInput = document.getElementById('guest-search');
     const dropdown = document.getElementById('guest-dropdown');
@@ -212,12 +507,12 @@
       <div class="party-member">
         <input 
           type="checkbox" 
-          id="member-${index}" 
+          id="member-${selectedGuest.id}-${index}" 
           name="party-member" 
           value="${member}"
           checked
         />
-        <label for="member-${index}">${member}</label>
+        <label for="member-${selectedGuest.id}-${index}">${member}</label>
       </div>
     `).join('');
   };
@@ -226,8 +521,23 @@
   const initFormSubmission = () => {
     const form = document.getElementById('rsvp-form');
     const formStatus = document.getElementById('form-status');
+    const attendingYesSection = document.getElementById('attending-yes-section');
+    const attendingYesRadio = document.getElementById('attending-yes');
+    const attendingNoRadio = document.getElementById('attending-no');
 
     if (!form) return;
+
+    // Show/hide "Who will be attending" section based on Yes/No selection
+    const handleAttendanceChange = () => {
+      if (attendingYesRadio && attendingYesRadio.checked) {
+        attendingYesSection.style.display = 'block';
+      } else {
+        attendingYesSection.style.display = 'none';
+      }
+    };
+
+    attendingYesRadio?.addEventListener('change', handleAttendanceChange);
+    attendingNoRadio?.addEventListener('change', handleAttendanceChange);
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -237,31 +547,51 @@
         return;
       }
 
-      const submitButton = form.querySelector('button[type="submit"]');
-      const originalText = submitButton.textContent;
-      
-      // Get selected party members
-      const checkboxes = form.querySelectorAll('input[name="party-member"]:checked');
-      const attendingMembers = Array.from(checkboxes).map(cb => cb.value);
-
-      if (attendingMembers.length === 0) {
-        showFormStatus('error', 'Please select at least one person or mark as not attending');
+      // Check if attendance question is answered
+      const attendingValue = form.querySelector('input[name="attending"]:checked')?.value;
+      if (!attendingValue) {
+        showFormStatus('error', 'Please indicate if you will be attending');
         return;
       }
 
-      const message = document.getElementById('message').value;
+      const submitButton = form.querySelector('button[type="submit"]');
+      const originalText = submitButton.textContent;
+      
+      let attendingMembers = [];
+      let dietaryRestrictions = '';
+      
+      // If attending YES, get party members and dietary restrictions
+      if (attendingValue === 'yes') {
+        const checkboxes = form.querySelectorAll('input[name="party-member"]:checked');
+        attendingMembers = Array.from(checkboxes).map(cb => cb.value);
+
+        if (attendingMembers.length === 0) {
+          showFormStatus('error', 'Please select at least one person attending');
+          return;
+        }
+
+        dietaryRestrictions = document.getElementById('dietary-restrictions')?.value || '';
+      }
+
+      const message = document.getElementById('message')?.value || '';
 
       // Prepare submission data
       const submissionData = {
         guestId: selectedGuest.id,
         guestName: selectedGuest.name,
+        attending: attendingValue === 'yes',
         totalInParty: selectedGuest.party.length,
-        attendingCount: attendingMembers.length,
-        attendingMembers: attendingMembers,
-        notAttendingMembers: selectedGuest.party.filter(m => !attendingMembers.includes(m)),
+        attendingCount: attendingValue === 'yes' ? attendingMembers.length : 0,
+        attendingMembers: attendingValue === 'yes' ? attendingMembers : [],
+        notAttendingMembers: attendingValue === 'yes' 
+          ? selectedGuest.party.filter(m => !attendingMembers.includes(m))
+          : selectedGuest.party,
+        dietaryRestrictions: dietaryRestrictions,
         message: message,
         timestamp: new Date().toISOString()
       };
+
+      console.log('📤 Submitting RSVP:', submissionData);
 
       // Disable submit button
       submitButton.disabled = true;
@@ -286,6 +616,7 @@
         setTimeout(() => {
           form.reset();
           document.getElementById('guest-info').style.display = 'none';
+          attendingYesSection.style.display = 'none';
           selectedGuest = null;
           submitButton.textContent = originalText;
           submitButton.disabled = false;
@@ -293,7 +624,7 @@
         }, 5000);
 
       } catch (error) {
-        console.error('Submission error:', error);
+        console.error('❌ Submission error:', error);
         showFormStatus('error', 'There was an error submitting your RSVP. Please try again.');
         submitButton.textContent = originalText;
         submitButton.disabled = false;
@@ -681,14 +1012,53 @@
   const translations = {
     en: {
       nav: {
+        home: 'HOME',
         rsvp: 'RSVP',
-        location: 'Location',
-        wedding_party: 'Wedding Party',
+        bridal_party: 'BRIDAL PARTY',
+        accommodations: 'ACCOMMODATIONS',
         faq: 'FAQ'
       },
+      logo: 'JS',
       hero: {
+        title: 'JUNIOR & SHAIRA',
         subtitle: 'Are Getting Married',
         cta: 'RSVP'
+      },
+      bridal_party: {
+        title: 'BRIDAL PARTY',
+        desc: 'The people that will be here to celebrate it with us',
+        member1: {
+          name: 'Fabian Sanchez',
+          role: 'Groomsmen / Officiant'
+        },
+        member2: {
+          name: 'Jennie Yoon',
+          role: 'Bridesmaid'
+        },
+        member3: {
+          name: 'Anthony Castro',
+          role: 'Groomsmen'
+        },
+        member4: {
+          name: 'Hannah Lindsey',
+          role: 'Bridesmaid'
+        },
+        member5: {
+          name: 'Eduardo Bazan',
+          role: 'Groomsmen'
+        },
+        member6: {
+          name: 'Alana',
+          role: 'Bridesmaid'
+        },
+        member7: {
+          name: 'Juan Carlos Avila',
+          role: 'Groomsmen'
+        },
+        member8: {
+          name: 'Kim',
+          role: 'Bridesmaid'
+        }
       },
       story: {
         title: 'Our Story',
@@ -741,27 +1111,74 @@
         cta: 'View Guide'
       },
       faq: {
-        title: 'Frequently Asked Questions',
+        title: 'FAQ',
+        desc: 'Answers to questions you may have',
         q1: {
-          question: 'What should I wear?',
-          answer: 'We recommend semi-formal beach attire. Think light fabrics, sundresses, and comfortable shoes for the sand.'
+          question: 'Is there an RSVP deadline?',
+          answer: 'Please RSVP by February 14, 2026 via our website or by texting Shaira at (408) 881-4877. We unfortunately can\'t accommodate RSVPs past this date.'
         },
         q2: {
-          question: 'Will transportation be provided?',
-          answer: 'Yes! We\'ll arrange shuttles from the main resort to all wedding events. Details will be sent via email.'
+          question: 'Where will the wedding be?',
+          answer: 'All wedding events will be at Arbor Terrace at Grand Tradition Estate and Gardens. Be sure to turn left and follow signs for Arbor Terrace once you enter.'
         },
         q3: {
-          question: 'Can I bring a plus one?',
-          answer: 'Please refer to your invitation. If you have a plus one, their name will be included on the invitation.'
+          question: 'What time Should I Arrive',
+          answer: 'Guests should arrive at 2:30 PM for welcome drinks and seating. The ceremony will begin at 3 PM sharp and we can\'t accommodate late arrivals.'
         },
         q4: {
-          question: 'What\'s the weather like in March?',
-          answer: 'March is perfect! Expect warm, sunny days with temperatures around 80-85°F (27-29°C) and cool evenings.'
+          question: 'What should I wear?',
+          answer: 'The dress code is cocktail attire. This generally means that knee-length or midi cocktail dresses, evening dresses, sundresses, jumpsuits, casual suits, slacks, button-downs, suits and sports coats with or without ties are perfect for our wedding.\n\nThe ceremony and cocktail hour will be fully outdoors, and reception will be in a partially outdoor space, so we recommend bringing a layer! It\'s typically X in Fallbrook in March.\n\nWhile we appreciate everyone\'s individual style, we kindly request that guests refrain from wearing informal clothing like shirts and jeans. And in case you were curious, the wedding party will be wearing lavender.'
+        },
+        q5: {
+          question: 'Will there be parking at the venue?',
+          answer: 'There\'s lots of parking available at the venue! If needed, you can leave your vehicle at the venue overnight, as long as it\'s picked up by noon on Sunday.'
+        },
+        q6: {
+          question: 'Will there be transportation provided?',
+          answer: 'If you choose not to drive to the venue or plan to drink (it is an open bar after all), we\'re sponsoring Uber rides to and from the venue. We\'ll send you codes the day of!'
+        },
+        q7: {
+          question: 'Can I bring a Plus One / Date? Can (another person) come?',
+          answer: 'The number of seats and names of guests in your party are listed on your invitation. Your invitation will be made out to {Your name} and Guest if a plus one has been added to your party. Unfortunately, we can\'t accommodate any additional guests.'
+        },
+        q8: {
+          question: 'Can I bring my kids?',
+          answer: 'We love your little ones, but we have decided to have our wedding be mostly child-free, with the exception of a few select family members. Unless noted on your invite, we kindly ask that only guests aged 12 and up attend.'
         }
       },
       rsvp: {
-        title: 'RSVP & Registry',
-        desc: 'Let us know if you can celebrate with us by March 1, 2026. You can also find our registry and travel checklist below.'
+        title: 'RSVP',
+        desc: 'Let us know if you\'ll be able to make it'
+      },
+      accommodations: {
+        label: 'Where to fly in to:',
+        airport_label: 'AIRPORT',
+        airport_name: 'SAN DIEGO INTERNATIONAL AIRPORT (SAN)',
+        airport_address: '3225 N. HARBOR DRIVE, SAN DIEGO, CA 92101'
+      },
+      accommodations_stay: {
+        title: 'Where you can stay:',
+        desc: 'Here\'s a few places we recommend for you all to stay at, that\'s close to the venue',
+        welk: {
+          name: 'THE WELK RESORT',
+          distance: '22 mins away',
+          description: 'A family-friendly resort with a number of pools, golf courses, and a spa, among other amenities.'
+        },
+        pala: {
+          name: 'PALA MESA RESORT',
+          distance: '15 mins away',
+          description: 'Resort known for its golf course. Closest to the venue but is farther from other things to do.'
+        },
+        springhill: {
+          name: 'SPRINGHILL SUITES',
+          distance: '22 mins away',
+          description: 'Hotel right on the coast, steps away from the beach. Located in lively downtown Oceanside.'
+        },
+        airbnb: {
+          name: 'AIRBNB',
+          distance: '22 mins away',
+          description: 'There are many vacation homes for rent on AirBnb in Fallbrook for proximity to the venue, which you can share with a few others.'
+        }
       },
       form: {
         search_name: 'Search for Your Name',
@@ -775,14 +1192,53 @@
     },
     es: {
       nav: {
+        home: 'INICIO',
         rsvp: 'RSVP',
-        location: 'Ubicación',
-        wedding_party: 'Fiesta de Bodas',
-        faq: 'Preguntas'
+        bridal_party: 'FIESTA NUPCIAL',
+        accommodations: 'ALOJAMIENTO',
+        faq: 'PREGUNTAS'
       },
+      logo: 'JS',
       hero: {
+        title: 'JUNIOR & SHAIRA',
         subtitle: 'Se Casan',
         cta: 'RSVP'
+      },
+      bridal_party: {
+        title: 'FIESTA NUPCIAL',
+        desc: 'Las personas que estarán aquí para celebrarlo con nosotros',
+        member1: {
+          name: 'Fabian Sanchez',
+          role: 'Padrino / Oficiante'
+        },
+        member2: {
+          name: 'Jennie Yoon',
+          role: 'Dama de Honor'
+        },
+        member3: {
+          name: 'Anthony Castro',
+          role: 'Padrino'
+        },
+        member4: {
+          name: 'Hannah Lindsey',
+          role: 'Dama de Honor'
+        },
+        member5: {
+          name: 'Eduardo Bazan',
+          role: 'Padrino'
+        },
+        member6: {
+          name: 'Alana',
+          role: 'Dama de Honor'
+        },
+        member7: {
+          name: 'Juan Carlos Avila',
+          role: 'Padrino'
+        },
+        member8: {
+          name: 'Kim',
+          role: 'Dama de Honor'
+        }
       },
       story: {
         title: 'Nuestra Historia',
@@ -836,26 +1292,73 @@
       },
       faq: {
         title: 'Preguntas Frecuentes',
+        desc: 'Respuestas a preguntas que puedas tener',
         q1: {
-          question: '¿Qué debo usar?',
-          answer: 'Recomendamos vestimenta semi-formal de playa. Piense en telas ligeras, vestidos de verano y zapatos cómodos para la arena.'
+          question: '¿Hay una fecha límite para RSVP?',
+          answer: 'Por favor confirme su asistencia antes del 14 de febrero de 2026 a través de nuestro sitio web o enviando un mensaje de texto a Shaira al (408) 881-4877. Desafortunadamente, no podemos aceptar confirmaciones después de esta fecha.'
         },
         q2: {
-          question: '¿Se proporcionará transporte?',
-          answer: '¡Sí! Organizaremos traslados desde el resort principal a todos los eventos de la boda. Los detalles se enviarán por correo electrónico.'
+          question: '¿Dónde será la boda?',
+          answer: 'Todos los eventos de la boda serán en Arbor Terrace en Grand Tradition Estate and Gardens. Asegúrese de girar a la izquierda y seguir las señales de Arbor Terrace una vez que entre.'
         },
         q3: {
-          question: '¿Puedo traer un acompañante?',
-          answer: 'Por favor consulte su invitación. Si tiene un acompañante, su nombre estará incluido en la invitación.'
+          question: '¿A qué hora debo llegar?',
+          answer: 'Los invitados deben llegar a las 2:30 PM para bebidas de bienvenida y tomar asiento. La ceremonia comenzará a las 3 PM en punto y no podemos acomodar llegadas tardías.'
         },
         q4: {
-          question: '¿Cómo es el clima en marzo?',
-          answer: '¡Marzo es perfecto! Espere días cálidos y soleados con temperaturas alrededor de 80-85°F (27-29°C) y noches frescas.'
+          question: '¿Qué debo usar?',
+          answer: 'El código de vestimenta es traje de cóctel. Esto generalmente significa que vestidos de cóctel hasta la rodilla o midi, vestidos de noche, vestidos de verano, monos, trajes casuales, pantalones, camisas con botones, trajes y sacos deportivos con o sin corbata son perfectos para nuestra boda.\n\nLa ceremonia y la hora del cóctel serán completamente al aire libre, y la recepción será en un espacio parcialmente al aire libre, ¡así que recomendamos traer una capa! Típicamente hace X en Fallbrook en marzo.\n\nSi bien apreciamos el estilo individual de cada uno, solicitamos amablemente que los invitados se abstengan de usar ropa informal como camisetas y jeans. Y en caso de que tengas curiosidad, el cortejo nupcial usará lavanda.'
+        },
+        q5: {
+          question: '¿Habrá estacionamiento en el lugar?',
+          answer: '¡Hay mucho estacionamiento disponible en el lugar! Si es necesario, puede dejar su vehículo en el lugar durante la noche, siempre que lo recoja antes del mediodía del domingo.'
+        },
+        q6: {
+          question: '¿Se proporcionará transporte?',
+          answer: 'Si elige no conducir al lugar o planea beber (¡después de todo es una barra libre!), estamos patrocinando viajes de Uber hacia y desde el lugar. ¡Le enviaremos códigos el día del evento!'
+        },
+        q7: {
+          question: '¿Puedo traer un acompañante/pareja? ¿Puede venir (otra persona)?',
+          answer: 'El número de asientos y los nombres de los invitados en su grupo están listados en su invitación. Su invitación estará dirigida a {Su nombre} e Invitado si se ha agregado un acompañante a su grupo. Desafortunadamente, no podemos acomodar invitados adicionales.'
+        },
+        q8: {
+          question: '¿Puedo traer a mis hijos?',
+          answer: 'Amamos a sus pequeños, pero hemos decidido que nuestra boda sea mayormente libre de niños, con excepción de algunos miembros selectos de la familia. A menos que se indique en su invitación, solicitamos amablemente que solo asistan invitados de 12 años en adelante.'
         }
       },
       rsvp: {
-        title: 'RSVP y Registro',
-        desc: 'Háganos saber si puede celebrar con nosotros antes del 1 de marzo de 2026. También puede encontrar nuestro registro y lista de verificación de viaje a continuación.'
+        title: 'RSVP',
+        desc: 'Háganos saber si podrá asistir'
+      },
+      accommodations: {
+        label: 'Dónde volar:',
+        airport_label: 'AEROPUERTO',
+        airport_name: 'AEROPUERTO INTERNACIONAL DE SAN DIEGO (SAN)',
+        airport_address: '3225 N. HARBOR DRIVE, SAN DIEGO, CA 92101'
+      },
+      accommodations_stay: {
+        title: 'Dónde pueden hospedarse:',
+        desc: 'Aquí hay algunos lugares que recomendamos para hospedarse, cerca del lugar',
+        welk: {
+          name: 'THE WELK RESORT',
+          distance: '22 minutos',
+          description: 'Un resort familiar con varias piscinas, campos de golf y un spa, entre otras comodidades.'
+        },
+        pala: {
+          name: 'PALA MESA RESORT',
+          distance: '15 minutos',
+          description: 'Resort conocido por su campo de golf. El más cercano al lugar pero más lejos de otras atracciones.'
+        },
+        springhill: {
+          name: 'SPRINGHILL SUITES',
+          distance: '22 minutos',
+          description: 'Hotel en la costa, a pasos de la playa. Ubicado en el animado centro de Oceanside.'
+        },
+        airbnb: {
+          name: 'AIRBNB',
+          distance: '22 minutos',
+          description: 'Hay muchas casas de vacaciones para alquilar en AirBnb en Fallbrook cerca del lugar, que puedes compartir con otros.'
+        }
       },
       form: {
         search_name: 'Busca tu Nombre',

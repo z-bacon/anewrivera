@@ -59,3 +59,4 @@ The parallax effect:
 
 Each wedding party member gets their own full-screen section with this effect!
 
+

@@ -424,3 +424,5 @@ This was a fun project to build! The parallax effect adds a modern, professional
 Built with ❤️ on November 30, 2025
 Inspired by [Microsoft AI](https://microsoft.ai/)
 
+
+
