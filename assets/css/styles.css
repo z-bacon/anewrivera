@@ -81,20 +81,21 @@ a {
 
 .section__content {
   display: grid;
-  gap: 2.5rem;
+  gap: 0.5rem; /* Reduced from 2.5rem to create tighter spacing */
 }
 
 .section__content > h2 {
   font-family: 'Playfair Display', 'Times New Roman', serif;
   font-weight: 600;
   font-size: clamp(2.2rem, 3vw + 1.4rem, 3.6rem);
-  margin: 0;
+  margin: 0 0 8px 0; /* Reduced spacing below h2 */
 }
 
 .section__content > p {
   margin: 0;
   color: var(--muted-text);
   font-size: 1.05rem;
+  font-weight: 400; /* Ensure not bold */
 }
 
 /* Header - Fixed at top */
@@ -229,7 +230,8 @@ a {
   width: 100%;
   max-width: 1400px;
   height: 700px;
-  pointer-events: none;
+  pointer-events: none; /* Don't block other UI elements */
+  cursor: default;
 }
 
 .polaroid {
@@ -238,6 +240,8 @@ a {
   transform-origin: center center;
   filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
   will-change: transform, opacity;
+  transition: transform 0.15s ease-out; /* Smooth parallax movement */
+  pointer-events: none; /* Don't interfere with stack's mouse events */
 }
 
 /* Polaroid Frame Styling */
@@ -348,6 +352,62 @@ a {
   height: 380px;
 }
 
+/* Polaroid 7 - Small, back far right */
+.polaroid-7 {
+  width: 340px;
+  height: 390px;
+  top: 15%;
+  right: 5%;
+  transform: rotate(-25deg) translateY(100px);
+  z-index: 1;
+}
+
+.polaroid-7 .polaroid__photo {
+  height: 300px;
+}
+
+/* Polaroid 8 - Medium, front left */
+.polaroid-8 {
+  width: 380px;
+  height: 440px;
+  bottom: 18%;
+  left: 8%;
+  transform: rotate(-12deg) translateY(100px);
+  z-index: 4;
+}
+
+.polaroid-8 .polaroid__photo {
+  height: 320px;
+}
+
+/* Polaroid 9 - Medium, front center */
+.polaroid-9 {
+  width: 420px;
+  height: 480px;
+  bottom: 15%;
+  left: 35%;
+  transform: rotate(8deg) translateY(100px);
+  z-index: 5;
+}
+
+.polaroid-9 .polaroid__photo {
+  height: 350px;
+}
+
+/* Polaroid 10 - Medium, front right */
+.polaroid-10 {
+  width: 390px;
+  height: 450px;
+  bottom: 20%;
+  right: 10%;
+  transform: rotate(-15deg) translateY(100px);
+  z-index: 4;
+}
+
+.polaroid-10 .polaroid__photo {
+  height: 330px;
+}
+
 /* Animation keyframes - Falling from above */
 @keyframes polaroidFallIn {
   0% {
@@ -386,14 +446,28 @@ a {
 .polaroid-4 { --start-transform: rotate(-20.8deg); }
 .polaroid-5 { --start-transform: rotate(14.6deg); }
 .polaroid-6 { --start-transform: rotate(20deg); }
+.polaroid-7 { --start-transform: rotate(-25deg); }
+.polaroid-8 { --start-transform: rotate(-12deg); }
+.polaroid-9 { --start-transform: rotate(8deg); }
+.polaroid-10 { --start-transform: rotate(-15deg); }
 
 .hero-new__content {
   text-align: center;
   opacity: 0;
   transform: scale(0.95);
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 100%;
   z-index: 10;
+  pointer-events: none; /* Don't block polaroid mouse events */
   /* Animation will be triggered by JavaScript after polaroids */
+}
+
+.hero-new__content.is-visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 @keyframes fadeInScale {
@@ -418,7 +492,7 @@ a {
   position: absolute;
   bottom: clamp(3rem, 6vw, 5.875rem);
   right: clamp(3rem, 6vw, 5.875rem);
-  z-index: 2;
+  z-index: 20; /* Above polaroids */
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -429,8 +503,10 @@ a {
   letter-spacing: 0.08em;
   color: #916dad;
   text-align: right;
+  pointer-events: none; /* Don't block polaroid mouse events */
 }
 
+/* Language Switcher - Disabled for now
 .language-switcher {
   position: absolute;
   bottom: clamp(2rem, 4vw, 3.5rem);
@@ -463,6 +539,7 @@ a {
   background: var(--accent);
   color: #fff;
 }
+*/
 
 .button {
   padding: 0.9rem 2.2rem;
@@ -829,13 +906,13 @@ a {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #916dad;
-  margin: 0 0 0.75rem;
+  margin: 0 0 8px; /* Reduced spacing */
 }
 
 .section--bridal-party > .container > .section__content > p {
   font-family: 'Roboto', system-ui, -apple-system, sans-serif;
   font-size: 1.25rem;
-  font-weight: 400;
+  font-weight: 400; /* Not bold */
   color: #969696;
   margin: 0 0 3.5rem;
 }
@@ -1408,8 +1485,7 @@ a {
 .section--rsvp {
   background-color: #523e83;
   position: relative;
-  overflow: hidden;
-  min-height: 100vh;
+  overflow: visible; /* Allow dropdown to extend beyond section */
   padding: clamp(5rem, 10vw, 8rem) 0;
 }
 
@@ -1441,15 +1517,20 @@ a {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #eed9ff;
-  margin: 0 0 0.75rem;
+  margin: 0; /* No spacing below */
+  padding: 0;
+  line-height: 1;
 }
 
-.section--rsvp > .container > .section__content > p {
+.section--rsvp .section__content > p,
+.section--rsvp p {
   font-family: 'Roboto', system-ui, -apple-system, sans-serif;
   font-size: 1.25rem;
   font-weight: 400;
-  color: #eed9ff;
-  margin: 0 0 2.5rem;
+  color: #ffffff !important; /* White text */
+  margin: 0 0 2.5rem 0;
+  padding: 0;
+  line-height: 1.4;
 }
 
 .form {
@@ -1529,7 +1610,7 @@ a {
   max-height: 250px;
   overflow-y: auto;
   box-shadow: 0 6px 40px 4px rgba(191, 183, 235, 0.2);
-  z-index: 10;
+  z-index: 100; /* Ensure it floats above other sections */
   display: none;
 }
 
@@ -1556,6 +1637,15 @@ a {
   font-weight: 500;
   color: #1c1c1e;
   font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.guest-dropdown__item-members {
+  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-size: 0.875rem; /* 14px */
+  font-weight: 400;
+  color: #8e8e93; /* Gray from Figma */
+  line-height: 1.4;
 }
 
 .guest-dropdown__item-party {
@@ -1575,22 +1665,34 @@ a {
 }
 
 .guest-info__header h3 {
-  margin: 0 0 1.5rem;
+  margin: 0 0 0.5rem; /* Reduced spacing to accommodate party members */
   font-family: 'Roboto', system-ui, -apple-system, sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
   color: #523e83;
 }
 
+.guest-info__party-members {
+  margin: 0 0 1.5rem;
+  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-size: 1rem; /* Match form label size */
+  font-weight: 400;
+  color: #8e8e93 !important; /* Match form label color - override RSVP section white */
+  line-height: 1.4;
+  padding-left: 0.5rem; /* Match form label padding */
+}
+
 /* Attendance Options (Yes/No Radio Buttons) */
 .attendance-options {
-  display: grid;
+  display: flex;
   gap: 1rem;
+  margin-top: 0.75rem;
 }
 
 .attendance-option {
   display: block;
   cursor: pointer;
+  flex: 1;
 }
 
 .attendance-option input[type="radio"] {
@@ -1602,11 +1704,11 @@ a {
 .attendance-option__label {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.125rem 1.5rem;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
   background: #f2f2f7;
   border-radius: 32px;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   font-family: 'Roboto', system-ui, -apple-system, sans-serif;
   font-size: 1rem;
   font-weight: 400;
@@ -1614,19 +1716,38 @@ a {
   border: 2px solid transparent;
 }
 
-.attendance-option__label svg {
+/* Custom circular radio button */
+.custom-radio {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #e2e2e2;
+  position: relative;
   flex-shrink: 0;
-  color: #fff;
-  transition: color 0.3s ease;
+  transition: border-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.attendance-option__label svg rect {
-  fill: #fff;
-  transition: fill 0.3s ease;
+.custom-radio::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #785fb1;
+  opacity: 0;
+  transform: scale(0);
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.attendance-option input[type="radio"]:checked + .attendance-option__label svg rect {
-  fill: #785fb1;
+.attendance-option input[type="radio"]:checked + .attendance-option__label .custom-radio {
+  border-color: #785fb1;
+}
+
+.attendance-option input[type="radio"]:checked + .attendance-option__label .custom-radio::after {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .attendance-option:hover .attendance-option__label {
@@ -1642,25 +1763,26 @@ a {
 .party-members {
   display: grid;
   gap: 0.75rem;
-  padding: 1.5rem;
-  background: #f9f9fb;
-  border-radius: 20px;
-  border: 1px solid #f2f2f7;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  margin-bottom: 24px; /* Add 24px spacing below party members */
 }
 
 .party-member {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  background: white;
-  border-radius: 12px;
+  padding: 0.875rem 1.25rem;
+  background: #f2f2f7; /* Gray background like attending options */
+  border-radius: 32px;
   transition: background-color var(--transition);
-  border: 1px solid #f2f2f7;
+  border: none;
 }
 
 .party-member:hover {
-  background-color: #fafafa;
+  background-color: #e0e0e5;
 }
 
 .party-member input[type="checkbox"] {
@@ -1821,6 +1943,18 @@ a {
   
   .polaroid-6 { width: 350px; height: 410px; }
   .polaroid-6 .polaroid__photo { height: 280px; }
+  
+  .polaroid-7 { width: 280px; height: 330px; }
+  .polaroid-7 .polaroid__photo { height: 240px; }
+  
+  .polaroid-8 { width: 310px; height: 360px; }
+  .polaroid-8 .polaroid__photo { height: 260px; }
+  
+  .polaroid-9 { width: 340px; height: 390px; }
+  .polaroid-9 .polaroid__photo { height: 280px; }
+  
+  .polaroid-10 { width: 320px; height: 370px; }
+  .polaroid-10 .polaroid__photo { height: 270px; }
 }
 
 @media (max-width: 599px) {
@@ -1875,7 +2009,9 @@ a {
   }
   
   .polaroid-1,
-  .polaroid-4 {
+  .polaroid-4,
+  .polaroid-7,
+  .polaroid-10 {
     display: none;
   }
   
@@ -1890,6 +2026,12 @@ a {
   
   .polaroid-6 { width: 240px; height: 290px; right: 8%; }
   .polaroid-6 .polaroid__photo { height: 180px; }
+  
+  .polaroid-8 { width: 220px; height: 270px; left: 5%; bottom: 15%; }
+  .polaroid-8 .polaroid__photo { height: 170px; }
+  
+  .polaroid-9 { width: 250px; height: 300px; left: 30%; bottom: 12%; }
+  .polaroid-9 .polaroid__photo { height: 190px; }
 }
 
 /* ============================================
@@ -1913,14 +2055,14 @@ a {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #916dad;
-  margin: 0 0 0.5rem;
+  margin: 0 0 8px; /* Reduced spacing */
   line-height: 1.2;
 }
 
 .faq__desc {
   font-family: 'Roboto', system-ui, -apple-system, sans-serif;
   font-size: 1.25rem;
-  font-weight: 400;
+  font-weight: 400; /* Not bold */
   color: #969696;
   margin: 0 0 3rem;
   line-height: 1.4;

@@ -44,9 +44,9 @@
     
     if (polaroids.length === 0) return;
 
-    // Stagger delays for each polaroid (in milliseconds)
-    // Increased spacing for falling effect
-    const delays = [0, 150, 300, 450, 600, 750];
+    // Sequential delays for each polaroid (200ms between each)
+    const delayBetween = 200; // Time between each polaroid
+    const delays = Array.from({ length: polaroids.length }, (_, i) => i * delayBetween);
 
     // Animate polaroids in sequence
     polaroids.forEach((polaroid, index) => {
@@ -61,13 +61,116 @@
     
     setTimeout(() => {
       if (heroTitle) {
-        heroTitle.style.animation = 'fadeInScale 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+        heroTitle.classList.add('is-visible');
+        heroTitle.style.transition = 'opacity 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
       }
     }, titleDelay);
   };
 
+  // Initialize polaroid parallax effect
+  const initPolaroidParallax = () => {
+    const polaroidStack = document.querySelector('.polaroid-stack');
+    const polaroids = document.querySelectorAll('[data-polaroid]');
+    
+    if (!polaroidStack || polaroids.length === 0) {
+      return;
+    }
+
+    // Store original rotation for each polaroid from CSS
+    const polaroidData = new Map();
+    
+    // Map of polaroid classes to their rotations (from CSS)
+    const rotationMap = {
+      'polaroid-1': 'rotate(-18.3deg)',
+      'polaroid-2': 'rotate(15.8deg)',
+      'polaroid-3': 'translateX(-50%) rotate(1.6deg)',
+      'polaroid-4': 'rotate(-20.8deg)',
+      'polaroid-5': 'rotate(14.6deg)',
+      'polaroid-6': 'rotate(20deg)',
+      'polaroid-7': 'rotate(-25deg)',
+      'polaroid-8': 'rotate(-12deg)',
+      'polaroid-9': 'rotate(8deg)',
+      'polaroid-10': 'rotate(-15deg)'
+    };
+    
+    polaroids.forEach((polaroid) => {
+      const polaroidClass = Array.from(polaroid.classList).find(cls => cls.startsWith('polaroid-'));
+      const rotation = rotationMap[polaroidClass] || 'rotate(0deg)';
+      const zIndex = parseInt(window.getComputedStyle(polaroid).zIndex) || 1;
+      
+      polaroidData.set(polaroid, {
+        rotation: rotation,
+        zIndex: zIndex
+      });
+    });
+
+    let isParallaxEnabled = false;
+    
+    // Enable parallax after animations complete
+    setTimeout(() => {
+      isParallaxEnabled = true;
+    }, 3500);
+
+    let isMouseInside = false;
+    
+    polaroidStack.addEventListener('mouseenter', () => {
+      isMouseInside = true;
+    });
+    
+    polaroidStack.addEventListener('mousemove', (e) => {
+      if (!isParallaxEnabled) return;
+      
+      const rect = polaroidStack.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      // Calculate mouse position relative to center (normalized -1 to 1)
+      const mouseX = (e.clientX - centerX) / (rect.width / 2);
+      const mouseY = (e.clientY - centerY) / (rect.height / 2);
+      
+      polaroids.forEach((polaroid) => {
+        const data = polaroidData.get(polaroid);
+        if (!data) return;
+        
+        // Different parallax strength for each layer (based on z-index)
+        // Higher z-index = closer to viewer = more movement
+        const strength = data.zIndex * 8;
+        
+        // Calculate offset based on mouse position
+        const offsetX = mouseX * strength;
+        const offsetY = mouseY * strength;
+        
+        // Apply the transform
+        const newTransform = `${data.rotation} translate(${offsetX}px, ${offsetY}px)`;
+        polaroid.style.transition = 'transform 0.15s ease-out';
+        polaroid.style.transform = newTransform;
+      });
+    });
+
+    // Reset on mouse leave with smooth transition back
+    polaroidStack.addEventListener('mouseleave', () => {
+      if (!isParallaxEnabled) return;
+      
+      isMouseInside = false;
+      
+      // Add a small delay to prevent immediate reset during rapid enter/leave
+      setTimeout(() => {
+        if (!isMouseInside) {
+          polaroids.forEach((polaroid) => {
+            const data = polaroidData.get(polaroid);
+            if (!data) return;
+            
+            polaroid.style.transition = 'transform 0.5s ease-out';
+            polaroid.style.transform = `${data.rotation} translate(0px, 0px)`;
+          });
+        }
+      }, 100);
+    });
+  };
+
   // Initialize polaroid animation on page load
   initPolaroidAnimation();
+  // initPolaroidParallax(); // Disabled for now
 
   // ============================================
   // SCRAMBLE/ROLODEX ANIMATION FOR ACCOMMODATIONS
@@ -446,12 +549,28 @@
         return;
       }
 
-      dropdown.innerHTML = filteredGuests.map(guest => `
-        <div class="guest-dropdown__item" data-guest-id="${guest.id}" data-guest-name="${guest.name}">
-          <div class="guest-dropdown__item-name">${guest.name}</div>
-          <div class="guest-dropdown__item-party">${guest.party.length} ${guest.party.length === 1 ? 'person' : 'people'}</div>
-        </div>
-      `).join('');
+      dropdown.innerHTML = filteredGuests.map(guest => {
+        // Format party members list with commas and "&" before last member
+        let membersList = '';
+        if (guest.party && guest.party.length > 0) {
+          if (guest.party.length === 1) {
+            membersList = guest.party[0];
+          } else if (guest.party.length === 2) {
+            membersList = guest.party.join(' & ');
+          } else {
+            const lastMember = guest.party[guest.party.length - 1];
+            const otherMembers = guest.party.slice(0, -1);
+            membersList = otherMembers.join(', ') + ', & ' + lastMember;
+          }
+        }
+        
+        return `
+          <div class="guest-dropdown__item" data-guest-id="${guest.id}" data-guest-name="${guest.name}">
+            <div class="guest-dropdown__item-name">${guest.name}</div>
+            ${membersList ? `<div class="guest-dropdown__item-members">${membersList}</div>` : ''}
+          </div>
+        `;
+      }).join('');
 
       dropdown.classList.add('active');
 
@@ -495,6 +614,15 @@
     const guestInfo = document.getElementById('guest-info');
     const selectedGuestName = document.getElementById('selected-guest-name');
     const partyMembers = document.getElementById('party-members');
+
+    // Reset attendance selection
+    const attendingYes = document.getElementById('attending-yes');
+    const attendingNo = document.getElementById('attending-no');
+    const attendingYesSection = document.getElementById('attending-yes-section');
+    
+    if (attendingYes) attendingYes.checked = false;
+    if (attendingNo) attendingNo.checked = false;
+    if (attendingYesSection) attendingYesSection.style.display = 'none';
 
     // Update UI
     searchInput.value = selectedGuest.name;
@@ -1408,7 +1536,7 @@
     localStorage.setItem('preferredLanguage', lang);
   };
 
-  // Language switcher
+  /* Language switcher - Disabled for now
   document.querySelectorAll('.language-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const lang = btn.getAttribute('data-lang');
@@ -1421,5 +1549,6 @@
   if (savedLang !== 'en') {
     updateTranslations(savedLang);
   }
+  */
 })();
 
