@@ -173,6 +173,44 @@
   // initPolaroidParallax(); // Disabled for now
 
   // ============================================
+  // MOBILE HAMBURGER MENU
+  // ============================================
+  const initHamburgerMenu = () => {
+    const hamburgerBtn = document.getElementById('hamburger-menu');
+    const siteNav = document.querySelector('.site-nav');
+    const navLinks = document.querySelectorAll('.site-nav__links a');
+    
+    if (!hamburgerBtn || !siteNav) return;
+    
+    // Toggle menu on hamburger click
+    hamburgerBtn.addEventListener('click', () => {
+      hamburgerBtn.classList.toggle('is-active');
+      siteNav.classList.toggle('is-open');
+      document.body.style.overflow = siteNav.classList.contains('is-open') ? 'hidden' : '';
+    });
+    
+    // Close menu when clicking on a nav link
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        hamburgerBtn.classList.remove('is-active');
+        siteNav.classList.remove('is-open');
+        document.body.style.overflow = '';
+      });
+    });
+    
+    // Close menu on ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && siteNav.classList.contains('is-open')) {
+        hamburgerBtn.classList.remove('is-active');
+        siteNav.classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
+    });
+  };
+  
+  initHamburgerMenu();
+
+  // ============================================
   // SCRAMBLE/ROLODEX ANIMATION FOR ACCOMMODATIONS
   // ============================================
   const initScrambleAnimation = () => {
