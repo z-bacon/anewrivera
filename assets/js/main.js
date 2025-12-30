@@ -1,5 +1,206 @@
 (() => {
   // ============================================
+  // LENIS SMOOTH SCROLL INITIALIZATION
+  // ============================================
+  let lenis;
+  
+  // Check if device is mobile
+  const isMobile = () => window.innerWidth <= 768;
+  const isTablet = () => window.innerWidth <= 1024 && window.innerWidth > 768;
+  
+  const initSmoothScroll = () => {
+    // Adjust settings based on device
+    const duration = isMobile() ? 1.0 : 1.2;
+    const wheelMultiplier = isMobile() ? 0.8 : 1;
+    
+    lenis = new Lenis({
+      duration: duration,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: wheelMultiplier,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
+    // Lenis animation loop
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Integrate Lenis with GSAP ScrollTrigger
+    lenis.on('scroll', ScrollTrigger.update);
+    
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    
+    gsap.ticker.lagSmoothing(0);
+    
+    console.log('✨ Lenis smooth scroll initialized');
+  };
+
+  // Initialize smooth scroll if Lenis is available
+  if (typeof Lenis !== 'undefined') {
+    initSmoothScroll();
+  }
+
+  // ============================================
+  // GSAP + SCROLLTRIGGER SETUP
+  // ============================================
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+    console.log('✨ GSAP & ScrollTrigger initialized');
+  }
+
+  // ============================================
+  // SPLITTING.JS TEXT SPLITTING
+  // ============================================
+  if (typeof Splitting !== 'undefined') {
+    Splitting();
+    console.log('✨ Splitting.js initialized');
+  }
+
+  // ============================================
+  // BLUR & STAGGER TEXT ANIMATIONS
+  // ============================================
+  const initTextAnimations = () => {
+    const textElements = document.querySelectorAll('[data-splitting]');
+    
+    textElements.forEach((element, index) => {
+      const chars = element.querySelectorAll('.char');
+      if (chars.length === 0) return;
+
+      // Set initial state
+      gsap.set(chars, {
+        opacity: 0,
+        filter: 'blur(10px)',
+        y: 20,
+      });
+
+      // Create scroll-triggered animation
+      gsap.to(chars, {
+        opacity: 1,
+        filter: 'blur(0px)',
+        y: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        stagger: {
+          each: 0.03,
+          from: 'start',
+        },
+        scrollTrigger: {
+          trigger: element,
+          start: 'top 85%',
+          end: 'bottom top', // Only reverse when element completely leaves viewport
+          toggleActions: 'play reverse play reverse',
+          // markers: true, // Debug
+        },
+      });
+    });
+    
+    console.log(`✨ Text animations applied to ${textElements.length} elements`);
+  };
+
+  // ============================================
+  // PARALLAX SCROLLING SYSTEM
+  // ============================================
+  const initParallax = () => {
+    // Disable parallax on mobile for better performance
+    if (isMobile()) {
+      console.log('⚡ Parallax disabled on mobile for performance');
+      return;
+    }
+    
+    const parallaxElements = document.querySelectorAll('[data-speed]');
+    
+    parallaxElements.forEach((element) => {
+      const speed = parseFloat(element.dataset.speed) || 1;
+      
+      // Reduce parallax intensity on tablet
+      const intensity = isTablet() ? 0.5 : 1;
+      
+      // Amplify the parallax effect
+      const multiplier = 1.5; // Increase overall parallax movement
+      
+      gsap.to(element, {
+        y: (i, target) => {
+          // Calculate parallax movement based on element position
+          return -(target.offsetHeight * (speed - 1) * intensity * multiplier);
+        },
+        ease: 'none',
+        scrollTrigger: {
+          trigger: element.parentElement,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+          // markers: true, // Debug
+        },
+      });
+    });
+    
+    console.log(`✨ Parallax applied to ${parallaxElements.length} elements`);
+  };
+
+  // ============================================
+  // STAGGERED CARD ANIMATIONS
+  // ============================================
+  const initCardAnimations = () => {
+    // Disable card parallax on mobile
+    if (isMobile()) {
+      console.log('⚡ Card parallax disabled on mobile for performance');
+      return;
+    }
+    
+    // Reduce animation intensity on tablet
+    const intensity = isTablet() ? 0.6 : 1;
+    
+    // FAQ Cards
+    const faqCards = gsap.utils.toArray('.faq-card');
+    if (faqCards.length > 0) {
+      faqCards.forEach((card, index) => {
+        const speed = 1 + (index % 3) * 0.15; // Varying speeds
+        
+        gsap.to(card, {
+          y: -50 * speed * intensity,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.section--faq',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+      });
+    }
+
+    // Wedding Party Members
+    const weddingMembers = gsap.utils.toArray('.wedding-party-member');
+    if (weddingMembers.length > 0) {
+      weddingMembers.forEach((member, index) => {
+        const speed = 1 + (index % 2) * 0.2; // Alternating speeds
+        
+        gsap.to(member, {
+          y: -40 * speed * intensity,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.section--wedding-party',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+      });
+    }
+    
+    console.log('✨ Card animations initialized');
+  };
+
+  // ============================================
   // STICKY NAVIGATION SCROLL EFFECT
   // ============================================
   const initStickyNav = () => {
@@ -36,141 +237,172 @@
   initStickyNav();
 
   // ============================================
-  // POLAROID STACK ANIMATION ON HERO
+  // HERO SECTION - FLOATING POLAROIDS WITH HOVER FOCUS
   // ============================================
-  const initPolaroidAnimation = () => {
-    const polaroids = document.querySelectorAll('[data-polaroid]');
-    const heroTitle = document.querySelector('.hero-new__content');
+  
+  const initHeroAnimations = () => {
+    const polaroids = document.querySelectorAll('.hero__polaroid');
+    const heroTitle = document.querySelector('.hero__title');
+    const heroTitleText = document.querySelector('.hero__title-text');
     
-    if (polaroids.length === 0) return;
-
-    // Sequential delays for each polaroid (200ms between each)
-    const delayBetween = 200; // Time between each polaroid
-    const delays = Array.from({ length: polaroids.length }, (_, i) => i * delayBetween);
-
-    // Animate polaroids in sequence
-    polaroids.forEach((polaroid, index) => {
-      setTimeout(() => {
-        polaroid.classList.add('animate-in');
-      }, delays[index]);
+    if (!polaroids.length || !heroTitle) return;
+    
+    // Store original positions and properties for each polaroid
+    const polaroidData = [];
+    const rotations = [-15, 8, -12, 20, 3, -18, 12, -8, 15, -10];
+    
+    polaroids.forEach((polaroid, i) => {
+      const rect = polaroid.getBoundingClientRect();
+      const parentRect = polaroid.parentElement.getBoundingClientRect();
+      
+      // Store original data
+      polaroidData.push({
+        element: polaroid,
+        rotation: rotations[i],
+        originalOpacity: 0.2,
+        originalWidth: polaroid.offsetWidth,
+        isFocused: false
+      });
+      
+      // Set initial state
+      gsap.set(polaroid, {
+        rotation: rotations[i],
+        opacity: 0.2
+      });
     });
-
-    // After all polaroids animate in, show the title
-    // Last polaroid delay + animation duration (1000ms) + small buffer
-    const titleDelay = delays[delays.length - 1] + 1000 + 300;
     
-    setTimeout(() => {
-      if (heroTitle) {
-        heroTitle.classList.add('is-visible');
-        heroTitle.style.transition = 'opacity 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      }
-    }, titleDelay);
-  };
-
-  // Initialize polaroid parallax effect
-  const initPolaroidParallax = () => {
-    const polaroidStack = document.querySelector('.polaroid-stack');
-    const polaroids = document.querySelectorAll('[data-polaroid]');
+    // ANIMATION 1: Continuous Floating Animation for all polaroids
+    polaroids.forEach((polaroid, i) => {
+      const data = polaroidData[i];
+      
+      // Create unique floating pattern for each polaroid
+      const floatTimeline = gsap.timeline({ repeat: -1, yoyo: true });
+      
+      floatTimeline.to(polaroid, {
+        y: `${gsap.utils.random(-30, 30)}`,
+        x: `${gsap.utils.random(-20, 20)}`,
+        rotation: data.rotation + gsap.utils.random(-8, 8),
+        duration: gsap.utils.random(3, 5),
+        ease: 'sine.inOut'
+      });
+      
+      // Store timeline so we can pause it on hover
+      data.floatTimeline = floatTimeline;
+    });
     
-    if (!polaroidStack || polaroids.length === 0) {
-      return;
+    // ANIMATION 2: Hero title fades in
+    gsap.to(heroTitle, {
+      opacity: 1,
+      scale: 1,
+      duration: 1.5,
+      ease: 'power2.out',
+      delay: 0.5
+    });
+    
+    // ANIMATION 3: Gradient follows mouse movement
+    if (heroTitleText) {
+      document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        gsap.to(heroTitleText, {
+          backgroundPosition: `${x}% ${y}%`,
+          duration: 0.3,
+          ease: 'power1.out'
+        });
+      });
     }
-
-    // Store original rotation for each polaroid from CSS
-    const polaroidData = new Map();
     
-    // Map of polaroid classes to their rotations (from CSS)
-    const rotationMap = {
-      'polaroid-1': 'rotate(-18.3deg)',
-      'polaroid-2': 'rotate(15.8deg)',
-      'polaroid-3': 'translateX(-50%) rotate(1.6deg)',
-      'polaroid-4': 'rotate(-20.8deg)',
-      'polaroid-5': 'rotate(14.6deg)',
-      'polaroid-6': 'rotate(20deg)',
-      'polaroid-7': 'rotate(-25deg)',
-      'polaroid-8': 'rotate(-12deg)',
-      'polaroid-9': 'rotate(8deg)',
-      'polaroid-10': 'rotate(-15deg)'
-    };
-    
-    polaroids.forEach((polaroid) => {
-      const polaroidClass = Array.from(polaroid.classList).find(cls => cls.startsWith('polaroid-'));
-      const rotation = rotationMap[polaroidClass] || 'rotate(0deg)';
-      const zIndex = parseInt(window.getComputedStyle(polaroid).zIndex) || 1;
+    // ANIMATION 4: Hover to Focus - Scale in place & focus
+    polaroids.forEach((polaroid, i) => {
+      const data = polaroidData[i];
       
-      polaroidData.set(polaroid, {
-        rotation: rotation,
-        zIndex: zIndex
-      });
-    });
-
-    let isParallaxEnabled = false;
-    
-    // Enable parallax after animations complete
-    setTimeout(() => {
-      isParallaxEnabled = true;
-    }, 3500);
-
-    let isMouseInside = false;
-    
-    polaroidStack.addEventListener('mouseenter', () => {
-      isMouseInside = true;
-    });
-    
-    polaroidStack.addEventListener('mousemove', (e) => {
-      if (!isParallaxEnabled) return;
-      
-      const rect = polaroidStack.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      
-      // Calculate mouse position relative to center (normalized -1 to 1)
-      const mouseX = (e.clientX - centerX) / (rect.width / 2);
-      const mouseY = (e.clientY - centerY) / (rect.height / 2);
-      
-      polaroids.forEach((polaroid) => {
-        const data = polaroidData.get(polaroid);
-        if (!data) return;
+      polaroid.addEventListener('mouseenter', () => {
+        if (data.isFocused) return;
         
-        // Different parallax strength for each layer (based on z-index)
-        // Higher z-index = closer to viewer = more movement
-        const strength = data.zIndex * 8;
+        data.isFocused = true;
+        polaroid.classList.add('is-focused');
         
-        // Calculate offset based on mouse position
-        const offsetX = mouseX * strength;
-        const offsetY = mouseY * strength;
-        
-        // Apply the transform
-        const newTransform = `${data.rotation} translate(${offsetX}px, ${offsetY}px)`;
-        polaroid.style.transition = 'transform 0.15s ease-out';
-        polaroid.style.transform = newTransform;
-      });
-    });
-
-    // Reset on mouse leave with smooth transition back
-    polaroidStack.addEventListener('mouseleave', () => {
-      if (!isParallaxEnabled) return;
-      
-      isMouseInside = false;
-      
-      // Add a small delay to prevent immediate reset during rapid enter/leave
-      setTimeout(() => {
-        if (!isMouseInside) {
-          polaroids.forEach((polaroid) => {
-            const data = polaroidData.get(polaroid);
-            if (!data) return;
-            
-            polaroid.style.transition = 'transform 0.5s ease-out';
-            polaroid.style.transform = `${data.rotation} translate(0px, 0px)`;
-          });
+        // Pause floating animation
+        if (data.floatTimeline) {
+          data.floatTimeline.pause();
         }
-      }, 100);
+        
+        // Get current animated values
+        const currentX = gsap.getProperty(polaroid, 'x');
+        const currentY = gsap.getProperty(polaroid, 'y');
+        const currentRotation = gsap.getProperty(polaroid, 'rotation');
+        
+        // Scale in place, enlarge, focus
+        gsap.to(polaroid, {
+          scale: 2.5,
+          rotation: 0,
+          opacity: 1,
+          filter: 'blur(0px)',
+          duration: 0.6,
+          ease: 'power3.out',
+          zIndex: 100
+        });
+      });
+      
+      polaroid.addEventListener('mouseleave', () => {
+        if (!data.isFocused) return;
+        
+        data.isFocused = false;
+        polaroid.classList.remove('is-focused');
+        
+        // Return to original state
+        gsap.to(polaroid, {
+          scale: 1,
+          rotation: data.rotation,
+          opacity: 0.2,
+          filter: 'blur(3px)',
+          duration: 0.5,
+          ease: 'power2.inOut',
+          zIndex: 1,
+          onComplete: () => {
+            // Resume floating animation
+            if (data.floatTimeline) {
+              data.floatTimeline.resume();
+            }
+          }
+        });
+      });
+    });
+    
+    // ANIMATION 5: Scroll parallax - polaroids move up at different speeds
+    polaroids.forEach((polaroid) => {
+      const speed = parseFloat(polaroid.getAttribute('data-scroll-speed')) || 0.5;
+      
+      gsap.to(polaroid, {
+        y: () => -200 * speed,
+        scrollTrigger: {
+          trigger: '.hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1,
+          markers: false
+        }
+      });
     });
   };
 
-  // Initialize polaroid animation on page load
-  initPolaroidAnimation();
-  // initPolaroidParallax(); // Disabled for now
+  // ============================================
+  // INITIALIZE NEW ANIMATION SYSTEMS
+  // ============================================
+  // Wait for libraries to load, then initialize animations
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    // Initialize after a short delay to ensure Lenis is ready
+    setTimeout(() => {
+      initHeroAnimations();
+      initTextAnimations();
+      initParallax();
+      initCardAnimations();
+      initWeddingPartyAnimations();
+      
+      // Refresh ScrollTrigger after all animations are set up
+      ScrollTrigger.refresh();
+    }, 100);
+  }
 
   // ============================================
   // MOBILE HAMBURGER MENU
@@ -211,203 +443,317 @@
   initHamburgerMenu();
 
   // ============================================
-  // SCRAMBLE/ROLODEX ANIMATION FOR ACCOMMODATIONS
+  // WEDDING PARTY MODAL - FULL SCREEN PURPLE TAKEOVER
   // ============================================
-  const initScrambleAnimation = () => {
-    const accommodationsSection = document.querySelector('.section--accommodations');
-    if (!accommodationsSection) return;
-
-    let hasAnimated = false;
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*().,';
-
-    // Scramble text effect
-    const scrambleText = (element, finalText, duration = 1000) => {
-      return new Promise((resolve) => {
-        element.classList.add('scramble-active');
-        let iteration = 0;
-        const textLength = finalText.length;
-        const frameRate = 30; // ms per frame
-        const totalFrames = duration / frameRate;
-
-        const interval = setInterval(() => {
-          element.textContent = finalText
-            .split('')
-            .map((char, index) => {
-              if (char === ' ') return ' ';
-              if (index < iteration) {
-                return finalText[index];
-              }
-              return chars[Math.floor(Math.random() * chars.length)];
-            })
-            .join('');
-
-          if (iteration >= textLength) {
-            clearInterval(interval);
-            element.textContent = finalText;
-            resolve();
-          }
-
-          iteration += textLength / totalFrames;
-        }, frameRate);
+  
+  const initWeddingPartyModal = () => {
+    const modal = document.getElementById('weddingPartyModal');
+    if (!modal) return;
+    
+    const background = modal.querySelector('.wedding-party-modal__background');
+    const closeBtn = modal.querySelector('.wedding-party-modal__close');
+    const modalContent = modal.querySelector('.wedding-party-modal__content');
+    const photoCircle = modal.querySelector('.wedding-party-modal__photo-circle');
+    const modalPhoto = modal.querySelector('.wedding-party-modal__photo');
+    const modalName = modal.querySelector('.wedding-party-modal__name');
+    const modalRole = modal.querySelector('.wedding-party-modal__role');
+    const modalStoryTitle = modal.querySelector('.wedding-party-modal__story-title');
+    const modalStoryText = modal.querySelector('.wedding-party-modal__story-text');
+    const cards = document.querySelectorAll('.wedding-party-card');
+    
+    if (!cards.length) return;
+    
+    // Story data for each person
+    const stories = {
+      alanna: "We met in college through mutual friends and instantly bonded over our love for adventure and late-night study sessions. She's been a constant source of support and laughter ever since.",
+      jennie: "We became best friends in high school and have been inseparable ever since. From sharing secrets to celebrating milestones, she's been there through it all.",
+      hannah: "We met at work and quickly discovered we had so much in common. Her positivity and kindness have made her not just a colleague, but a true friend.",
+      kimberly: "We met through a book club and our friendship blossomed from there. Her thoughtfulness and warm personality have made her someone I can always count on.",
+      fabian: "Junior and Fabian met in elementary school and have been best friends ever since. From playground adventures to life's biggest moments, Fabian has always been there.",
+      anthony: "They met playing basketball in high school and became instant friends. Anthony's loyalty and sense of humor have made him a brother to Junior.",
+      eddie: "Junior and Eddie met at work and quickly bonded over their shared interests. Eddie's support and genuine friendship mean the world to us.",
+      jc: "They met through mutual friends and hit it off immediately. JC's positive energy and dependability have made him an invaluable friend to Junior."
+    };
+    
+    // Open modal function
+    const openModal = (person, clickedCard) => {
+      const card = document.querySelector(`[data-person="${person}"]`);
+      if (!card) return;
+      
+      // Get data from card
+      const cardPhoto = card.querySelector('.wedding-party-card__photo-circle img');
+      const nameEl = card.querySelector('.wedding-party-card__name');
+      const roleEl = card.querySelector('.wedding-party-card__role');
+      const story = stories[person] || "A wonderful friend who has been part of our journey.";
+      
+      // Set modal content
+      if (cardPhoto) {
+        modalPhoto.src = cardPhoto.src;
+        modalPhoto.alt = cardPhoto.alt;
+        console.log('Photo set:', modalPhoto.src);
+      } else {
+        console.log('No card photo found');
+        modalPhoto.src = '';
+        modalPhoto.alt = nameEl ? nameEl.textContent : '';
+      }
+      
+      modalName.textContent = nameEl ? nameEl.textContent : '';
+      modalRole.textContent = roleEl ? roleEl.textContent : '';
+      modalStoryText.textContent = story;
+      
+      // Apply Splitting.js to story text for word-by-word blur animation
+      if (typeof Splitting !== 'undefined') {
+        Splitting({ target: modalStoryText, by: 'words' });
+      }
+      
+      // Disable Lenis smooth scroll
+      if (typeof lenis !== 'undefined') {
+        lenis.stop();
+      }
+      
+      // Show modal
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      // Set initial states explicitly
+      gsap.set(photoCircle, { opacity: 0, scale: 0.8 });
+      gsap.set(modalName, { opacity: 0, y: 20 });
+      gsap.set(modalRole, { opacity: 0, y: 20 });
+      gsap.set(modalStoryTitle, { opacity: 0, y: 20 });
+      gsap.set(closeBtn, { opacity: 0, scale: 0.8 });
+      gsap.set(background, { opacity: 0 });
+      
+      // Animation Timeline
+      const tl = gsap.timeline();
+      
+      // 1. Purple background - SIMPLE FADE IN
+      tl.fromTo(background,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.5, ease: 'power2.out' }
+      );
+      
+      // 2. Photo circle fades in (modal's photo circle, not card's)
+      tl.fromTo(photoCircle,
+        { opacity: 0, scale: 0.8 },
+        { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.4)' },
+        '-=0.3'
+      );
+      
+      // 3. Name fades in
+      tl.fromTo(modalName,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+        '-=0.2'
+      );
+      
+      // 4. Role fades in
+      tl.fromTo(modalRole,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+        '-=0.3'
+      );
+      
+      // 5. Story title fades in
+      tl.fromTo(modalStoryTitle,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+        '-=0.2'
+      );
+      
+      // 6. Close button fades in
+      tl.fromTo(closeBtn,
+        { opacity: 0, scale: 0.8 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.7)' },
+        '-=0.3'
+      );
+      
+      // 7. Story text - WORD BY WORD BLUR ANIMATION
+      // Add a callback to the timeline to ensure Splitting.js has completed
+      tl.call(() => {
+        const storyWords = modalStoryText.querySelectorAll('.word');
+        console.log('Story words found:', storyWords.length);
+        
+        if (storyWords.length > 0) {
+          gsap.fromTo(storyWords,
+            { opacity: 0, filter: 'blur(10px)', y: 10 },
+            { 
+              opacity: 1, 
+              filter: 'blur(0px)', 
+              y: 0,
+              duration: 0.6,
+              ease: 'power2.out',
+              stagger: 0.03
+            }
+          );
+        } else {
+          console.log('No words found - Splitting may have failed');
+        }
       });
     };
-
-    const scrambleObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(async (entry) => {
-          if (entry.isIntersecting && !hasAnimated) {
-            hasAnimated = true;
-            
-            // Animate the left label first
-            const leftLabel = accommodationsSection.querySelector('[data-typewriter]');
-            if (leftLabel) {
-              const originalText = leftLabel.textContent;
-              await new Promise(resolve => setTimeout(resolve, 300));
-              await scrambleText(leftLabel, originalText, 600);
-            }
-
-            // Then animate the right side info sequentially
-            const rightInfo = accommodationsSection.querySelector('[data-typewriter-delay]');
-            if (rightInfo) {
-              const paragraphs = rightInfo.querySelectorAll('p');
-              
-              // Small delay before starting right side
-              await new Promise(resolve => setTimeout(resolve, 300));
-              
-              // Animate each paragraph sequentially
-              for (let i = 0; i < paragraphs.length; i++) {
-                const p = paragraphs[i];
-                const originalText = p.getAttribute('data-i18n') 
-                  ? p.textContent 
-                  : p.textContent;
-                
-                await scrambleText(p, originalText, 800);
-                
-                // Small gap between lines
-                if (i < paragraphs.length - 1) {
-                  await new Promise(resolve => setTimeout(resolve, 150));
-                }
-              }
-            }
-          }
-        });
-      },
-      {
-        threshold: 0.2,
-        rootMargin: '0px'
-      }
-    );
-
-    scrambleObserver.observe(accommodationsSection);
-  };
-
-  // Initialize scramble animation
-  initScrambleAnimation();
-
-  // ============================================
-  // SEQUENTIAL FADE-IN FOR STAY CARDS
-  // ============================================
-  const initStayCardsFadeIn = () => {
-    const staySection = document.querySelector('.section--accommodations-stay');
-    if (!staySection) return;
-
-    const stayCards = staySection.querySelectorAll('[data-stay-card]');
-    if (stayCards.length === 0) return;
-
-    let hasAnimated = false;
-
-    const stayObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimated) {
-            hasAnimated = true;
-            
-            // Fade in each card sequentially
-            stayCards.forEach((card, index) => {
-              setTimeout(() => {
-                card.classList.add('fade-in');
-              }, index * 200); // 200ms delay between each card
-            });
-          }
-        });
-      },
-      {
-        threshold: 0.2,
-        rootMargin: '0px'
-      }
-    );
-
-    stayObserver.observe(staySection);
-  };
-
-  // Initialize stay cards fade-in
-  initStayCardsFadeIn();
-
-  // ============================================
-  // BRIDAL PARTY MODAL INTERACTIONS
-  // ============================================
-  const initBridalPartyModal = () => {
-    const modal = document.getElementById('bridal-party-modal');
-    const members = document.querySelectorAll('.bridal-party-member[data-member-name]');
-    const closeBtn = modal?.querySelector('.bridal-party-modal__close');
     
-    if (!modal || members.length === 0) return;
-    
-    // Open modal when clicking on a member
-    members.forEach(member => {
-      member.addEventListener('click', () => {
-        const name = member.dataset.memberName;
-        const role = member.dataset.memberRole;
-        const quoteLabel = member.dataset.memberQuoteLabel;
-        const quote = member.dataset.memberQuote;
-        
-        // Update modal content
-        modal.querySelector('.bridal-party-modal__name').textContent = name;
-        modal.querySelector('.bridal-party-modal__role').textContent = role;
-        modal.querySelector('.bridal-party-modal__quote-label').textContent = quoteLabel;
-        modal.querySelector('.bridal-party-modal__quote').textContent = quote;
-        
-        // Copy the avatar/placeholder
-        const memberAvatar = member.querySelector('.bridal-party-member__placeholder');
-        const modalPlaceholder = modal.querySelector('.bridal-party-modal__placeholder');
-        if (memberAvatar && modalPlaceholder) {
-          // Copy any background or image from the member to modal
-          modalPlaceholder.style.background = window.getComputedStyle(memberAvatar).background;
-          modalPlaceholder.innerHTML = memberAvatar.innerHTML;
+    // Close modal function
+    const closeModal = () => {
+      const allWords = modal.querySelectorAll('.word');
+      
+      // Animate out
+      const tl = gsap.timeline({
+        onComplete: () => {
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
+          
+          // Reset all words
+          allWords.forEach(word => {
+            gsap.set(word, { opacity: 0, filter: 'blur(10px)', y: 10 });
+          });
+          
+          // Reset elements
+          gsap.set(photoCircle, { opacity: 0, scale: 0.8 });
+          gsap.set(modalName, { opacity: 0, y: 20 });
+          gsap.set(modalRole, { opacity: 0, y: 20 });
+          gsap.set(modalStoryTitle, { opacity: 0, y: 20 });
+          gsap.set(background, { opacity: 0 });
+          
+          // Re-enable Lenis smooth scroll
+          if (typeof lenis !== 'undefined') {
+            lenis.start();
+          }
         }
-        
-        // Show modal
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+      });
+      
+      tl.to(allWords, { opacity: 0, filter: 'blur(10px)', duration: 0.2, ease: 'power2.in' })
+        .to([modalName, modalRole, modalStoryTitle], { opacity: 0, y: -20, duration: 0.3, ease: 'power2.in' }, '-=0.1')
+        .to(photoCircle, { scale: 0.8, opacity: 0, duration: 0.4, ease: 'power3.in' }, '-=0.2')
+        .to(closeBtn, { opacity: 0, scale: 0.8, duration: 0.3, ease: 'power2.in' }, '-=0.3')
+        .to(background, { opacity: 0, duration: 0.4, ease: 'power2.in' }, '-=0.2');
+    };
+    
+    // Event listeners
+    cards.forEach((card) => {
+      card.addEventListener('click', () => {
+        const person = card.getAttribute('data-person');
+        if (person) {
+          openModal(person, card);
+        }
       });
     });
     
-    // Close modal functionality
-    const closeModal = () => {
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
-    };
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (background) background.addEventListener('click', closeModal);
+    if (modalContent) modalContent.addEventListener('click', closeModal);
     
-    // Close on button click
-    closeBtn?.addEventListener('click', closeModal);
-    
-    // Close on escape key
+    // Close on ESC key
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && modal.classList.contains('active')) {
         closeModal();
       }
     });
-    
-    // Close on background click
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
-    });
   };
   
-  // Initialize bridal party modal
-  initBridalPartyModal();
+  initWeddingPartyModal();
+  
+  // ============================================
+  // WEDDING PARTY POLAROID ANIMATIONS
+  // ============================================
+  
+  const initWeddingPartyAnimations = () => {
+    const cards = document.querySelectorAll('.wedding-party-card');
+    const bgText = document.querySelector('.wedding-party__bg-text');
+    
+    if (typeof gsap === 'undefined') return;
+    
+    // Animate background text with Splitting.js
+    if (bgText && typeof Splitting !== 'undefined') {
+      Splitting({ target: bgText, by: 'words' });
+      
+      requestAnimationFrame(() => {
+        const words = bgText.querySelectorAll('.word');
+        
+        if (words.length > 0) {
+          gsap.fromTo(words,
+            { opacity: 0, filter: 'blur(10px)', y: 30 },
+            {
+              opacity: 1,
+              filter: 'blur(0px)',
+              y: 0,
+              duration: 0.8,
+              ease: 'power2.out',
+              stagger: 0.05,
+              scrollTrigger: {
+                trigger: '.section--wedding-party',
+                start: 'top 80%',
+                end: 'bottom top',
+                toggleActions: 'play none none reverse',
+                markers: false
+              }
+            }
+          );
+        }
+      });
+      
+      // Parallax for background text
+      gsap.to(bgText, {
+        y: -100,
+        scrollTrigger: {
+          trigger: '.section--wedding-party',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+          markers: false
+        }
+      });
+    }
+    
+    // Animate cards
+    if (cards.length > 0) {
+      cards.forEach((card, index) => {
+        // Blur fade-in animation on scroll into view
+        gsap.to(card, {
+          opacity: 1,
+          filter: 'blur(0px)',
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            end: 'top 60%',
+            toggleActions: 'play none none none',
+            markers: false
+          }
+        });
+        
+        // Continuous floating animation - only x and rotation, no y conflict
+        const floatX = gsap.utils.random(-15, 15);
+        const floatRotation = gsap.utils.random(-2, 2);
+        const floatDuration = gsap.utils.random(4, 6);
+        
+        gsap.to(card, {
+          x: floatX,
+          rotation: floatRotation,
+          repeat: -1,
+          yoyo: true,
+          duration: floatDuration,
+          ease: 'sine.inOut',
+          delay: index * 0.3
+        });
+        
+        // Separate y-axis floating (independent timeline)
+        const floatY = gsap.utils.random(20, 35);
+        const floatYDuration = gsap.utils.random(5, 7);
+        
+        gsap.to(card, {
+          y: floatY,
+          repeat: -1,
+          yoyo: true,
+          duration: floatYDuration,
+          ease: 'sine.inOut',
+          delay: index * 0.2
+        });
+        
+        // Disable parallax to prevent conflict
+        // The floating animation provides enough movement
+      });
+    }
+  };
 
   const parallaxElements = document.querySelectorAll('[data-parallax]');
 
@@ -972,7 +1318,7 @@
       }, 50);
     };
 
-    let currentTitleText = 'BRIDAL PARTY';
+    let currentTitleText = 'WEDDING PARTY';
     let hasChangedToGroomsmen = false;
     let hasChangedToBridesmaids = false;
 
@@ -999,7 +1345,7 @@
         let opacity, scale, blur, translateY;
         const centerToTop = -(windowHeight * 0.5 - 60);
         
-        // Phase 1: BRIDAL PARTY intro (0-33%)
+        // Phase 1: WEDDING PARTY intro (0-33%)
         if (overallProgress < 0.15) {
           // Fade in
           const fadeInProgress = overallProgress / 0.15;
@@ -1008,8 +1354,8 @@
           blur = (1 - fadeInProgress) * 20;
           translateY = 0;
           
-          if (titleText && titleText.textContent !== 'BRIDAL PARTY') {
-            titleText.textContent = 'BRIDAL PARTY';
+          if (titleText && titleText.textContent !== 'WEDDING PARTY') {
+            titleText.textContent = 'WEDDING PARTY';
             hasChangedToGroomsmen = false;
             hasChangedToBridesmaids = false;
           }
@@ -1180,7 +1526,7 @@
       nav: {
         home: 'HOME',
         rsvp: 'RSVP',
-        bridal_party: 'BRIDAL PARTY',
+        wedding_party: 'WEDDING PARTY',
         accommodations: 'ACCOMMODATIONS',
         faq: 'FAQ'
       },
@@ -1190,8 +1536,8 @@
         subtitle: 'Are Getting Married',
         cta: 'RSVP'
       },
-      bridal_party: {
-        title: 'BRIDAL PARTY',
+      wedding_party: {
+        title: 'WEDDING PARTY',
         desc: 'The people that will be here to celebrate it with us',
         member1: {
           name: 'Fabian Sanchez',
@@ -1317,14 +1663,12 @@
         desc: 'Let us know if you\'ll be able to make it'
       },
       accommodations: {
-        label: 'Where to fly in to:',
-        airport_label: 'AIRPORT',
-        airport_name: 'SAN DIEGO INTERNATIONAL AIRPORT (SAN)',
-        airport_address: '3225 N. HARBOR DRIVE, SAN DIEGO, CA 92101'
-      },
-      accommodations_stay: {
-        title: 'Where you can stay:',
-        desc: 'Here\'s a few places we recommend for you all to stay at, that\'s close to the venue',
+        fly_label: 'Where to fly in to:',
+        airport_title: 'Airport',
+        airport_name: 'San Diego International Airport (SAN)',
+        airport_address: '3225 N. Harbor Drive, San Diego, CA 92101',
+        stay_title: 'Where you can stay',
+        stay_desc: 'Here\'s a few places we recommend for you all to stay at, that\'s close to the venue',
         welk: {
           name: 'THE WELK RESORT',
           distance: '22 mins away',
@@ -1342,8 +1686,8 @@
         },
         airbnb: {
           name: 'AIRBNB',
-          distance: '22 mins away',
-          description: 'There are many vacation homes for rent on AirBnb in Fallbrook for proximity to the venue, which you can share with a few others.'
+          distance: 'Varies',
+          description: 'There are many vacation homes for rent on AirBnb in Fallbrook for proximity to the venue.'
         }
       },
       form: {
@@ -1360,7 +1704,7 @@
       nav: {
         home: 'INICIO',
         rsvp: 'RSVP',
-        bridal_party: 'FIESTA NUPCIAL',
+        wedding_party: 'FIESTA NUPCIAL',
         accommodations: 'ALOJAMIENTO',
         faq: 'PREGUNTAS'
       },
@@ -1370,7 +1714,7 @@
         subtitle: 'Se Casan',
         cta: 'RSVP'
       },
-      bridal_party: {
+      wedding_party: {
         title: 'FIESTA NUPCIAL',
         desc: 'Las personas que estarán aquí para celebrarlo con nosotros',
         member1: {
@@ -1497,14 +1841,12 @@
         desc: 'Háganos saber si podrá asistir'
       },
       accommodations: {
-        label: 'Dónde volar:',
-        airport_label: 'AEROPUERTO',
-        airport_name: 'AEROPUERTO INTERNACIONAL DE SAN DIEGO (SAN)',
-        airport_address: '3225 N. HARBOR DRIVE, SAN DIEGO, CA 92101'
-      },
-      accommodations_stay: {
-        title: 'Dónde pueden hospedarse:',
-        desc: 'Aquí hay algunos lugares que recomendamos para hospedarse, cerca del lugar',
+        fly_label: 'Dónde volar:',
+        airport_title: 'Aeropuerto',
+        airport_name: 'Aeropuerto Internacional de San Diego (SAN)',
+        airport_address: '3225 N. Harbor Drive, San Diego, CA 92101',
+        stay_title: 'Dónde hospedarse',
+        stay_desc: 'Aquí hay algunos lugares que recomendamos para hospedarse, cerca del lugar',
         welk: {
           name: 'THE WELK RESORT',
           distance: '22 minutos',
@@ -1522,8 +1864,8 @@
         },
         airbnb: {
           name: 'AIRBNB',
-          distance: '22 minutos',
-          description: 'Hay muchas casas de vacaciones para alquilar en AirBnb en Fallbrook cerca del lugar, que puedes compartir con otros.'
+          distance: 'Varía',
+          description: 'Hay muchas casas de vacaciones para alquilar en AirBnb en Fallbrook cerca del lugar.'
         }
       },
       form: {
@@ -1588,5 +1930,155 @@
     updateTranslations(savedLang);
   }
   */
+
+  // ============================================
+  // NAVIGATION ACTIVE STATE & SCROLL SPY
+  // ============================================
+  const initNavigationActiveState = () => {
+    const navLinks = document.querySelectorAll('.site-nav__links a');
+    const sections = document.querySelectorAll('section[id]');
+    const siteHeader = document.querySelector('.site-header');
+    
+    if (!navLinks.length || !sections.length) return;
+    
+    // Sections with dark purple background
+    const darkSections = document.querySelectorAll('.section--rsvp, .section--accommodations');
+    console.log('Dark sections found:', darkSections.length);
+    darkSections.forEach(section => {
+      console.log('- Dark section:', section.id || section.className);
+    });
+    
+    // Function to update active state
+    const updateActiveState = (targetHref) => {
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === targetHref) {
+          link.classList.add('active');
+        }
+      });
+    };
+    
+    // Click handler for nav links
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        
+        // Only handle section links (not external or homepage)
+        if (href && href.startsWith('#') && href !== '#') {
+          e.preventDefault();
+          
+          // Update active state
+          updateActiveState(href);
+          
+          // Smooth scroll to section
+          const targetSection = document.querySelector(href);
+          if (targetSection) {
+            if (typeof lenis !== 'undefined') {
+              lenis.scrollTo(targetSection, {
+                offset: -100,
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+              });
+            } else {
+              targetSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }
+        } else if (href === '#' || href === '') {
+          e.preventDefault();
+          updateActiveState('#');
+          
+          // Scroll to top
+          if (typeof lenis !== 'undefined') {
+            lenis.scrollTo(0, {
+              duration: 1.2,
+              easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+            });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }
+      });
+    });
+    
+    // Check if header is over dark sections
+    const updateHeaderTheme = () => {
+      if (!siteHeader) return;
+      
+      const headerRect = siteHeader.getBoundingClientRect();
+      const headerMiddle = headerRect.top + (headerRect.height / 2);
+      let isOverDarkSection = false;
+      
+      darkSections.forEach(section => {
+        const sectionRect = section.getBoundingClientRect();
+        
+        // Check if header's middle point is within the dark section
+        if (headerMiddle >= sectionRect.top && headerMiddle <= sectionRect.bottom) {
+          isOverDarkSection = true;
+          console.log('Header over dark section:', section.id || section.className);
+        }
+      });
+      
+      // Toggle inverted class
+      if (isOverDarkSection) {
+        if (!siteHeader.classList.contains('inverted')) {
+          console.log('✨ Adding inverted class to header');
+          siteHeader.classList.add('inverted');
+        }
+      } else {
+        if (siteHeader.classList.contains('inverted')) {
+          console.log('✨ Removing inverted class from header');
+          siteHeader.classList.remove('inverted');
+        }
+      }
+    };
+    
+    // Scroll spy - update active state based on scroll position
+    const handleScrollSpy = () => {
+      let currentSection = '';
+      const scrollPosition = window.scrollY + 200; // Offset for better triggering
+      
+      // Check if we're at the very top
+      if (window.scrollY < 100) {
+        currentSection = '#';
+      } else {
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.offsetHeight;
+          
+          if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+            currentSection = '#' + section.getAttribute('id');
+          }
+        });
+      }
+      
+      if (currentSection) {
+        updateActiveState(currentSection);
+      }
+      
+      // Update header theme based on dark sections
+      updateHeaderTheme();
+    };
+    
+    // Throttle scroll spy for performance
+    let scrollSpyTimeout;
+    const throttledScrollSpy = () => {
+      if (scrollSpyTimeout) return;
+      scrollSpyTimeout = setTimeout(() => {
+        handleScrollSpy();
+        scrollSpyTimeout = null;
+      }, 100);
+    };
+    
+    // Listen to scroll events
+    window.addEventListener('scroll', throttledScrollSpy);
+    
+    // Initial check
+    handleScrollSpy();
+    updateHeaderTheme();
+    
+    console.log('✨ Navigation active state initialized');
+  };
+  
+  initNavigationActiveState();
 })();
 

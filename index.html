@@ -7,10 +7,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Scheherazade+New:wght@400;700&family=Playfair+Display:wght@400;600;700&family=Roboto:wght@300;400;500;800;900&family=Verdana:wght@700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Work+Sans:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=DM+Serif+Text:ital@0;1&family=Scheherazade+New:wght@400;700&family=Playfair+Display:wght@400;600;700&family=Verdana:wght@700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Work+Sans:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/css/styles.css" />
+    
+    <!-- Animation Libraries -->
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    
+    <!-- GSAP Core & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    
+    <!-- Splitting.js for text animations -->
+    <script src="https://unpkg.com/splitting@1.0.6/dist/splitting.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/splitting@1.0.6/dist/splitting.css" />
   </head>
   <body>
     <!-- Sticky Header -->
@@ -30,7 +42,7 @@
             <ul class="site-nav__links">
               <li><a href="#" class="active" data-i18n="nav.home">HOME</a></li>
               <li><a href="#rsvp" data-i18n="nav.rsvp">RSVP</a></li>
-              <li><a href="#bridal-party" data-i18n="nav.bridal_party">BRIDAL PARTY</a></li>
+              <li><a href="#wedding-party" data-i18n="nav.wedding_party">WEDDING PARTY</a></li>
               <li><a href="#accommodations" data-i18n="nav.accommodations">ACCOMMODATIONS</a></li>
               <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
             </ul>
@@ -42,116 +54,80 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero-new">
-      <!-- Polaroid Stack -->
-      <div class="polaroid-stack">
-        <!-- Polaroid 1 - Back far left -->
-        <div class="polaroid polaroid-1" data-polaroid="1">
-          <div class="polaroid__frame">
-            <div class="polaroid__photo">
-              <img src="assets/images/polaroids/polaroid-3.png" alt="Junior and Shaira">
-            </div>
+    <section class="hero">
+      <!-- Polaroids (Behind text) -->
+      <div class="hero__polaroids" id="polaroidStack">
+        <div class="hero__polaroid" data-index="0" data-scroll-speed="0.3">
+          <div class="hero__polaroid-frame">
+            <img src="assets/images/polaroids/polaroid-0.png" alt="Memory">
           </div>
         </div>
-
-        <!-- Polaroid 2 - Back left -->
-        <div class="polaroid polaroid-2" data-polaroid="2">
-          <div class="polaroid__frame">
-            <div class="polaroid__photo">
-              <img src="assets/images/polaroids/polaroid-7.png" alt="Junior and Shaira">
-            </div>
+        <div class="hero__polaroid" data-index="1" data-scroll-speed="0.5">
+          <div class="hero__polaroid-frame">
+            <img src="assets/images/polaroids/polaroid-1.png" alt="Memory">
           </div>
         </div>
-
-        <!-- Polaroid 3 - Back center-left -->
-        <div class="polaroid polaroid-3" data-polaroid="3">
-          <div class="polaroid__frame">
-            <div class="polaroid__photo">
-              <img src="assets/images/polaroids/polaroid-1.png" alt="Junior and Shaira">
-            </div>
+        <div class="hero__polaroid" data-index="2" data-scroll-speed="0.7">
+          <div class="hero__polaroid-frame">
+            <img src="assets/images/polaroids/polaroid-2.png" alt="Memory">
           </div>
         </div>
-
-        <!-- Polaroid 4 - Center (Main) -->
-        <div class="polaroid polaroid-4" data-polaroid="4">
-          <div class="polaroid__frame">
-            <div class="polaroid__photo">
-              <img src="assets/images/polaroids/polaroid-5.png" alt="Junior and Shaira">
-            </div>
+        <div class="hero__polaroid" data-index="3" data-scroll-speed="0.4">
+          <div class="hero__polaroid-frame">
+            <img src="assets/images/polaroids/polaroid-3.png" alt="Memory">
           </div>
         </div>
-
-        <!-- Polaroid 5 - Back center-right -->
-        <div class="polaroid polaroid-5" data-polaroid="5">
-          <div class="polaroid__frame">
-            <div class="polaroid__photo">
-              <img src="assets/images/polaroids/polaroid-9.png" alt="Junior and Shaira">
-            </div>
+        <div class="hero__polaroid" data-index="4" data-scroll-speed="0.6">
+          <div class="hero__polaroid-frame">
+            <img src="assets/images/polaroids/polaroid-4.png" alt="Memory">
           </div>
         </div>
-
-        <!-- Polaroid 6 - Back right -->
-        <div class="polaroid polaroid-6" data-polaroid="6">
-          <div class="polaroid__frame">
-            <div class="polaroid__photo">
-              <img src="assets/images/polaroids/polaroid-2.png" alt="Junior and Shaira">
-            </div>
+        <div class="hero__polaroid" data-index="5" data-scroll-speed="0.8">
+          <div class="hero__polaroid-frame">
+            <img src="assets/images/polaroids/polaroid-5.png" alt="Memory">
           </div>
         </div>
-
-        <!-- Polaroid 7 - Back far right -->
-        <div class="polaroid polaroid-7" data-polaroid="7">
-          <div class="polaroid__frame">
-            <div class="polaroid__photo">
-              <img src="assets/images/polaroids/polaroid-6.png" alt="Junior and Shaira">
-            </div>
+        <div class="hero__polaroid" data-index="6" data-scroll-speed="0.35">
+          <div class="hero__polaroid-frame">
+            <img src="assets/images/polaroids/polaroid-6.png" alt="Memory">
           </div>
         </div>
-
-        <!-- Polaroid 8 - Front left -->
-        <div class="polaroid polaroid-8" data-polaroid="8">
-          <div class="polaroid__frame">
-            <div class="polaroid__photo">
-              <img src="assets/images/polaroids/polaroid-0.png" alt="Junior and Shaira">
-            </div>
+        <div class="hero__polaroid" data-index="7" data-scroll-speed="0.55">
+          <div class="hero__polaroid-frame">
+            <img src="assets/images/polaroids/polaroid-7.png" alt="Memory">
           </div>
         </div>
-
-        <!-- Polaroid 9 - Front center -->
-        <div class="polaroid polaroid-9" data-polaroid="9">
-          <div class="polaroid__frame">
-            <div class="polaroid__photo">
-              <img src="assets/images/polaroids/polaroid-4.png" alt="Junior and Shaira">
-            </div>
+        <div class="hero__polaroid" data-index="8" data-scroll-speed="0.75">
+          <div class="hero__polaroid-frame">
+            <img src="assets/images/polaroids/polaroid-8.png" alt="Memory">
           </div>
         </div>
-
-        <!-- Polaroid 10 - Front right -->
-        <div class="polaroid polaroid-10" data-polaroid="10">
-          <div class="polaroid__frame">
-            <div class="polaroid__photo">
-              <img src="assets/images/polaroids/polaroid-8.png" alt="Junior and Shaira">
-            </div>
+        <div class="hero__polaroid" data-index="9" data-scroll-speed="0.45">
+          <div class="hero__polaroid-frame">
+            <img src="assets/images/polaroids/polaroid-9.png" alt="Memory">
           </div>
         </div>
-      </div>
-
-      <!-- Hero Title -->
-      <div class="hero-new__content">
-        <h1 class="hero-new__title" data-i18n="hero.title">JUNIOR & SHAIRA</h1>
       </div>
       
-      <div class="hero-new__date-badge">
-        <span>03</span>
-        <span>21</span>
-        <span>26</span>
+      <!-- Hero Title (In front) -->
+      <div class="hero__title-wrapper">
+        <h1 class="hero__title" id="heroTitle">
+          <span class="hero__title-text">JUNIOR & SHAIRA</span>
+        </h1>
+      </div>
+      
+      <!-- Date Badge (Bottom Right) -->
+      <div class="hero__date">
+        <div class="hero__date-number">03</div>
+        <div class="hero__date-number">21</div>
+        <div class="hero__date-number">26</div>
       </div>
     </section>
 
     <main>
       <section class="section section--rsvp" id="rsvp">
         <div class="container section__content">
-          <h2 data-i18n="rsvp.title">RSVP</h2>
+          <h2 data-splitting data-i18n="rsvp.title">RSVP</h2>
           <p data-i18n="rsvp.desc">
             Let us know if you'll be able to make it
           </p>
@@ -235,246 +211,179 @@
         </div>
       </section>
 
-      <!-- Bridal Party Section -->
-      <section class="section section--bridal-party" id="bridal-party">
-        <div class="container section__content">
-          <h2 data-i18n="bridal_party.title">BRIDAL PARTY</h2>
-          <p data-i18n="bridal_party.desc">
-            The people that will be here to celebrate it with us
-          </p>
+      <!-- Wedding Party Section -->
+      <section class="section section--wedding-party" id="wedding-party">
+        <div class="container">
+          <div class="wedding-party__header">
+            <h2>WEDDING PARTY</h2>
+            <p>The people that will be here to celebrate it with us</p>
+          </div>
+        </div>
+        
+        <!-- Background Text -->
+        <div class="wedding-party__bg-text" data-speed="0.3" data-splitting>
+          SOME OF OUR CLOSE FRIENDS
+        </div>
+        
+        <!-- Cards Grid -->
+        <div class="wedding-party__cards">
+          <!-- TOP ROW - BRIDESMAIDS -->
           
-          <div class="bridal-party-grid">
-            <!-- Member 1 -->
-            <div class="bridal-party-member" 
-                 data-member-name="Fabian Sanchez" 
-                 data-member-role="Groomsmen / Officiant"
-                 data-member-quote-label="How he met the groom"
-                 data-member-quote="He pulled in with his GOLF GTI at a starbucks one day">
-              <div class="bridal-party-member__avatar">
-                <div class="bridal-party-member__placeholder"></div>
-              </div>
-              <div class="bridal-party-member__info">
-                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member1.name">Fabian Sanchez</h3>
-                <p class="bridal-party-member__role" data-i18n="bridal_party.member1.role">Groomsmen / Officiant</p>
-              </div>
+          <!-- Card 1 - Alanna -->
+          <div class="wedding-party-card" data-speed="0.5" data-person="alanna">
+            <div class="wedding-party-card__photo-circle">
+              <img src="assets/images/bridalparty/Alanna.png" alt="Alanna Narvasa">
             </div>
-
-            <!-- Member 2 -->
-            <div class="bridal-party-member"
-                 data-member-name="Jennie Yoon"
-                 data-member-role="Bridesmaid"
-                 data-member-quote-label="How she met the bride"
-                 data-member-quote="They met at a coffee shop and bonded over their love for design">
-              <div class="bridal-party-member__avatar">
-                <div class="bridal-party-member__placeholder"></div>
-              </div>
-              <div class="bridal-party-member__info">
-                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member2.name">Jennie Yoon</h3>
-                <p class="bridal-party-member__role" data-i18n="bridal_party.member2.role">Bridesmaid</p>
-              </div>
+            <h3 class="wedding-party-card__name">Alanna Narvasa</h3>
+            <p class="wedding-party-card__role">Bridesmaid</p>
+          </div>
+          
+          <!-- Card 2 - Jennie -->
+          <div class="wedding-party-card" data-speed="0.7" data-person="jennie">
+            <div class="wedding-party-card__photo-circle">
+              <img src="assets/images/bridalparty/jennie.png" alt="Jennie Yoon">
             </div>
-
-            <!-- Member 3 -->
-            <div class="bridal-party-member"
-                 data-member-name="Anthony Castro"
-                 data-member-role="Groomsmen"
-                 data-member-quote-label="How he met the groom"
-                 data-member-quote="Best friends since college, always there for each other">
-              <div class="bridal-party-member__avatar">
-                <div class="bridal-party-member__placeholder"></div>
-              </div>
-              <div class="bridal-party-member__info">
-                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member3.name">Anthony Castro</h3>
-                <p class="bridal-party-member__role" data-i18n="bridal_party.member3.role">Groomsmen</p>
-              </div>
+            <h3 class="wedding-party-card__name">Jennie Yoon</h3>
+            <p class="wedding-party-card__role">Bridesmaid</p>
+          </div>
+          
+          <!-- Card 3 - Hannah -->
+          <div class="wedding-party-card" data-speed="0.6" data-person="hannah">
+            <div class="wedding-party-card__photo-circle">
+              <img src="assets/images/bridalparty/Hannah.png" alt="Hannah De Asis">
             </div>
-
-            <!-- Member 4 -->
-            <div class="bridal-party-member"
-                 data-member-name="Hannah Lindsey"
-                 data-member-role="Bridesmaid"
-                 data-member-quote-label="How she met the bride"
-                 data-member-quote="Childhood friends who grew up together in the same neighborhood">
-              <div class="bridal-party-member__avatar">
-                <div class="bridal-party-member__placeholder"></div>
-              </div>
-              <div class="bridal-party-member__info">
-                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member4.name">Hannah Lindsey</h3>
-                <p class="bridal-party-member__role" data-i18n="bridal_party.member4.role">Bridesmaid</p>
-              </div>
+            <h3 class="wedding-party-card__name">Hannah De Asis</h3>
+            <p class="wedding-party-card__role">Bridesmaid</p>
+          </div>
+          
+          <!-- Card 4 - Kimberly -->
+          <div class="wedding-party-card" data-speed="0.8" data-person="kimberly">
+            <div class="wedding-party-card__photo-circle">
+              <img src="assets/images/bridalparty/Kimberly.png" alt="Kimberly Vasadre">
             </div>
-
-            <!-- Member 5 -->
-            <div class="bridal-party-member"
-                 data-member-name="Eduardo Bazan"
-                 data-member-role="Groomsmen"
-                 data-member-quote-label="How he met the groom"
-                 data-member-quote="They bonded over their shared passion for cars and late-night adventures">
-              <div class="bridal-party-member__avatar">
-                <div class="bridal-party-member__placeholder"></div>
-              </div>
-              <div class="bridal-party-member__info">
-                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member5.name">Eduardo Bazan</h3>
-                <p class="bridal-party-member__role" data-i18n="bridal_party.member5.role">Groomsmen</p>
-              </div>
+            <h3 class="wedding-party-card__name">Kimberly Vasadre</h3>
+            <p class="wedding-party-card__role">Bridesmaid</p>
+          </div>
+          
+          <!-- BOTTOM ROW - GROOMSMEN -->
+          
+          <!-- Card 5 - Fabian -->
+          <div class="wedding-party-card" data-speed="0.55" data-person="fabian">
+            <div class="wedding-party-card__photo-circle">
+              <img src="assets/images/bridalparty/fabian.png" alt="Fabian Sanchez">
             </div>
-
-            <!-- Member 6 -->
-            <div class="bridal-party-member"
-                 data-member-name="Alana"
-                 data-member-role="Bridesmaid"
-                 data-member-quote-label="How she met the bride"
-                 data-member-quote="College roommates who became inseparable best friends">
-              <div class="bridal-party-member__avatar">
-                <div class="bridal-party-member__placeholder"></div>
-              </div>
-              <div class="bridal-party-member__info">
-                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member6.name">Alana</h3>
-                <p class="bridal-party-member__role" data-i18n="bridal_party.member6.role">Bridesmaid</p>
-              </div>
+            <h3 class="wedding-party-card__name">Fabian Sanchez</h3>
+            <p class="wedding-party-card__role">Groomsman</p>
+          </div>
+          
+          <!-- Card 6 - Anthony -->
+          <div class="wedding-party-card" data-speed="0.75" data-person="anthony">
+            <div class="wedding-party-card__photo-circle">
+              <img src="assets/images/bridalparty/anthony.png" alt="Anthony Castro">
             </div>
-
-            <!-- Member 7 -->
-            <div class="bridal-party-member"
-                 data-member-name="Juan Carlos Avila"
-                 data-member-role="Groomsmen"
-                 data-member-quote-label="How he met the groom"
-                 data-member-quote="Lifelong friends since elementary school, brothers from another mother">
-              <div class="bridal-party-member__avatar">
-                <div class="bridal-party-member__placeholder"></div>
-              </div>
-              <div class="bridal-party-member__info">
-                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member7.name">Juan Carlos Avila</h3>
-                <p class="bridal-party-member__role" data-i18n="bridal_party.member7.role">Groomsmen</p>
-              </div>
+            <h3 class="wedding-party-card__name">Anthony Castro</h3>
+            <p class="wedding-party-card__role">Groomsman</p>
+          </div>
+          
+          <!-- Card 7 - Eddie -->
+          <div class="wedding-party-card" data-speed="0.65" data-person="eddie">
+            <div class="wedding-party-card__photo-circle">
+              <img src="assets/images/bridalparty/Eddie.png" alt="Eddie Bazan">
             </div>
-
-            <!-- Member 8 -->
-            <div class="bridal-party-member"
-                 data-member-name="Kim"
-                 data-member-role="Bridesmaid"
-                 data-member-quote-label="How she met the bride"
-                 data-member-quote="Work colleagues turned best friends who support each other through everything">
-              <div class="bridal-party-member__avatar">
-                <div class="bridal-party-member__placeholder"></div>
-              </div>
-              <div class="bridal-party-member__info">
-                <h3 class="bridal-party-member__name" data-i18n="bridal_party.member8.name">Kim</h3>
-                <p class="bridal-party-member__role" data-i18n="bridal_party.member8.role">Bridesmaid</p>
-              </div>
+            <h3 class="wedding-party-card__name">Eddie Bazan</h3>
+            <p class="wedding-party-card__role">Groomsman</p>
+          </div>
+          
+          <!-- Card 8 - JC -->
+          <div class="wedding-party-card" data-speed="0.85" data-person="jc">
+            <div class="wedding-party-card__photo-circle">
+              <img src="assets/images/bridalparty/JC.png" alt="JC Avila">
             </div>
+            <h3 class="wedding-party-card__name">JC Avila</h3>
+            <p class="wedding-party-card__role">Groomsman</p>
           </div>
         </div>
       </section>
-
-      <!-- Bridal Party Modal Overlay -->
-      <div class="bridal-party-modal" id="bridal-party-modal">
-        <button class="bridal-party-modal__close" aria-label="Close">
-          <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line x1="2" y1="2" x2="23" y2="23" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            <line x1="23" y1="2" x2="2" y2="23" stroke="white" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </button>
-        
-        <div class="bridal-party-modal__content">
-          <div class="bridal-party-modal__header">
-            <div class="bridal-party-modal__avatar">
-              <div class="bridal-party-modal__placeholder"></div>
-            </div>
-            <div class="bridal-party-modal__info">
-              <h3 class="bridal-party-modal__name"></h3>
-              <p class="bridal-party-modal__role"></p>
-            </div>
-          </div>
-          
-          <div class="bridal-party-modal__body">
-            <p class="bridal-party-modal__quote-label"></p>
-            <p class="bridal-party-modal__quote"></p>
-          </div>
-        </div>
-      </div>
 
       <!-- Accommodations Section -->
       <section class="section section--accommodations" id="accommodations">
-        <div class="container accommodations-content">
-          <div class="accommodations-left">
-            <p class="accommodations-label" data-typewriter data-i18n="accommodations.label">Where to fly in to:</p>
-          </div>
-          <div class="accommodations-right">
-            <div class="accommodations-info" data-typewriter-delay>
-              <p class="accommodations-airport" data-i18n="accommodations.airport_label">AIRPORT</p>
-              <p class="accommodations-name" data-i18n="accommodations.airport_name">SAN DIEGO INTERNATIONAL AIRPORT (SAN)</p>
-              <p class="accommodations-address" data-i18n="accommodations.airport_address">3225 N. HARBOR DRIVE, SAN DIEGO, CA 92101</p>
+        <!-- Background Watermark Text -->
+        <div class="accommodations__bg-text" data-speed="0.5">
+          <span>Places to<br>stay<br>nearby</span>
+        </div>
+
+        <div class="container">
+          <!-- Airport Information -->
+          <div class="accommodations__airport">
+            <div class="accommodations__airport-left">
+              <p class="accommodations__airport-label" data-splitting data-i18n="accommodations.fly_label">Where to fly in to:</p>
+            </div>
+            <div class="accommodations__airport-right">
+              <p class="accommodations__airport-title" data-splitting data-i18n="accommodations.airport_title">Airport</p>
+              <p class="accommodations__airport-name" data-splitting data-i18n="accommodations.airport_name">San Diego International Airport (SAN)</p>
+              <p class="accommodations__airport-address" data-splitting data-i18n="accommodations.airport_address">3225 N. Harbor Drive, San Diego, CA 92101</p>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- Accommodations Stay Section -->
-      <section class="section section--accommodations-stay" id="accommodations-stay">
-        <div class="container accommodations-stay-content">
-          <div class="accommodations-stay-left">
-            <h3 class="accommodations-stay-title" data-i18n="accommodations_stay.title">Where you can stay:</h3>
-            <p class="accommodations-stay-desc" data-i18n="accommodations_stay.desc">Here's a few places we recommend for you all to stay at, that's close to the venue</p>
+          <!-- Accommodations Stay -->
+          <div class="accommodations__header">
+            <h2 data-splitting data-i18n="accommodations.stay_title">Where you can stay</h2>
+            <p data-splitting data-i18n="accommodations.stay_desc">Here's a few places we recommend for you all to stay at, that's close to the venue</p>
           </div>
-          <div class="accommodations-stay-right">
-            <div class="accommodations-stay-grid">
-              <!-- Card 1 -->
-              <div class="stay-card" data-stay-card>
-                <div class="stay-card__image">
-                  <img src="assets/images/acom01.png" alt="The Welk Resort">
-                </div>
-                <div class="stay-card__content">
-                  <h4 class="stay-card__name" data-i18n="accommodations_stay.welk.name">THE WELK RESORT</h4>
-                  <p class="stay-card__distance" data-i18n="accommodations_stay.welk.distance">22 mins away</p>
-                  <p class="stay-card__description" data-i18n="accommodations_stay.welk.description">A family-friendly resort with a number of pools, golf courses, and a spa, among other amenities.</p>
-                </div>
-              </div>
+        </div>
 
-              <!-- Card 2 -->
-              <div class="stay-card" data-stay-card>
-                <div class="stay-card__image">
-                  <img src="assets/images/acom02.png" alt="Pala Mesa Resort">
-                </div>
-                <div class="stay-card__content">
-                  <h4 class="stay-card__name" data-i18n="accommodations_stay.pala.name">PALA MESA RESORT</h4>
-                  <p class="stay-card__distance" data-i18n="accommodations_stay.pala.distance">15 mins away</p>
-                  <p class="stay-card__description" data-i18n="accommodations_stay.pala.description">Resort known for its golf course. Closest to the venue but is farther from other things to do.</p>
-                </div>
+        <!-- Cards outside container to extend off edges -->
+        <div class="accommodations__cards">
+            <!-- Card 1 - The Welk Resort (Large) -->
+            <div class="accommodation-card accommodation-card--1" data-speed="0.5">
+              <img src="assets/images/acom01.png" alt="The Welk Resort" class="accommodation-card__bg">
+              <div class="accommodation-card__gradient"></div>
+              <div class="accommodation-card__content">
+                <h3 class="accommodation-card__name" data-i18n="accommodations.welk.name">THE WELK RESORT</h3>
+                <p class="accommodation-card__distance" data-i18n="accommodations.welk.distance">22 mins away</p>
+                <p class="accommodation-card__description" data-i18n="accommodations.welk.description">A family-friendly resort with a number of pools, golf courses, and a spa, among other amenities.</p>
               </div>
+            </div>
 
-              <!-- Card 3 -->
-              <div class="stay-card" data-stay-card>
-                <div class="stay-card__image">
-                  <img src="assets/images/acom03.png" alt="Springhill Suites">
-                </div>
-                <div class="stay-card__content">
-                  <h4 class="stay-card__name" data-i18n="accommodations_stay.springhill.name">SPRINGHILL SUITES</h4>
-                  <p class="stay-card__distance" data-i18n="accommodations_stay.springhill.distance">22 mins away</p>
-                  <p class="stay-card__description" data-i18n="accommodations_stay.springhill.description">Hotel right on the coast, steps away from the beach. Located in lively downtown Oceanside.</p>
-                </div>
+            <!-- Card 2 - Pala Mesa Resort (Medium) -->
+            <div class="accommodation-card accommodation-card--2" data-speed="1.8">
+              <img src="assets/images/acom02.png" alt="Pala Mesa Resort" class="accommodation-card__bg">
+              <div class="accommodation-card__gradient"></div>
+              <div class="accommodation-card__content">
+                <h3 class="accommodation-card__name" data-i18n="accommodations.pala.name">PALA MESA RESORT</h3>
+                <p class="accommodation-card__distance" data-i18n="accommodations.pala.distance">15 mins away</p>
+                <p class="accommodation-card__description" data-i18n="accommodations.pala.description">Resort known for its golf course. Closest to the venue but is farther from other things to do.</p>
               </div>
+            </div>
 
-              <!-- Card 4 -->
-              <div class="stay-card" data-stay-card>
-                <div class="stay-card__image">
-                  <img src="assets/images/acom04.png" alt="Airbnb">
-                </div>
-                <div class="stay-card__content">
-                  <h4 class="stay-card__name" data-i18n="accommodations_stay.airbnb.name">AIRBNB</h4>
-                  <p class="stay-card__distance" data-i18n="accommodations_stay.airbnb.distance">22 mins away</p>
-                  <p class="stay-card__description" data-i18n="accommodations_stay.airbnb.description">There are many vacation homes for rent on AirBnb in Fallbrook for proximity to the venue, which you can share with a few others.</p>
-                </div>
+            <!-- Card 3 - Springhill Suites (Medium) -->
+            <div class="accommodation-card accommodation-card--3" data-speed="0.5">
+              <img src="assets/images/acom03.png" alt="Springhill Suites" class="accommodation-card__bg">
+              <div class="accommodation-card__gradient"></div>
+              <div class="accommodation-card__content">
+                <h3 class="accommodation-card__name" data-i18n="accommodations.springhill.name">SPRINGHILL SUITES</h3>
+                <p class="accommodation-card__distance" data-i18n="accommodations.springhill.distance">22 mins away</p>
+                <p class="accommodation-card__description" data-i18n="accommodations.springhill.description">Hotel right on the coast, steps away from the beach. Located in lively downtown Oceanside.</p>
+              </div>
+            </div>
+
+            <!-- Card 4 - Airbnb (Small) -->
+            <div class="accommodation-card accommodation-card--4" data-speed="1.8">
+              <img src="assets/images/acom04.png" alt="Airbnb" class="accommodation-card__bg">
+              <div class="accommodation-card__gradient"></div>
+              <div class="accommodation-card__content">
+                <h3 class="accommodation-card__name" data-i18n="accommodations.airbnb.name">AIRBNB</h3>
+                <p class="accommodation-card__distance" data-i18n="accommodations.airbnb.distance">Varies</p>
+                <p class="accommodation-card__description" data-i18n="accommodations.airbnb.description">There are many vacation homes for rent on AirBnb in Fallbrook for proximity to the venue.</p>
               </div>
             </div>
           </div>
-        </div>
       </section>
 
       <!-- FAQ Section -->
       <section class="section section--faq" id="faq">
         <div class="container section__content">
-          <h2 data-i18n="faq.title">FAQ</h2>
+          <h2 data-splitting data-i18n="faq.title">FAQ</h2>
           <p class="faq__desc" data-i18n="faq.desc">Answers to questions you may have</p>
           
           <div class="faq__list">
@@ -533,6 +442,25 @@
         </div>
       </section>
     </main>
+
+    <!-- Wedding Party Modal -->
+    <div id="weddingPartyModal" class="wedding-party-modal">
+      <div class="wedding-party-modal__background"></div>
+      <button class="wedding-party-modal__close" aria-label="Close modal">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="wedding-party-modal__content">
+        <div class="wedding-party-modal__photo-circle">
+          <img src="" alt="" class="wedding-party-modal__photo">
+        </div>
+        <h2 class="wedding-party-modal__name"></h2>
+        <p class="wedding-party-modal__role"></p>
+        <h3 class="wedding-party-modal__story-title">How they met the groom</h3>
+        <p class="wedding-party-modal__story-text" data-splitting></p>
+      </div>
+    </div>
 
     <script src="assets/js/main.js"></script>
   </body>

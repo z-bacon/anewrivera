@@ -31,10 +31,44 @@
 
 body {
   margin: 0;
-  font-family: 'Work Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text-color);
   background-color: var(--bg-color);
   line-height: 1.6;
+  overflow-x: hidden; /* Prevent horizontal scroll from animations */
+}
+
+/* Lenis Smooth Scroll */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Text Animation Characters */
+[data-splitting] .char {
+  display: inline-block;
+  will-change: opacity, filter, transform;
+  /* Initial state set by GSAP */
+}
+
+/* Parallax Elements */
+[data-speed] {
+  will-change: transform;
 }
 
 img {
@@ -55,7 +89,7 @@ a {
 }
 
 .eyebrow {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   font-size: 2.0rem;
@@ -100,7 +134,7 @@ a {
 
 /* Header - Fixed at top */
 .site-header {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -135,7 +169,7 @@ a {
 .site-header__rsvp-btn {
   background: #785fb1;
   color: white;
-  font-family: 'Verdana', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -217,7 +251,7 @@ a {
   gap: clamp(2rem, 4vw, 3.5rem);
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 1rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -240,8 +274,42 @@ a {
   color: #5e5e5e;
 }
 
-/* New Hero Section */
-.hero-new {
+/* Inverted state for dark backgrounds */
+.site-header.inverted .site-logo {
+  color: #c5adff;
+}
+
+.site-header.inverted .site-logo:hover {
+  color: #e8deff;
+}
+
+.site-header.inverted .site-nav__links a {
+  color: #c5adff;
+}
+
+.site-header.inverted .site-nav__links a:hover {
+  color: #e8deff;
+}
+
+.site-header.inverted .site-nav__links a.active {
+  color: #ffffff;
+}
+
+.site-header.inverted .site-header__rsvp-btn {
+  background: #c5adff;
+  color: #523e83;
+}
+
+.site-header.inverted .site-header__rsvp-btn:hover {
+  background: #e8deff;
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   HERO SECTION (REBUILT FROM SCRATCH)
+   ============================================ */
+
+.hero {
   position: relative;
   min-height: 100vh;
   display: flex;
@@ -252,292 +320,175 @@ a {
   padding-top: 8rem;
 }
 
-/* ============================================
-   POLAROID STACK
-   ============================================ */
+/* Polaroids Container */
+.hero__polaroids {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
 
-.polaroid-stack {
+/* Individual Polaroid - Floating Background State */
+.hero__polaroid {
+  position: absolute;
+  opacity: 0.2;
+  will-change: transform, opacity, filter;
+  cursor: pointer;
+  pointer-events: auto;
+  filter: blur(3px);
+  transition: z-index 0s;
+  transform-origin: center center;
+}
+
+.hero__polaroid.is-focused {
+  z-index: 100;
+  filter: blur(0px);
+  opacity: 1;
+}
+
+/* Polaroid Frame */
+.hero__polaroid-frame {
+  background: #ffffff;
+  padding: 12px 12px 36px 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+}
+
+.hero__polaroid-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Polaroid Positioning - Smaller & Spread Out Without Overlap */
+.hero__polaroid[data-index="0"] { 
+  width: 160px; 
+  top: 8%; 
+  left: 5%; 
+}
+
+.hero__polaroid[data-index="1"] { 
+  width: 140px; 
+  top: 12%; 
+  left: 28%; 
+}
+
+.hero__polaroid[data-index="2"] { 
+  width: 180px; 
+  top: 5%; 
+  right: 8%; 
+}
+
+.hero__polaroid[data-index="3"] { 
+  width: 150px; 
+  top: 42%; 
+  left: 8%; 
+}
+
+.hero__polaroid[data-index="4"] { 
+  width: 200px; 
+  top: 32%; 
+  left: 50%; 
+  transform: translateX(-50%); 
+}
+
+.hero__polaroid[data-index="5"] { 
+  width: 165px; 
+  top: 8%; 
+  right: 25%; 
+}
+
+.hero__polaroid[data-index="6"] { 
+  width: 155px; 
+  bottom: 18%; 
+  left: 6%; 
+}
+
+.hero__polaroid[data-index="7"] { 
+  width: 190px; 
+  bottom: 12%; 
+  left: 42%; 
+}
+
+.hero__polaroid[data-index="8"] { 
+  width: 160px; 
+  bottom: 20%; 
+  right: 10%; 
+}
+
+.hero__polaroid[data-index="9"] { 
+  width: 175px; 
+  bottom: 8%; 
+  right: 28%; 
+}
+
+.hero__polaroid-frame img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+/* Hero Title (In front of polaroids) */
+.hero__title-wrapper {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100%;
-  max-width: 1400px;
-  height: 700px;
-  pointer-events: none; /* Don't block other UI elements */
-  cursor: default;
-}
-
-.polaroid {
-  position: absolute;
-  opacity: 0;
-  transform-origin: center center;
-  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
-  will-change: transform, opacity;
-  transition: transform 0.15s ease-out; /* Smooth parallax movement */
-  pointer-events: none; /* Don't interfere with stack's mouse events */
-}
-
-/* Polaroid Frame Styling */
-.polaroid__frame {
-  background: #ffffff;
-  padding: 20px 20px 60px 20px;
-  border-radius: 4px;
-}
-
-.polaroid__photo {
-  width: 100%;
-  height: 100%;
-  background: #523e83;
-  position: relative;
-  overflow: hidden;
-}
-
-.polaroid__photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Individual Polaroid Sizes and Positions */
-
-/* Polaroid 1 - Small, back left */
-.polaroid-1 {
-  width: 320px;
-  height: 360px;
-  top: 35%;
-  left: 10%;
-  transform: rotate(-18.3deg) translateY(100px);
-  z-index: 1;
-}
-
-.polaroid-1 .polaroid__photo {
-  height: 280px;
-}
-
-/* Polaroid 2 - Small, back center-left */
-.polaroid-2 {
-  width: 320px;
-  height: 360px;
-  top: 20%;
-  left: 20%;
-  transform: rotate(15.8deg) translateY(100px);
-  z-index: 2;
-}
-
-.polaroid-2 .polaroid__photo {
-  height: 280px;
-}
-
-/* Polaroid 3 - Large, center (main photo) */
-.polaroid-3 {
-  width: 520px;
-  height: 590px;
-  top: 15%;
-  left: 50%;
-  transform: translateX(-50%) rotate(1.6deg) translateY(100px);
-  z-index: 5;
-}
-
-.polaroid-3 .polaroid__photo {
-  height: 440px;
-}
-
-/* Polaroid 4 - Medium, back right */
-.polaroid-4 {
-  width: 450px;
-  height: 520px;
-  top: 18%;
-  right: 10%;
-  transform: rotate(-20.8deg) translateY(100px);
-  z-index: 3;
-}
-
-.polaroid-4 .polaroid__photo {
-  height: 380px;
-}
-
-/* Polaroid 5 - Medium, front left */
-.polaroid-5 {
-  width: 490px;
-  height: 560px;
-  top: 18%;
-  left: 15%;
-  transform: rotate(14.6deg) translateY(100px);
-  z-index: 4;
-}
-
-.polaroid-5 .polaroid__photo {
-  height: 420px;
-}
-
-/* Polaroid 6 - Medium, front right */
-.polaroid-6 {
-  width: 450px;
-  height: 520px;
-  top: 25%;
-  right: 15%;
-  transform: rotate(20deg) translateY(100px);
-  z-index: 6;
-}
-
-.polaroid-6 .polaroid__photo {
-  height: 380px;
-}
-
-/* Polaroid 7 - Small, back far right */
-.polaroid-7 {
-  width: 340px;
-  height: 390px;
-  top: 15%;
-  right: 5%;
-  transform: rotate(-25deg) translateY(100px);
-  z-index: 1;
-}
-
-.polaroid-7 .polaroid__photo {
-  height: 300px;
-}
-
-/* Polaroid 8 - Medium, front left */
-.polaroid-8 {
-  width: 380px;
-  height: 440px;
-  bottom: 18%;
-  left: 8%;
-  transform: rotate(-12deg) translateY(100px);
-  z-index: 4;
-}
-
-.polaroid-8 .polaroid__photo {
-  height: 320px;
-}
-
-/* Polaroid 9 - Medium, front center */
-.polaroid-9 {
-  width: 420px;
-  height: 480px;
-  bottom: 15%;
-  left: 35%;
-  transform: rotate(8deg) translateY(100px);
-  z-index: 5;
-}
-
-.polaroid-9 .polaroid__photo {
-  height: 350px;
-}
-
-/* Polaroid 10 - Medium, front right */
-.polaroid-10 {
-  width: 390px;
-  height: 450px;
-  bottom: 20%;
-  right: 10%;
-  transform: rotate(-15deg) translateY(100px);
-  z-index: 4;
-}
-
-.polaroid-10 .polaroid__photo {
-  height: 330px;
-}
-
-/* Animation keyframes - Falling from above */
-@keyframes polaroidFallIn {
-  0% {
-    opacity: 0;
-    transform: var(--start-transform) translateY(-300px) scale(1.5);
-    filter: blur(12px) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
-  }
-  50% {
-    opacity: 1;
-    filter: blur(4px) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
-  }
-  70% {
-    transform: var(--start-transform) translateY(15px) scale(0.98);
-    filter: blur(1px) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
-  }
-  85% {
-    transform: var(--start-transform) translateY(-5px) scale(1.01);
-    filter: blur(0px) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
-  }
-  100% {
-    opacity: 1;
-    transform: var(--start-transform) translateY(0) scale(1);
-    filter: blur(0px) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
-  }
-}
-
-/* Applied animation classes */
-.polaroid.animate-in {
-  animation: polaroidFallIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-}
-
-/* Set CSS variables for each polaroid's rotation */
-.polaroid-1 { --start-transform: rotate(-18.3deg); }
-.polaroid-2 { --start-transform: rotate(15.8deg); }
-.polaroid-3 { --start-transform: translateX(-50%) rotate(1.6deg); }
-.polaroid-4 { --start-transform: rotate(-20.8deg); }
-.polaroid-5 { --start-transform: rotate(14.6deg); }
-.polaroid-6 { --start-transform: rotate(20deg); }
-.polaroid-7 { --start-transform: rotate(-25deg); }
-.polaroid-8 { --start-transform: rotate(-12deg); }
-.polaroid-9 { --start-transform: rotate(8deg); }
-.polaroid-10 { --start-transform: rotate(-15deg); }
-
-.hero-new__content {
-  text-align: center;
-  opacity: 0;
-  transform: scale(0.95);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.95);
-  width: 100%;
   z-index: 10;
-  pointer-events: none; /* Don't block polaroid mouse events */
-  /* Animation will be triggered by JavaScript after polaroids */
+  pointer-events: none;
 }
 
-.hero-new__content.is-visible {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-@keyframes fadeInScale {
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.hero-new__title {
+.hero__title {
   margin: 0;
   font-family: 'Scheherazade New', 'Georgia', serif;
-  font-size: clamp(3.5rem, 8.75vw, 8.75rem);
+  font-size: clamp(3rem, 10vw, 10rem);
   font-weight: 400;
   letter-spacing: 0.08em;
-  color: #c5adff;
   line-height: 1;
   text-transform: uppercase;
+  text-align: center;
+  opacity: 0;
 }
 
-.hero-new__date-badge {
+.hero__title-text {
+  background: linear-gradient(135deg, #c5adff 0%, #6744bd 50%, #c5adff 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Date Badge (Bottom Right) */
+.hero__date {
   position: absolute;
-  bottom: clamp(3rem, 6vw, 5.875rem);
-  right: clamp(3rem, 6vw, 5.875rem);
-  z-index: 20; /* Above polaroids */
+  bottom: clamp(3rem, 6vw, 6rem);
+  right: clamp(3rem, 6vw, 6rem);
+  z-index: 15;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  font-family: 'Roboto', system-ui, sans-serif;
-  font-size: clamp(1.5rem, 1.828vw, 1.828rem);
+  pointer-events: none;
+}
+
+.hero__date-number {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: clamp(1.5rem, 2vw, 2rem);
   font-weight: 800;
-  line-height: 1.4;
   letter-spacing: 0.08em;
   color: #916dad;
   text-align: right;
-  pointer-events: none; /* Don't block polaroid mouse events */
+  line-height: 1.2;
 }
 
 /* Language Switcher - Disabled for now
@@ -551,7 +502,7 @@ a {
 }
 
 .language-btn {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 0.85rem;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -593,7 +544,7 @@ a {
   background: #785fb1;
   color: #fff;
   box-shadow: 0 4px 20px rgba(120, 95, 177, 0.25);
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-weight: 600;
   font-size: 1rem;
   padding: 0.875rem 2.5rem;
@@ -673,7 +624,7 @@ a {
 }
 
 .wedding-party-title__text {
-  font-family: 'Roboto', system-ui, sans-serif;
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-size: clamp(4.2rem, 8.4vw, 5.35rem);
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -700,7 +651,7 @@ a {
 }
 
 .wedding-party-group__label {
-  font-family: 'Roboto', system-ui, sans-serif;
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -759,7 +710,7 @@ a {
 }
 
 .wedding-party-card__name {
-  font-family: 'Roboto', system-ui, sans-serif;
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 1.125rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -769,7 +720,7 @@ a {
 }
 
 .wedding-party-card__desc {
-  font-family: 'Roboto', system-ui, sans-serif;
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   color: #b2805b;
@@ -927,592 +878,486 @@ a {
   line-height: 1.7;
 }
 
-/* Bridal Party Section */
-.section--bridal-party {
-  background-color: var(--bg-color);
-  padding: clamp(5rem, 10vw, 8rem) 0;
+/* ============================================
+   WEDDING PARTY SECTION
+   ============================================ */
+
+.section--wedding-party {
+  background-color: #faf8ff;
+  padding: clamp(8rem, 15vw, 14rem) 0;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
 }
 
-.section--bridal-party h2 {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 1.828rem;
+.wedding-party__header {
+  text-align: left;
+  margin-bottom: clamp(4rem, 8vw, 6rem);
+  position: relative;
+  z-index: 2;
+}
+
+.wedding-party__header h2 {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1.5rem, 2vw, 1.828rem);
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #916dad;
-  margin: 0 0 8px; /* Reduced spacing */
+  margin: 0 0 0.5rem 0;
 }
 
-.section--bridal-party > .container > .section__content > p {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 1.25rem;
-  font-weight: 400; /* Not bold */
-  color: #969696;
-  margin: 0 0 3.5rem;
-}
-
-.bridal-party-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 3rem 5rem;
-  max-width: 900px;
-}
-
-.bridal-party-member {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1rem 2rem;
-  border-radius: 30px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  cursor: pointer;
-}
-
-.bridal-party-member:hover {
-  background-color: #eee6ff;
-  transform: translateY(-2px);
-}
-
-.bridal-party-member:active {
-  transform: translateY(0);
-}
-
-.bridal-party-member__avatar {
-  flex-shrink: 0;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-.bridal-party-member__placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #916dad, #785fb1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bridal-party-member__avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.bridal-party-member__info {
-  flex: 1;
-  min-width: 0;
-}
-
-.bridal-party-member__name {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: 0.01em;
-  color: #916dad;
-  margin: 0 0 0.375rem;
-}
-
-.bridal-party-member__role {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 1rem;
+.wedding-party__header p {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1rem, 1.25vw, 1.25rem);
   font-weight: 400;
-  letter-spacing: 0.01em;
   color: #969696;
+  line-height: 1.6;
   margin: 0;
 }
 
-/* ============================================
-   BRIDAL PARTY MODAL
-   ============================================ */
+/* Background Text */
+.wedding-party__bg-text {
+  position: absolute;
+  top: 35%;
+  left: 5%;
+  transform: none;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(4rem, 12.5vw, 12.5rem);
+  font-weight: 800;
+  line-height: 1;
+  color: #e7ddff;
+  z-index: 0;
+  pointer-events: none;
+  text-align: left;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  will-change: transform;
+  max-width: 90%;
+  white-space: normal;
+  word-wrap: break-word;
+}
 
-.bridal-party-modal {
+.wedding-party__bg-text .word {
+  display: inline-block;
+  margin-right: 0.15em;
+  opacity: 0;
+  filter: blur(10px);
+  will-change: opacity, filter, transform;
+}
+
+/* Cards Container - Grid Layout */
+.wedding-party__cards {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(5rem, 8vw, 8rem) clamp(1.5rem, 3vw, 3rem);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  z-index: 1;
+}
+
+/* Individual Card */
+.wedding-party-card {
+  background: #ffffff;
+  border-radius: 30px;
+  padding: clamp(2rem, 3vw, 2.5rem) clamp(1.5rem, 2.5vw, 2rem);
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.4s ease;
+  cursor: pointer;
+  opacity: 0;
+  filter: blur(10px);
+  will-change: transform, opacity, filter;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.wedding-party-card:hover {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Stagger cards vertically for visual interest */
+.wedding-party-card:nth-child(1) {
+  transform: translateY(0px);
+}
+
+.wedding-party-card:nth-child(2) {
+  transform: translateY(40px);
+}
+
+.wedding-party-card:nth-child(3) {
+  transform: translateY(-30px);
+}
+
+.wedding-party-card:nth-child(4) {
+  transform: translateY(20px);
+}
+
+.wedding-party-card:nth-child(5) {
+  transform: translateY(30px);
+}
+
+.wedding-party-card:nth-child(6) {
+  transform: translateY(-20px);
+}
+
+.wedding-party-card:nth-child(7) {
+  transform: translateY(0px);
+}
+
+.wedding-party-card:nth-child(8) {
+  transform: translateY(50px);
+}
+
+/* Hover state handled by base hover class */
+
+/* Photo Circle */
+.wedding-party-card__photo-circle {
+  width: clamp(100px, 15vw, 136px);
+  height: clamp(100px, 15vw, 136px);
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  background: linear-gradient(135deg, #c5adff, #916dad);
+  flex-shrink: 0;
+}
+
+.wedding-party-card__photo-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Card Name */
+.wedding-party-card__name {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  font-weight: 800;
+  color: #916dad;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+}
+
+/* Card Role */
+.wedding-party-card__role {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  font-weight: 400;
+  color: #969696;
+  margin: 0;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+}
+
+/* Responsive: Tablet */
+@media (max-width: 1024px) {
+  .wedding-party__bg-text {
+    font-size: clamp(3rem, 10vw, 8rem);
+    max-width: 90%;
+    white-space: normal;
+    top: 30%;
+    left: 4%;
+  }
+
+  .wedding-party__cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(4rem, 6vw, 6rem) clamp(1.5rem, 3vw, 2rem);
+    max-width: 600px;
+  }
+
+  .wedding-party-card {
+    padding: clamp(1.75rem, 3vw, 2.25rem) clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  .wedding-party-card__photo-circle {
+    width: clamp(100px, 18vw, 120px);
+    height: clamp(100px, 18vw, 120px);
+  }
+
+  /* Reduce stagger on tablet */
+  .wedding-party-card:nth-child(1) { transform: translateY(0px); }
+  .wedding-party-card:nth-child(2) { transform: translateY(30px); }
+  .wedding-party-card:nth-child(3) { transform: translateY(-20px); }
+  .wedding-party-card:nth-child(4) { transform: translateY(15px); }
+  .wedding-party-card:nth-child(5) { transform: translateY(20px); }
+  .wedding-party-card:nth-child(6) { transform: translateY(-15px); }
+  .wedding-party-card:nth-child(7) { transform: translateY(0px); }
+  .wedding-party-card:nth-child(8) { transform: translateY(35px); }
+}
+
+/* Responsive: Mobile */
+@media (max-width: 600px) {
+  .wedding-party__header {
+    text-align: center;
+  }
+
+  .wedding-party__bg-text {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    top: 20%;
+    max-width: 95%;
+    white-space: normal;
+    left: 3%;
+  }
+
+  .wedding-party__cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 1rem;
+    padding: 0 1rem;
+    max-width: 100%;
+  }
+  
+  .wedding-party-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .wedding-party-card__photo-circle {
+    width: clamp(80px, 20vw, 100px);
+    height: clamp(80px, 20vw, 100px);
+    margin-bottom: 1rem;
+  }
+
+  /* Minimal stagger on mobile */
+  .wedding-party-card:nth-child(1) { transform: translateY(0px); }
+  .wedding-party-card:nth-child(2) { transform: translateY(20px); }
+  .wedding-party-card:nth-child(3) { transform: translateY(-15px); }
+  .wedding-party-card:nth-child(4) { transform: translateY(10px); }
+  .wedding-party-card:nth-child(5) { transform: translateY(15px); }
+  .wedding-party-card:nth-child(6) { transform: translateY(-10px); }
+  .wedding-party-card:nth-child(7) { transform: translateY(0px); }
+  .wedding-party-card:nth-child(8) { transform: translateY(25px); }
+
+  .wedding-party-card__name {
+    font-size: 0.875rem;
+  }
+  
+  .wedding-party-card__role {
+    font-size: 0.8125rem;
+  }
+}
+
+.section--rsvp {
+  background-color: #523e83;
+  position: relative;
+  overflow: visible; /* Allow dropdown to extend beyond section */
+  padding: clamp(5rem, 10vw, 8rem) 0;
+}
+
+.section--rsvp::before {
+  content: 'RSVP';
+  position: absolute;
+  margin-top: clamp(1.5rem, 3vw, 3rem);
+}
+
+/* ===============================================
+   Wedding Party Modal - Full Screen Purple Takeover
+   =============================================== */
+
+.wedding-party-modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #523e83;
   z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  overflow-y: auto;
+}
+
+.wedding-party-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Purple Background - Fade Animation */
+.wedding-party-modal__background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #523e83;
+  opacity: 0;
+  z-index: 1;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M18 6L6 18M6 6l12 12' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 12 12, pointer;
+}
+
+/* Close Button */
+.wedding-party-modal__close {
+  position: fixed;
+  top: clamp(2rem, 4vw, 3rem);
+  right: clamp(2rem, 4vw, 3rem);
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.4s ease, visibility 0.4s ease;
-}
-
-.bridal-party-modal.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-.bridal-party-modal__close {
-  position: absolute;
-  top: 3rem;
-  right: 3rem;
-  background: none;
-  border: none;
-  width: 25px;
-  height: 25px;
   cursor: pointer;
-  padding: 0;
-  transition: transform 0.2s ease;
-  z-index: 10;
-}
-
-.bridal-party-modal__close:hover {
-  transform: rotate(90deg) scale(1.1);
-}
-
-.bridal-party-modal__close svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.bridal-party-modal__content {
-  max-width: 710px;
-  text-align: center;
-  padding: 2rem;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  z-index: 100;
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+  padding: 0;
 }
 
-.bridal-party-modal.active .bridal-party-modal__content {
-  opacity: 1;
-  transform: translateY(0);
+.wedding-party-modal__close:hover {
+  transform: scale(1.1);
 }
 
-.bridal-party-modal__header {
+.wedding-party-modal__close svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Modal Content Container */
+.wedding-party-modal__content {
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 3rem;
+  justify-content: center;
+  min-height: 100vh;
+  padding: clamp(3rem, 8vw, 6rem) clamp(2rem, 4vw, 3rem);
+  text-align: center;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M18 6L6 18M6 6l12 12' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 12 12, pointer;
 }
 
-.bridal-party-modal__avatar {
-  width: 80px;
-  height: 80px;
+/* Photo Circle */
+.wedding-party-modal__photo-circle {
+  width: clamp(150px, 20vw, 190px);
+  height: clamp(150px, 20vw, 190px);
   border-radius: 50%;
   overflow: hidden;
-  flex-shrink: 0;
-}
-
-.bridal-party-modal__placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #c5adff, #a98ed5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bridal-party-modal__info {
-  text-align: center;
-}
-
-.bridal-party-modal__name {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-  color: #ffc6b8;
-  margin: 0 0 0.25rem;
-  line-height: 1.3;
-}
-
-.bridal-party-modal__role {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  color: #ffffff;
-  margin: 0;
-  line-height: 1.3;
-}
-
-.bridal-party-modal__body {
-  text-align: center;
-}
-
-.bridal-party-modal__quote-label {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  color: #ffffff;
-  margin: 0 0 1rem;
-  line-height: 1.3;
-}
-
-.bridal-party-modal__quote {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 2.5rem;
-  font-weight: 800;
-  letter-spacing: 0.025em;
-  color: #ffffff;
-  margin: 0;
-  line-height: 1.3;
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
+  background: linear-gradient(135deg, #c5adff, #916dad);
   opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.8s ease-in-out 0.5s, transform 0.8s ease-in-out 0.5s;
 }
 
-.bridal-party-modal.active .bridal-party-modal__quote {
-  opacity: 1;
-  transform: scale(1);
-}
-
-@media (max-width: 1024px) {
-  .bridal-party-modal__close {
-    top: 2rem;
-    right: 2rem;
-  }
-  
-  .bridal-party-modal__quote {
-    font-size: 2rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .bridal-party-modal__close {
-    top: 1.5rem;
-    right: 1.5rem;
-    width: 20px;
-    height: 20px;
-  }
-  
-  .bridal-party-modal__content {
-    padding: 1.5rem;
-  }
-  
-  .bridal-party-modal__quote {
-    font-size: 1.5rem;
-  }
-  
-  .bridal-party-modal__header {
-    margin-bottom: 2rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .bridal-party-grid {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-  
-  .bridal-party-member {
-    padding: 0.75rem 1.5rem;
-  }
-}
-
-/* Accommodations Section */
-.section--accommodations {
-  background-color: #523e83;
-  min-height: 100vh;
-  padding: clamp(5rem, 10vw, 8rem) 0;
-  display: flex;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.accommodations-content {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 4rem;
-  align-items: center;
-  width: 100%;
-  padding-left: clamp(2rem, 6.25vw, 6.25rem);
-  padding-right: clamp(2rem, 6.25vw, 6.25rem);
-}
-
-.accommodations-left {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.accommodations-label {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0;
-  line-height: 1.4;
-  max-width: 439px;
-}
-
-.accommodations-right {
-  display: flex;
-  align-items: center;
-}
-
-.accommodations-info {
-  width: 100%;
-}
-
-.accommodations-airport {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: clamp(2rem, 3.125vw, 3.125rem);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #ffc6b8;
-  margin: 0 0 0.5rem;
-  line-height: 1.2;
-}
-
-.accommodations-name {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: clamp(2rem, 3.125vw, 3.125rem);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #f6ebff;
-  margin: 0 0 0.5rem;
-  line-height: 1.2;
-}
-
-.accommodations-address {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: clamp(2rem, 3.125vw, 3.125rem);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #f6ebff;
-  margin: 0;
-  line-height: 1.2;
-}
-
-/* Rolodex scramble effect */
-.accommodations-label {
-  display: inline-block;
-  opacity: 1;
-}
-
-.accommodations-info p {
-  display: block;
-  opacity: 0;
-  visibility: hidden;
-}
-
-.accommodations-label.scramble-active,
-.accommodations-info p.scramble-active {
-  opacity: 1;
-  visibility: visible;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@media (max-width: 1024px) {
-  .accommodations-content {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-    text-align: center;
-    padding-left: 3rem;
-    padding-right: 3rem;
-  }
-  
-  .accommodations-left {
-    justify-content: center;
-  }
-  
-  .accommodations-airport,
-  .accommodations-name,
-  .accommodations-address {
-    font-size: clamp(1.5rem, 5vw, 2.5rem);
-  }
-  
-  .accommodations-label {
-    font-size: 1.125rem;
-  }
-  
-  /* Allow scramble effect on smaller screens too */
-  .accommodations-info p.scramble-active {
-    opacity: 1;
-    visibility: visible;
-  }
-}
-
-@media (max-width: 768px) {
-  .accommodations-content {
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-  
-  .accommodations-airport,
-  .accommodations-name,
-  .accommodations-address {
-    font-size: clamp(1.25rem, 6vw, 2rem);
-    letter-spacing: 0.04em;
-  }
-}
-
-/* Accommodations Stay Section */
-.section--accommodations-stay {
-  background-color: #523e83;
-  min-height: 100vh;
-  padding: clamp(5rem, 10vw, 8rem) 0;
-  display: flex;
-  align-items: center;
-}
-
-.accommodations-stay-content {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 5rem;
-  align-items: flex-start;
-  width: 100%;
-  padding-left: clamp(2rem, 6.25vw, 6.25rem);
-  padding-right: clamp(2rem, 6.25vw, 6.25rem);
-}
-
-.accommodations-stay-left {
-  padding-top: 2rem;
-}
-
-.accommodations-stay-title {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 1rem;
-  line-height: 1.4;
-}
-
-.accommodations-stay-desc {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 1.25rem;
-  font-weight: 400;
-  color: #ffffff;
-  margin: 0;
-  line-height: 1.5;
-  max-width: 399px;
-}
-
-.accommodations-stay-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 3rem 2rem;
-}
-
-.stay-card {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.stay-card.fade-in {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.stay-card__image {
-  width: 206px;
-  height: 249px;
-  background: #8367c8;
-  border-radius: 24px;
-  margin-bottom: 2.5rem;
-  overflow: hidden;
-}
-
-.stay-card__image img {
+.wedding-party-modal__photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-.stay-card__content {
-  max-width: 296px;
-}
-
-.stay-card__name {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 1.25rem;
+/* Name */
+.wedding-party-modal__name {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1rem, 2vw, 1rem);
   font-weight: 800;
-  letter-spacing: 0.096em;
-  text-transform: uppercase;
   color: #ffc6b8;
-  margin: 0 0 0.375rem;
-  line-height: 1.3;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  opacity: 0;
 }
 
-.stay-card__distance {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 0.75rem;
+/* Role */
+.wedding-party-modal__role {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1rem, 2vw, 1rem);
+  font-weight: 400;
+  color: #ffffff;
+  margin: 0 0 clamp(2rem, 4vw, 2.5rem) 0;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  opacity: 0;
+}
+
+/* Story Title */
+.wedding-party-modal__story-title {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
   font-weight: 700;
   letter-spacing: 0.01em;
-  color: #f6ebff;
-  margin: 0 0 1rem;
-  line-height: 1.3;
+  color: #ffffff;
+  margin: 0 0 clamp(1.5rem, 3vw, 2rem) 0;
+  opacity: 0;
 }
 
-.stay-card__description {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  color: #f6ebff;
-  margin: 0;
+/* Story Text - Large */
+.wedding-party-modal__story-text {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 800;
+  color: #ffffff;
   line-height: 1.5;
+  margin: 0;
+  max-width: clamp(600px, 80vw, 911px);
+  text-align: center;
+  letter-spacing: 0.01em;
 }
 
-@media (max-width: 1024px) {
-  .accommodations-stay-content {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
+.wedding-party-modal__story-text .word {
+  display: inline-block;
+  margin-right: 0.25em;
+  opacity: 0;
+  filter: blur(10px);
+  will-change: opacity, filter, transform;
+}
+
+/* Responsive: Tablet */
+@media (max-width: 900px) {
+  .wedding-party-modal__photo-circle {
+    width: clamp(120px, 25vw, 160px);
+    height: clamp(120px, 25vw, 160px);
   }
-  
-  .accommodations-stay-left {
-    text-align: center;
-    padding-top: 0;
-  }
-  
-  .accommodations-stay-desc {
-    max-width: 100%;
-  }
-  
-  .accommodations-stay-grid {
-    gap: 3rem 2rem;
-    justify-items: center;
+
+  .wedding-party-modal__story-text {
+    font-size: clamp(1.25rem, 4vw, 2rem);
+    max-width: 90%;
   }
 }
 
-@media (max-width: 768px) {
-  .accommodations-stay-content {
-    padding-left: 2rem;
-    padding-right: 2rem;
+/* Responsive: Mobile */
+@media (max-width: 600px) {
+  .wedding-party-modal__content {
+    padding: 4rem 1.5rem;
   }
-  
-  .accommodations-stay-grid {
-    grid-template-columns: 1fr;
-    gap: 3rem;
+
+  .wedding-party-modal__photo-circle {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 1.5rem;
   }
-  
-  .stay-card__image {
-    width: 100%;
-    max-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
+
+  .wedding-party-modal__close {
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 36px;
+    height: 36px;
   }
-  
-  .stay-card__content {
-    max-width: 100%;
+
+  .wedding-party-modal__close svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .wedding-party-modal__name {
+    font-size: 0.9375rem;
+  }
+
+  .wedding-party-modal__role {
+    font-size: 0.9375rem;
+    margin-bottom: 2rem;
+  }
+
+  .wedding-party-modal__story-title {
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .wedding-party-modal__story-text {
+    font-size: 1.25rem;
   }
 }
 
@@ -1545,7 +1390,7 @@ a {
 }
 
 .section--rsvp h2 {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 1.828rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -1558,7 +1403,7 @@ a {
 
 .section--rsvp .section__content > p,
 .section--rsvp p {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 1.25rem;
   font-weight: 400;
   color: #ffffff !important; /* White text */
@@ -1592,7 +1437,7 @@ a {
 }
 
 .form__field > span {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 1rem;
   font-weight: 400;
   color: #8e8e93;
@@ -1675,7 +1520,7 @@ a {
 }
 
 .guest-dropdown__item-members {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 0.875rem; /* 14px */
   font-weight: 400;
   color: #8e8e93; /* Gray from Figma */
@@ -1700,7 +1545,7 @@ a {
 
 .guest-info__header h3 {
   margin: 0 0 0.5rem; /* Reduced spacing to accommodate party members */
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
   color: #523e83;
@@ -1708,7 +1553,7 @@ a {
 
 .guest-info__party-members {
   margin: 0 0 1.5rem;
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 1rem; /* Match form label size */
   font-weight: 400;
   color: #8e8e93 !important; /* Match form label color - override RSVP section white */
@@ -1743,7 +1588,7 @@ a {
   background: #f2f2f7;
   border-radius: 32px;
   transition: all 0.2s ease;
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 1rem;
   font-weight: 400;
   color: #000;
@@ -1949,46 +1794,25 @@ a {
     font-size: 0.75rem;
   }
   
-  .hero-new__title {
-    font-size: clamp(2.5rem, 10vw, 5rem);
-    letter-spacing: 0.06em;
+  /* Hero section tablet adjustments */
+  .hero__title {
+    font-size: clamp(3rem, 8vw, 7rem);
   }
   
-  /* Scale down polaroids on tablets */
-  .polaroid-stack {
-    max-width: 1000px;
-    height: 550px;
+  .hero__polaroid[data-index="0"] { width: 130px; }
+  .hero__polaroid[data-index="1"] { width: 115px; }
+  .hero__polaroid[data-index="2"] { width: 145px; }
+  .hero__polaroid[data-index="3"] { width: 125px; }
+  .hero__polaroid[data-index="4"] { width: 160px; }
+  .hero__polaroid[data-index="5"] { width: 135px; }
+  .hero__polaroid[data-index="6"] { width: 128px; }
+  .hero__polaroid[data-index="7"] { width: 155px; }
+  .hero__polaroid[data-index="8"] { width: 130px; }
+  .hero__polaroid[data-index="9"] { width: 145px; }
+  
+  .hero__polaroid-frame img {
+    height: 150px;
   }
-  
-  .polaroid-1 { width: 260px; height: 300px; }
-  .polaroid-1 .polaroid__photo { height: 220px; }
-  
-  .polaroid-2 { width: 260px; height: 300px; }
-  .polaroid-2 .polaroid__photo { height: 220px; }
-  
-  .polaroid-3 { width: 400px; height: 460px; }
-  .polaroid-3 .polaroid__photo { height: 330px; }
-  
-  .polaroid-4 { width: 350px; height: 410px; }
-  .polaroid-4 .polaroid__photo { height: 280px; }
-  
-  .polaroid-5 { width: 380px; height: 440px; }
-  .polaroid-5 .polaroid__photo { height: 310px; }
-  
-  .polaroid-6 { width: 350px; height: 410px; }
-  .polaroid-6 .polaroid__photo { height: 280px; }
-  
-  .polaroid-7 { width: 280px; height: 330px; }
-  .polaroid-7 .polaroid__photo { height: 240px; }
-  
-  .polaroid-8 { width: 310px; height: 360px; }
-  .polaroid-8 .polaroid__photo { height: 260px; }
-  
-  .polaroid-9 { width: 340px; height: 390px; }
-  .polaroid-9 .polaroid__photo { height: 280px; }
-  
-  .polaroid-10 { width: 320px; height: 370px; }
-  .polaroid-10 .polaroid__photo { height: 270px; }
 }
 
 @media (max-width: 599px) {
@@ -2050,44 +1874,465 @@ a {
     font-size: 1.5rem;
   }
   
-  .hero-new__title {
-    font-size: clamp(2rem, 12vw, 3.5rem);
+  /* Hero section mobile adjustments */
+  .hero__title {
+    font-size: clamp(2.5rem, 12vw, 4rem);
   }
   
-  .hero-new__date-badge {
+  .hero__date {
+    bottom: 2rem;
+    right: 2rem;
+  }
+  
+  .hero__date-number {
     font-size: 1.25rem;
   }
   
   /* Hide some polaroids on mobile for cleaner look */
-  .polaroid-stack {
-    max-width: 700px;
-    height: 420px;
-  }
-  
-  .polaroid-1,
-  .polaroid-4,
-  .polaroid-7,
-  .polaroid-10 {
+  .hero__polaroid[data-index="0"],
+  .hero__polaroid[data-index="3"],
+  .hero__polaroid[data-index="6"],
+  .hero__polaroid[data-index="9"] {
     display: none;
   }
   
-  .polaroid-2 { width: 200px; height: 240px; left: 5%; }
-  .polaroid-2 .polaroid__photo { height: 160px; }
+  /* Disable hover on mobile */  
+  /* Adjust remaining polaroids for mobile - smaller floating sizes */
+  .hero__polaroid[data-index="1"] { width: 110px; top: 15%; left: 20%; }
+  .hero__polaroid[data-index="2"] { width: 130px; top: 8%; right: 15%; }
+  .hero__polaroid[data-index="4"] { width: 145px; top: 28%; left: 50%; }
+  .hero__polaroid[data-index="5"] { width: 120px; top: 10%; right: 25%; }
+  .hero__polaroid[data-index="7"] { width: 135px; bottom: 15%; left: 40%; }
+  .hero__polaroid[data-index="8"] { width: 115px; bottom: 22%; right: 18%; }
   
-  .polaroid-3 { width: 300px; height: 350px; }
-  .polaroid-3 .polaroid__photo { height: 230px; }
+  .hero__polaroid-frame img {
+    height: 130px;
+  }
   
-  .polaroid-5 { width: 260px; height: 310px; left: 8%; }
-  .polaroid-5 .polaroid__photo { height: 200px; }
-  
-  .polaroid-6 { width: 240px; height: 290px; right: 8%; }
-  .polaroid-6 .polaroid__photo { height: 180px; }
-  
-  .polaroid-8 { width: 220px; height: 270px; left: 5%; bottom: 15%; }
-  .polaroid-8 .polaroid__photo { height: 170px; }
-  
-  .polaroid-9 { width: 250px; height: 300px; left: 30%; bottom: 12%; }
-  .polaroid-9 .polaroid__photo { height: 190px; }
+  /* Scale adjustment for mobile hover */
+  .hero__polaroid.is-focused {
+    transform: scale(2) !important;
+  }
+}
+
+/* ============================================
+   FAQ SECTION
+   ============================================ */
+
+/* ============================================
+   ACCOMMODATIONS SECTION
+   ============================================ */
+
+.section--accommodations {
+  background-color: #523e83;
+  padding: clamp(6rem, 12vw, 10rem) 0;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+/* Background Watermark Text */
+.accommodations__bg-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(4rem, 10vw, 10rem);
+  font-weight: 900;
+  color: #422E72;
+  text-transform: uppercase;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  line-height: 0.95;
+  text-align: center;
+}
+
+/* Airport Information Section */
+.accommodations__airport {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: flex-start;
+  margin-bottom: clamp(5rem, 10vw, 8rem);
+  padding: 0 clamp(2rem, 6vw, 4rem);
+  position: relative;
+  z-index: 1;
+}
+
+.accommodations__airport-left {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.accommodations__airport-label {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.accommodations__airport-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.accommodations__airport-title {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffc6b8;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.accommodations__airport-name {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f6ebff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.accommodations__airport-address {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f6ebff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.accommodations__header {
+  text-align: left;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+  padding: 0 clamp(2rem, 6vw, 4rem);
+  position: relative;
+  z-index: 1;
+}
+
+.accommodations__header h2 {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  margin: 0 0 1rem;
+  text-transform: none;
+}
+
+.accommodations__header p {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  max-width: 600px;
+}
+
+/* Accommodations Cards Container */
+.accommodations__cards {
+  position: relative;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 40px;
+  min-height: 2200px;
+  z-index: 1;
+  overflow: visible;
+}
+
+/* Card Base Styles */
+.accommodation-card {
+  position: absolute;
+  border-radius: 24px;
+  overflow: hidden;
+  will-change: transform;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Background Image */
+.accommodation-card__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Gradient Overlay for Text Legibility */
+.accommodation-card__gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.6) 40%,
+    rgba(0, 0, 0, 0.3) 70%,
+    transparent 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Card Content (Text Overlay) */
+.accommodation-card__content {
+  position: relative;
+  z-index: 2;
+  padding: clamp(2rem, 4vw, 3.5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  color: #ffffff;
+}
+
+.accommodation-card__name {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0 0 0.5rem;
+  line-height: 1.3;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.accommodation-card__distance {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 1rem;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.accommodation-card__description {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Card Specific Positions & Sizes (Based on Figma Layout) */
+/* Card 1 - The Welk Resort (Large, Square, Top Left - SLOW) */
+.accommodation-card--1 {
+  top: 0;
+  left: 40px;
+  width: 55%;
+  max-width: 700px;
+  height: 650px;
+}
+
+/* Card 2 - Pala Mesa (Small, Top Right - FAST) */
+.accommodation-card--2 {
+  top: 300px;
+  right: 40px;
+  width: 38%;
+  max-width: 480px;
+  height: 420px;
+}
+
+/* Card 3 - Springhill Suites (Large, Square, Middle Left - SLOW) */
+.accommodation-card--3 {
+  top: 1060px;
+  left: 40px;
+  width: 55%;
+  max-width: 700px;
+  height: 650px;
+}
+
+/* Card 4 - Airbnb (Small, Bottom Right - FAST) */
+.accommodation-card--4 {
+  top: 1450px;
+  right: 40px;
+  width: 38%;
+  max-width: 480px;
+  height: 420px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .accommodations__cards {
+    min-height: 1900px;
+    padding: 0 20px;
+  }
+
+  /* Adjust card sizes and positions for tablet */
+  .accommodation-card--1 {
+    top: 0;
+    left: 20px;
+    width: 58%;
+    max-width: 500px;
+    height: 550px;
+  }
+
+  .accommodation-card--2 {
+    top: 250px;
+    right: 20px;
+    width: 42%;
+    max-width: 380px;
+    height: 380px;
+  }
+
+  .accommodation-card--3 {
+    top: 910px;
+    left: 20px;
+    width: 58%;
+    max-width: 500px;
+    height: 550px;
+  }
+
+  .accommodation-card--4 {
+    top: 1250px;
+    right: 20px;
+    width: 42%;
+    max-width: 380px;
+    height: 380px;
+  }
+
+  .accommodations__bg-text {
+    font-size: clamp(3rem, 9vw, 8rem);
+    line-height: 0.95;
+  }
+
+  .accommodations__header {
+    padding: 0 3rem;
+  }
+
+  .accommodations__airport {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .accommodations__airport-left {
+    justify-content: center;
+  }
+
+  .accommodations__airport-right {
+    align-items: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .section--accommodations {
+    padding: clamp(4rem, 8vw, 6rem) 0;
+  }
+
+  .accommodations__cards {
+    min-height: 1900px;
+    padding: 0 1rem;
+  }
+
+  /* Stack cards vertically on mobile */
+  .accommodation-card--1 {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 420px;
+    margin-bottom: 2rem;
+  }
+
+  .accommodation-card--2 {
+    position: relative;
+    top: 0;
+    right: auto;
+    left: 0;
+    width: 100%;
+    height: 380px;
+    margin-bottom: 2rem;
+  }
+
+  .accommodation-card--3 {
+    position: relative;
+    top: 0;
+    left: 0;
+    bottom: auto;
+    width: 100%;
+    height: 380px;
+    margin-bottom: 2rem;
+  }
+
+  .accommodation-card--4 {
+    position: relative;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: 0;
+    width: 100%;
+    height: 350px;
+  }
+
+  .accommodations__bg-text {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    line-height: 0.95;
+  }
+
+  .accommodations__header {
+    text-align: center;
+    padding: 0 1.5rem;
+  }
+
+  .accommodations__header p {
+    max-width: 100%;
+  }
+
+  .accommodation-card__content {
+    padding: 1.5rem;
+  }
+
+  .accommodations__airport {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 0 1.5rem;
+    margin-bottom: 4rem;
+    text-align: center;
+  }
+
+  .accommodations__airport-left {
+    justify-content: center;
+  }
+
+  .accommodations__airport-right {
+    align-items: center;
+  }
+
+  .accommodations__airport-label {
+    font-size: 1rem;
+  }
+
+  .accommodations__airport-title,
+  .accommodations__airport-name,
+  .accommodations__airport-address {
+    font-size: clamp(1.25rem, 6vw, 2rem);
+    letter-spacing: 0.04em;
+  }
 }
 
 /* ============================================
@@ -2105,7 +2350,7 @@ a {
 }
 
 .section--faq h2 {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 1.829rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -2116,7 +2361,7 @@ a {
 }
 
 .faq__desc {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 1.25rem;
   font-weight: 400; /* Not bold */
   color: #969696;
@@ -2165,7 +2410,7 @@ a {
 }
 
 .faq__question {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: 0.01em;
@@ -2181,7 +2426,7 @@ a {
 }
 
 .faq__answer {
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 1.25rem;
   font-weight: 400;
   letter-spacing: 0.01em;
