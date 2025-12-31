@@ -96,7 +96,7 @@
         scrollTrigger: {
           trigger: element,
           start: 'top 85%',
-          end: 'bottom top', // Only reverse when element completely leaves viewport
+          end: 'bottom top',
           toggleActions: 'play reverse play reverse',
           // markers: true, // Debug
         },
@@ -244,6 +244,9 @@
     const polaroids = document.querySelectorAll('.hero__polaroid');
     const heroTitle = document.querySelector('.hero__title');
     const heroTitleText = document.querySelector('.hero__title-text');
+    const heroLocation = document.querySelector('.hero__location');
+    const heroRsvpBtn = document.querySelector('.hero__rsvp-btn');
+    const heroHashtag = document.querySelector('.hero__hashtag');
     
     if (!polaroids.length || !heroTitle) return;
     
@@ -299,6 +302,88 @@
       delay: 0.5
     });
     
+    // ANIMATION 2b: Hero location fades in after title
+    if (heroLocation) {
+      gsap.to(heroLocation, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'power2.out',
+        delay: 0.8
+      });
+    }
+    
+    // ANIMATION 2c: Hero RSVP button fades in after location
+    if (heroRsvpBtn) {
+      gsap.to(heroRsvpBtn, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'back.out(1.4)',
+        delay: 1.2
+      });
+    }
+    
+    // ANIMATION 2c: Hero hashtag split text animation
+    if (heroHashtag && typeof Splitting !== 'undefined') {
+      // Apply Splitting.js to split into characters
+      Splitting({ target: heroHashtag, by: 'chars' });
+      
+      const chars = heroHashtag.querySelectorAll('.char');
+      
+      // Initial animation: Characters appear one by one
+      gsap.set(chars, { opacity: 0, y: 20, rotationX: -90 });
+      
+      gsap.to(chars, {
+        opacity: 1,
+        y: 0,
+        rotationX: 0,
+        duration: 0.6,
+        stagger: 0.05,
+        ease: 'back.out(1.7)',
+        delay: 0.8
+      });
+      
+      // Glitch effect function
+      const glitchEffect = () => {
+        const glitchTimeline = gsap.timeline();
+        
+        // Random glitch effects on random characters
+        chars.forEach((char, index) => {
+          if (Math.random() > 0.6) { // 40% chance per character
+            glitchTimeline.to(char, {
+              x: gsap.utils.random(-5, 5),
+              y: gsap.utils.random(-3, 3),
+              scaleX: gsap.utils.random(0.8, 1.2),
+              scaleY: gsap.utils.random(0.8, 1.2),
+              opacity: gsap.utils.random(0.5, 1),
+              duration: 0.05,
+              ease: 'power4.inOut',
+              yoyo: true,
+              repeat: gsap.utils.random(1, 3, 1)
+            }, index * 0.01);
+          }
+        });
+        
+        // Reset all characters back to normal
+        glitchTimeline.to(chars, {
+          x: 0,
+          y: 0,
+          scaleX: 1,
+          scaleY: 1,
+          opacity: 1,
+          duration: 0.2,
+          ease: 'power2.out'
+        }, '+=0.1');
+      };
+      
+      // Start glitch effect every 4 seconds (after initial animation completes)
+      setTimeout(() => {
+        glitchEffect(); // First glitch
+        setInterval(glitchEffect, 4000); // Repeat every 4 seconds
+      }, 2000); // Wait 2 seconds after page load
+    }
+    
     // ANIMATION 3: Gradient follows mouse movement
     if (heroTitleText) {
       document.addEventListener('mousemove', (e) => {
@@ -340,7 +425,8 @@
           filter: 'blur(0px)',
           duration: 0.6,
           ease: 'power3.out',
-          zIndex: 100
+          zIndex: 100,
+          overwrite: 'auto'
         });
       });
       
@@ -359,6 +445,7 @@
           duration: 0.5,
           ease: 'power2.inOut',
           zIndex: 1,
+          overwrite: 'auto',
           onComplete: () => {
             // Resume floating animation
             if (data.floatTimeline) {
@@ -368,6 +455,20 @@
         });
       });
     });
+    
+    // Safety net: Reset polaroids when mouse leaves hero section entirely
+    const heroSection = document.querySelector('.hero');
+    if (heroSection) {
+      heroSection.addEventListener('mouseleave', () => {
+        polaroids.forEach((polaroid, i) => {
+          const data = polaroidData[i];
+          if (data.isFocused) {
+            // Simulate mouseleave for any still-focused polaroid
+            polaroid.dispatchEvent(new Event('mouseleave'));
+          }
+        });
+      });
+    }
     
     // ANIMATION 5: Scroll parallax - polaroids move up at different speeds
     polaroids.forEach((polaroid) => {
@@ -384,6 +485,42 @@
         }
       });
     });
+    
+    // ANIMATION 6: Reset all polaroids when scrolling away from hero
+    ScrollTrigger.create({
+      trigger: '.hero',
+      start: 'bottom center',
+      onEnter: () => resetAllPolaroids(),
+      onEnterBack: () => {}, // Do nothing when scrolling back
+      markers: false
+    });
+    
+    // Function to reset all polaroids to default state
+    const resetAllPolaroids = () => {
+      polaroids.forEach((polaroid, i) => {
+        const data = polaroidData[i];
+        if (data.isFocused) {
+          data.isFocused = false;
+          polaroid.classList.remove('is-focused');
+          
+          gsap.to(polaroid, {
+            scale: 1,
+            rotation: data.rotation,
+            opacity: 0.2,
+            filter: 'blur(3px)',
+            duration: 0.4,
+            ease: 'power2.out',
+            zIndex: 1,
+            overwrite: 'auto'
+          });
+          
+          // Resume floating animation
+          if (data.floatTimeline) {
+            data.floatTimeline.resume();
+          }
+        }
+      });
+    };
   };
 
   // ============================================
@@ -397,6 +534,7 @@
       initTextAnimations();
       initParallax();
       initCardAnimations();
+      initDetailsAnimations();
       initWeddingPartyAnimations();
       
       // Refresh ScrollTrigger after all animations are set up
@@ -465,10 +603,10 @@
     
     // Story data for each person
     const stories = {
-      alanna: "We met in college through mutual friends and instantly bonded over our love for adventure and late-night study sessions. She's been a constant source of support and laughter ever since.",
-      jennie: "We became best friends in high school and have been inseparable ever since. From sharing secrets to celebrating milestones, she's been there through it all.",
-      hannah: "We met at work and quickly discovered we had so much in common. Her positivity and kindness have made her not just a colleague, but a true friend.",
-      kimberly: "We met through a book club and our friendship blossomed from there. Her thoughtfulness and warm personality have made her someone I can always count on.",
+      alanna: "Shortly after moving into her junior year on-campus apartment, Shaira ran to get the door from hearing a ring, only to open it to Alanna, her new roommate, excitedly testing the doorbell. Four apartments together led to a lifelong friendship consisting of constantly changing conversations, all-you-can-eat restaurants, and annual joint birthday celebrations.",
+      jennie: "At Intuit's new hire orientation, Shaira learned that Jennie was also a designer and randomly decided to brave her social anxiety by coming up to her to chat. She's so glad she did because they've now bonded for years over good food, cozy games and endless memes.",
+      hannah: "Shaira and Hannah were introduced over boba one day through Junior's good friend and groomsman, Anthony. If you see them together, you'll probably catch them bopping at a concert or festival, coloring Bobbie Goods books, drinking matcha, or eating ice cream.",
+      kimberly: "Kim and Shaira were introduced to each other by someone in Intervarsity, their college org, thinking they might bond over both growing up in the Philippines. And while their shared background did start it all, years of late night car conversations and shared life changes kept their friendship going strong to this day.",
       fabian: "Junior and Fabian met in elementary school and have been best friends ever since. From playground adventures to life's biggest moments, Fabian has always been there.",
       anthony: "They met playing basketball in high school and became instant friends. Anthony's loyalty and sense of humor have made him a brother to Junior.",
       eddie: "Junior and Eddie met at work and quickly bonded over their shared interests. Eddie's support and genuine friendship mean the world to us.",
@@ -500,6 +638,11 @@
       modalName.textContent = nameEl ? nameEl.textContent : '';
       modalRole.textContent = roleEl ? roleEl.textContent : '';
       modalStoryText.textContent = story;
+      
+      // Set story title based on role (bride vs groom)
+      const role = roleEl ? roleEl.textContent.toLowerCase() : '';
+      const isBridesmaid = role.includes('bridesmaid') || role.includes('dama');
+      modalStoryTitle.textContent = isBridesmaid ? 'How they met the bride' : 'How they met the groom';
       
       // Apply Splitting.js to story text for word-by-word blur animation
       if (typeof Splitting !== 'undefined') {
@@ -652,9 +795,434 @@
   initWeddingPartyModal();
   
   // ============================================
+  // STORY OVERLAY
+  // ============================================
+  
+  const initStoryOverlay = () => {
+    const overlay = document.getElementById('storyOverlay');
+    const heroHashtag = document.querySelector('.hero__hashtag');
+    const background = overlay.querySelector('.story-overlay__background');
+    const scrollContainer = overlay.querySelector('.story-overlay__scroll-container');
+    const overlayHashtag = overlay.querySelector('.story-overlay__hashtag');
+    const subtitle = overlay.querySelector('.story-overlay__subtitle');
+    const paragraphs = overlay.querySelectorAll('.story-overlay__story p');
+    const closeBtn = overlay.querySelector('.story-overlay__close');
+    
+    if (!overlay || !heroHashtag || !background) return;
+    
+    // Open story overlay
+    const openStory = () => {
+      console.log('🎬 Opening story overlay...');
+      
+      // Get position of hero hashtag
+      const hashtagRect = heroHashtag.getBoundingClientRect();
+      const centerX = hashtagRect.left + hashtagRect.width / 2;
+      const centerY = hashtagRect.top + hashtagRect.height / 2;
+      
+      console.log('Hero hashtag position:', { centerX, centerY });
+      
+      // Calculate size needed to cover screen
+      const maxDistance = Math.max(
+        Math.hypot(centerX, centerY),
+        Math.hypot(window.innerWidth - centerX, centerY),
+        Math.hypot(centerX, window.innerHeight - centerY),
+        Math.hypot(window.innerWidth - centerX, window.innerHeight - centerY)
+      );
+      const finalSize = maxDistance * 2.4;
+      
+      console.log('Circle final size:', finalSize);
+      
+      // Force reset background circle to ensure clean state
+      gsap.set(background, {
+        left: centerX,
+        top: centerY,
+        width: 0,
+        height: 0,
+        clearProps: 'all' // Clear any lingering properties
+      });
+      
+      // Immediately set it back with proper values
+      gsap.set(background, {
+        left: centerX,
+        top: centerY,
+        width: 0,
+        height: 0
+      });
+      
+      // Cleanup any existing smooth scroll
+      if (scrollContainer._cleanupSmoothScroll) {
+        scrollContainer._cleanupSmoothScroll();
+      }
+      
+      // Activate overlay
+      overlay.classList.add('active');
+      document.body.classList.add('story-active');
+      
+      // Reset scroll position
+      scrollContainer.scrollTop = 0;
+      
+      // Disable Lenis smooth scroll
+      if (typeof lenis !== 'undefined') {
+        lenis.stop();
+      }
+      
+      // Disable body scroll
+      document.body.style.overflow = 'hidden';
+      
+      // Ensure subtitle is reset (Splitting.js works with original text)
+      const subtitleOriginalText = 'OUR STORY';
+      if (!subtitle.hasAttribute('data-splitting-original')) {
+        subtitle.setAttribute('data-splitting-original', subtitleOriginalText);
+      }
+      
+      // Apply Splitting.js (it handles re-splitting automatically)
+      if (typeof Splitting !== 'undefined') {
+        Splitting({ target: subtitle, by: 'chars' });
+      }
+      
+      // Animation timeline
+      const tl = gsap.timeline();
+      
+      // 1. Expand background circle
+      tl.to(background, {
+        width: finalSize,
+        height: finalSize,
+        duration: 1.2,
+        ease: 'power2.inOut'
+      });
+      
+      // 2. Fade in scroll container
+      tl.to(scrollContainer, {
+        opacity: 1,
+        duration: 0.4
+      }, '-=0.4');
+      
+      // 3. Fade in overlay hashtag
+      tl.to(overlayHashtag, {
+        opacity: 1,
+        duration: 0.6,
+        ease: 'power2.out'
+      }, '-=0.3');
+      
+      // 4. Animate subtitle
+      tl.fromTo(subtitle.querySelectorAll('.char'),
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.02,
+          ease: 'back.out(1.7)'
+        },
+        '-=0.2'
+      );
+      
+      tl.to(subtitle, {
+        opacity: 1,
+        duration: 0.3
+      }, '<');
+      
+      // 5. Animate paragraphs
+      paragraphs.forEach((p, index) => {
+        tl.fromTo(p,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out'
+          },
+          index === 0 ? '-=0.3' : '-=0.5'
+        );
+      });
+      
+      // Initialize smooth scrolling after animation completes
+      tl.eventCallback('onComplete', () => {
+        console.log('✅ Story overlay animation complete!');
+        // Ensure hashtag stays visible
+        gsap.set(overlayHashtag, { opacity: 1 });
+        initSmoothScrollForOverlay();
+      });
+      
+      console.log('📊 Timeline created with duration:', tl.duration(), 'seconds');
+      console.log('✅ Story overlay opened with', paragraphs.length, 'paragraphs');
+    };
+    
+    // Smooth scroll implementation for overlay
+    let currentScroll = 0;
+    let targetScroll = 0;
+    let scrollRAF = null;
+    
+    const initSmoothScrollForOverlay = () => {
+      if (!scrollContainer) return;
+      
+      // Reset scroll values
+      currentScroll = 0;
+      targetScroll = 0;
+      scrollContainer.scrollTop = 0;
+      
+      console.log('🎯 Initializing smooth scroll for overlay');
+      
+      // Handle wheel events
+      const handleWheel = (e) => {
+        e.preventDefault();
+        
+        // Adjust target scroll position
+        const delta = e.deltaY;
+        targetScroll += delta;
+        
+        // Clamp target scroll
+        const maxScroll = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+        targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
+        
+        // Start animation loop if not already running
+        if (!scrollRAF) {
+          animateScroll();
+        }
+      };
+      
+      // Smooth scroll animation loop
+      const animateScroll = () => {
+        // Lerp (linear interpolation) for smooth movement
+        const ease = 0.1; // Adjust for smoothness (lower = smoother but slower)
+        currentScroll += (targetScroll - currentScroll) * ease;
+        
+        // Apply scroll position
+        scrollContainer.scrollTop = currentScroll;
+        
+        // Continue animation if not close enough to target
+        if (Math.abs(targetScroll - currentScroll) > 0.5) {
+          scrollRAF = requestAnimationFrame(animateScroll);
+        } else {
+          // Snap to target and stop animation
+          scrollContainer.scrollTop = targetScroll;
+          currentScroll = targetScroll;
+          scrollRAF = null;
+        }
+      };
+      
+      // Handle native scroll for fallback (touch, scrollbar)
+      const handleNativeScroll = () => {
+        if (!scrollRAF) {
+          // If user scrolls via scrollbar or touch, sync our values
+          targetScroll = scrollContainer.scrollTop;
+          currentScroll = scrollContainer.scrollTop;
+        }
+      };
+      
+      // Handle keyboard scrolling
+      const handleKeyboard = (e) => {
+        const keyScrollAmount = 100; // pixels per key press
+        const maxScroll = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+        
+        switch(e.key) {
+          case 'ArrowDown':
+            e.preventDefault();
+            targetScroll = Math.min(targetScroll + keyScrollAmount, maxScroll);
+            if (!scrollRAF) animateScroll();
+            break;
+          case 'ArrowUp':
+            e.preventDefault();
+            targetScroll = Math.max(targetScroll - keyScrollAmount, 0);
+            if (!scrollRAF) animateScroll();
+            break;
+          case ' ': // Space bar
+            if (!e.shiftKey) {
+              e.preventDefault();
+              targetScroll = Math.min(targetScroll + keyScrollAmount * 3, maxScroll);
+              if (!scrollRAF) animateScroll();
+            }
+            break;
+          case 'PageDown':
+            e.preventDefault();
+            targetScroll = Math.min(targetScroll + scrollContainer.clientHeight * 0.9, maxScroll);
+            if (!scrollRAF) animateScroll();
+            break;
+          case 'PageUp':
+            e.preventDefault();
+            targetScroll = Math.max(targetScroll - scrollContainer.clientHeight * 0.9, 0);
+            if (!scrollRAF) animateScroll();
+            break;
+          case 'Home':
+            e.preventDefault();
+            targetScroll = 0;
+            if (!scrollRAF) animateScroll();
+            break;
+          case 'End':
+            e.preventDefault();
+            targetScroll = maxScroll;
+            if (!scrollRAF) animateScroll();
+            break;
+        }
+      };
+      
+      // Add wheel listener for mouse wheel
+      scrollContainer.addEventListener('wheel', handleWheel, { passive: false });
+      
+      // Add scroll listener for scrollbar/touch
+      scrollContainer.addEventListener('scroll', handleNativeScroll, { passive: true });
+      
+      // Add keyboard listener
+      document.addEventListener('keydown', handleKeyboard);
+      
+      // Store cleanup function
+      scrollContainer._cleanupSmoothScroll = () => {
+        scrollContainer.removeEventListener('wheel', handleWheel);
+        scrollContainer.removeEventListener('scroll', handleNativeScroll);
+        document.removeEventListener('keydown', handleKeyboard);
+        if (scrollRAF) {
+          cancelAnimationFrame(scrollRAF);
+          scrollRAF = null;
+        }
+        console.log('🧹 Smooth scroll cleaned up');
+      };
+      
+      console.log('✅ Smooth scroll initialized for overlay');
+    };
+    
+    // Close story overlay
+    const closeStory = () => {
+      // Cleanup smooth scroll
+      if (scrollContainer._cleanupSmoothScroll) {
+        scrollContainer._cleanupSmoothScroll();
+        console.log('🧹 Cleaned up smooth scroll');
+      }
+      
+      const tl = gsap.timeline({
+        onComplete: () => {
+          overlay.classList.remove('active');
+          document.body.classList.remove('story-active');
+          
+          // Re-enable Lenis smooth scroll
+          if (typeof lenis !== 'undefined') {
+            lenis.start();
+          }
+          
+          // Re-enable body scroll
+          document.body.style.overflow = '';
+          
+          // Reset all elements to initial state
+          gsap.set(background, {
+            width: 0,
+            height: 0,
+            left: 0,
+            top: 0
+          });
+          
+          gsap.set([scrollContainer, overlayHashtag, subtitle], {
+            opacity: 0
+          });
+          
+          gsap.set(paragraphs, { 
+            opacity: 0, 
+            y: 30 
+          });
+          
+          console.log('✅ Story overlay closed and reset');
+        }
+      });
+      
+      // Fade out content
+      tl.to(scrollContainer, {
+        opacity: 0,
+        duration: 0.3
+      });
+      
+      // Shrink background circle
+      tl.to(background, {
+        width: 0,
+        height: 0,
+        duration: 0.8,
+        ease: 'power2.inOut'
+      }, '-=0.2');
+    };
+    
+    // Event listeners
+    heroHashtag.addEventListener('click', openStory);
+    closeBtn.addEventListener('click', closeStory);
+    
+    // Close on ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('active')) {
+        closeStory();
+      }
+    });
+    
+  };
+  
+  initStoryOverlay();
+  
+  // ============================================
   // WEDDING PARTY POLAROID ANIMATIONS
   // ============================================
   
+  // ============================================
+  // DETAILS SECTION ANIMATIONS
+  // ============================================
+  const initDetailsAnimations = () => {
+    const detailsSection = document.querySelector('.section--details');
+    const detailsLabel = document.querySelector('.details__label');
+    const detailsTexts = document.querySelectorAll('.details__text');
+    
+    if (!detailsSection || typeof gsap === 'undefined' || typeof Splitting === 'undefined') return;
+    
+    // Apply Splitting.js to label (characters)
+    if (detailsLabel) {
+      Splitting({ target: detailsLabel, by: 'chars' });
+      
+      requestAnimationFrame(() => {
+        const chars = detailsLabel.querySelectorAll('.char');
+        
+        if (chars.length > 0) {
+          gsap.fromTo(chars,
+            { opacity: 0, filter: 'blur(10px)', y: 20 },
+            {
+              opacity: 1,
+              filter: 'blur(0px)',
+              y: 0,
+              duration: 0.6,
+              ease: 'power2.out',
+              stagger: 0.03,
+              scrollTrigger: {
+                trigger: detailsSection,
+                start: 'top 80%',
+                toggleActions: 'play none none reverse'
+              }
+            }
+          );
+        }
+      });
+    }
+    
+    // Apply Splitting.js to text paragraphs (words)
+    detailsTexts.forEach((text, index) => {
+      Splitting({ target: text, by: 'words' });
+      
+      requestAnimationFrame(() => {
+        const words = text.querySelectorAll('.word');
+        
+        if (words.length > 0) {
+          gsap.fromTo(words,
+            { opacity: 0, filter: 'blur(10px)', y: 20 },
+            {
+              opacity: 1,
+              filter: 'blur(0px)',
+              y: 0,
+              duration: 0.8,
+              ease: 'power2.out',
+              stagger: 0.04,
+              scrollTrigger: {
+                trigger: text,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+              }
+            }
+          );
+        }
+      });
+    });
+  };
+
   const initWeddingPartyAnimations = () => {
     const cards = document.querySelectorAll('.wedding-party-card');
     const bgText = document.querySelector('.wedding-party__bg-text');
@@ -923,9 +1491,17 @@
         return;
       }
 
-      const filteredGuests = guestData.filter(guest =>
-        guest.name.toLowerCase().includes(searchTerm)
-      );
+      const filteredGuests = guestData.filter(guest => {
+        // Search by party name
+        const matchesPartyName = guest.name.toLowerCase().includes(searchTerm);
+        
+        // Search by individual party member names
+        const matchesPartyMember = guest.party && guest.party.some(member =>
+          member.toLowerCase().includes(searchTerm)
+        );
+        
+        return matchesPartyName || matchesPartyMember;
+      });
 
       if (filteredGuests.length === 0) {
         dropdown.innerHTML = '<div class="guest-dropdown__item" style="cursor: default;">No guests found</div>';
@@ -1045,6 +1621,13 @@
         attendingYesSection.style.display = 'block';
       } else {
         attendingYesSection.style.display = 'none';
+      }
+      
+      // Refresh ScrollTrigger after layout change
+      if (typeof ScrollTrigger !== 'undefined') {
+        setTimeout(() => {
+          ScrollTrigger.refresh();
+        }, 100);
       }
     };
 
@@ -1942,7 +2525,7 @@
     if (!navLinks.length || !sections.length) return;
     
     // Sections with dark purple background
-    const darkSections = document.querySelectorAll('.section--rsvp, .section--accommodations');
+    const darkSections = document.querySelectorAll('.section--rsvp, .section--details, .section--accommodations');
     console.log('Dark sections found:', darkSections.length);
     darkSections.forEach(section => {
       console.log('- Dark section:', section.id || section.className);

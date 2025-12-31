@@ -42,6 +42,7 @@
             <ul class="site-nav__links">
               <li><a href="#" class="active" data-i18n="nav.home">HOME</a></li>
               <li><a href="#rsvp" data-i18n="nav.rsvp">RSVP</a></li>
+              <li><a href="#details" data-i18n="nav.details">DETAILS</a></li>
               <li><a href="#wedding-party" data-i18n="nav.wedding_party">WEDDING PARTY</a></li>
               <li><a href="#accommodations" data-i18n="nav.accommodations">ACCOMMODATIONS</a></li>
               <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
@@ -111,16 +112,22 @@
       
       <!-- Hero Title (In front) -->
       <div class="hero__title-wrapper">
+        <div class="hero__hashtag" data-splitting>#ANEWRIVERA</div>
         <h1 class="hero__title" id="heroTitle">
           <span class="hero__title-text">JUNIOR & SHAIRA</span>
         </h1>
+        <p class="hero__location">FALLBROOK, CA</p>
+        <a href="#rsvp" class="hero__rsvp-btn" data-i18n="nav.rsvp">RSVP</a>
       </div>
       
       <!-- Date Badge (Bottom Right) -->
       <div class="hero__date">
-        <div class="hero__date-number">03</div>
-        <div class="hero__date-number">21</div>
-        <div class="hero__date-number">26</div>
+        <div class="hero__date-month">MARCH</div>
+        <div class="hero__date-details">
+          <span class="hero__date-day">21</span>
+          <span class="hero__date-bullet">•</span>
+          <span class="hero__date-year">2026</span>
+        </div>
       </div>
     </section>
 
@@ -129,7 +136,7 @@
         <div class="container section__content">
           <h2 data-splitting data-i18n="rsvp.title">RSVP</h2>
           <p data-i18n="rsvp.desc">
-            Let us know if you'll be able to make it
+            Let us know by February 14th if you'll be partying with us
           </p>
           <form class="form" id="rsvp-form">
             <label class="form__field form__field--full">
@@ -185,7 +192,7 @@
                     id="dietary-restrictions"
                     name="dietary-restrictions"
                     data-i18n-placeholder="form.dietary_placeholder"
-                    placeholder="Let us know if anyone has dietary restrictions"
+                    placeholder="List allergies or special diets for us to consider"
                   />
                 </label>
               </div>
@@ -197,7 +204,7 @@
                   id="message"
                   name="message"
                   data-i18n-placeholder="form.message_placeholder"
-                  placeholder="Leave us a message or if you have a song request, holler"
+                  placeholder="Type your message here"
                 />
               </label>
 
@@ -211,12 +218,27 @@
         </div>
       </section>
 
+      <!-- Details Section -->
+      <section class="section section--details" id="details">
+        <div class="container">
+          <div class="details__info">
+            <div class="details__info-left">
+              <p class="details__label" data-splitting>Details</p>
+            </div>
+            <div class="details__info-right">
+              <p class="details__text" data-splitting>The ceremony, cocktail hour and reception will take place at <a href="https://maps.app.goo.gl/7fdsRi3ya9c8hG5D7" target="_blank" rel="noopener noreferrer" class="details__highlight">Grand Tradition Estate and Gardens in Fallbrook, CA</a>. When you arrive, please head to Arbor Terrace.</p>
+              <p class="details__text" data-splitting>Our wedding will be from <span class="details__highlight">2:30</span> to <span class="details__highlight">10PM</span>. The ceremony will start promptly at 3PM. We're unfortunately unable to accommodate late arrivals, so please plan accordingly.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Wedding Party Section -->
       <section class="section section--wedding-party" id="wedding-party">
         <div class="container">
           <div class="wedding-party__header">
             <h2>WEDDING PARTY</h2>
-            <p>The people that will be here to celebrate it with us</p>
+            <p>The people standing with us on our day</p>
           </div>
         </div>
         
@@ -327,15 +349,15 @@
 
           <!-- Accommodations Stay -->
           <div class="accommodations__header">
-            <h2 data-splitting data-i18n="accommodations.stay_title">Where you can stay</h2>
-            <p data-splitting data-i18n="accommodations.stay_desc">Here's a few places we recommend for you all to stay at, that's close to the venue</p>
+            <h2 data-splitting data-i18n="accommodations.stay_title">Where to stay</h2>
+            <p data-splitting data-i18n="accommodations.stay_desc">Here's a few options that are close to the venue</p>
           </div>
         </div>
 
         <!-- Cards outside container to extend off edges -->
         <div class="accommodations__cards">
             <!-- Card 1 - The Welk Resort (Large) -->
-            <div class="accommodation-card accommodation-card--1" data-speed="0.5">
+            <a href="https://www.hyatt.com/en-US/hotel/california/hyatt-vacation-club-at-the-welk/sansw" target="_blank" rel="noopener noreferrer" class="accommodation-card accommodation-card--1" data-speed="0.5">
               <img src="assets/images/acom01.png" alt="The Welk Resort" class="accommodation-card__bg">
               <div class="accommodation-card__gradient"></div>
               <div class="accommodation-card__content">
@@ -343,10 +365,10 @@
                 <p class="accommodation-card__distance" data-i18n="accommodations.welk.distance">22 mins away</p>
                 <p class="accommodation-card__description" data-i18n="accommodations.welk.description">A family-friendly resort with a number of pools, golf courses, and a spa, among other amenities.</p>
               </div>
-            </div>
+            </a>
 
             <!-- Card 2 - Pala Mesa Resort (Medium) -->
-            <div class="accommodation-card accommodation-card--2" data-speed="1.8">
+            <a href="https://www.palamesa.com/accommodations/" target="_blank" rel="noopener noreferrer" class="accommodation-card accommodation-card--2" data-speed="1.8">
               <img src="assets/images/acom02.png" alt="Pala Mesa Resort" class="accommodation-card__bg">
               <div class="accommodation-card__gradient"></div>
               <div class="accommodation-card__content">
@@ -354,10 +376,10 @@
                 <p class="accommodation-card__distance" data-i18n="accommodations.pala.distance">15 mins away</p>
                 <p class="accommodation-card__description" data-i18n="accommodations.pala.description">Resort known for its golf course. Closest to the venue but is farther from other things to do.</p>
               </div>
-            </div>
+            </a>
 
             <!-- Card 3 - Springhill Suites (Medium) -->
-            <div class="accommodation-card accommodation-card--3" data-speed="0.5">
+            <a href="https://www.marriott.com/en-us/hotels/sanod-springhill-suites-oceanside-beach/overview/" target="_blank" rel="noopener noreferrer" class="accommodation-card accommodation-card--3" data-speed="0.5">
               <img src="assets/images/acom03.png" alt="Springhill Suites" class="accommodation-card__bg">
               <div class="accommodation-card__gradient"></div>
               <div class="accommodation-card__content">
@@ -365,10 +387,10 @@
                 <p class="accommodation-card__distance" data-i18n="accommodations.springhill.distance">22 mins away</p>
                 <p class="accommodation-card__description" data-i18n="accommodations.springhill.description">Hotel right on the coast, steps away from the beach. Located in lively downtown Oceanside.</p>
               </div>
-            </div>
+            </a>
 
             <!-- Card 4 - Airbnb (Small) -->
-            <div class="accommodation-card accommodation-card--4" data-speed="1.8">
+            <a href="https://www.airbnb.com/s/North-County--San-Diego--CA/homes?refinement_paths%5B%5D=%2Fhomes&place_id=ChIJUX5WNmkM3IAR-f3SSgCRZak&location_bb=QgUyasLp4ZdCA7VpwurMCQ%3D%3D&acp_id=t-g-ChIJUX5WNmkM3IAR-f3SSgCRZak&date_picker_type=calendar&checkin=2026-03-20&checkout=2026-03-22&source=structured_search_input_header&search_type=autocomplete_click" target="_blank" rel="noopener noreferrer" class="accommodation-card accommodation-card--4" data-speed="1.8">
               <img src="assets/images/acom04.png" alt="Airbnb" class="accommodation-card__bg">
               <div class="accommodation-card__gradient"></div>
               <div class="accommodation-card__content">
@@ -376,15 +398,14 @@
                 <p class="accommodation-card__distance" data-i18n="accommodations.airbnb.distance">Varies</p>
                 <p class="accommodation-card__description" data-i18n="accommodations.airbnb.description">There are many vacation homes for rent on AirBnb in Fallbrook for proximity to the venue.</p>
               </div>
-            </div>
+            </a>
           </div>
       </section>
 
       <!-- FAQ Section -->
       <section class="section section--faq" id="faq">
         <div class="container section__content">
-          <h2 data-splitting data-i18n="faq.title">FAQ</h2>
-          <p class="faq__desc" data-i18n="faq.desc">Answers to questions you may have</p>
+          <h2 data-splitting data-i18n="faq.title">Frequently Asked Questions</h2>
           
           <div class="faq__list">
             <!-- FAQ Item 1 -->
@@ -401,7 +422,7 @@
 
             <!-- FAQ Item 3 -->
             <div class="faq__item">
-              <h3 class="faq__question" data-i18n="faq.q3.question">What time Should I Arrive</h3>
+              <h3 class="faq__question" data-i18n="faq.q3.question">What time Should I Arrive?</h3>
               <p class="faq__answer" data-i18n="faq.q3.answer">Guests should arrive at 2:30 PM for welcome drinks and seating. The ceremony will begin at 3 PM sharp and we can't accommodate late arrivals.</p>
             </div>
 
@@ -430,13 +451,19 @@
             <!-- FAQ Item 7 -->
             <div class="faq__item">
               <h3 class="faq__question" data-i18n="faq.q7.question">Can I bring a Plus One / Date? Can (another person) come?</h3>
-              <p class="faq__answer" data-i18n="faq.q7.answer">The number of seats and names of guests in your party are listed on your invitation. Your invitation will be made out to {Your name} and Guest if a plus one has been added to your party. Unfortunately, we can't accommodate any additional guests.</p>
+              <p class="faq__answer" data-i18n="faq.q7.answer">The number of seats and names of guests in your party are listed on your invitation. Your invitation will be made out to {Your name} and Guest if a plus one has been added to your party. Unfortunately, due to space constraints, we can't accommodate any additional guests.</p>
             </div>
 
             <!-- FAQ Item 8 -->
             <div class="faq__item">
               <h3 class="faq__question" data-i18n="faq.q8.question">Can I bring my kids?</h3>
-              <p class="faq__answer" data-i18n="faq.q8.answer">We love your little ones, but we have decided to have our wedding be mostly child-free, with the exception of a few select family members. Unless noted on your invite, we kindly ask that only guests aged 12 and up attend.</p>
+              <p class="faq__answer" data-i18n="faq.q8.answer">We love your little ones, but we have decided to have our wedding be mostly child-free, with the exception of a few select family members. Unless noted on your invite, we kindly ask that only named guests aged 12 and up attend.</p>
+            </div>
+
+            <!-- FAQ Item 9 -->
+            <div class="faq__item">
+              <h3 class="faq__question" data-i18n="faq.q9.question">Do you have a wedding registry?</h3>
+              <p class="faq__answer" data-i18n="faq.q9.answer">Your presence celebrating with us is truly the greatest gift. If you'd still like to give, a contribution toward our future together would be so appreciated. You can do so via our <a href="https://www.honeyfund.com/site/anewrivera-321" target="_blank" rel="noopener noreferrer" class="faq__link">Honeyfund site</a> or Venmo (@ShairaTuazon).</p>
             </div>
           </div>
         </div>
@@ -459,6 +486,25 @@
         <p class="wedding-party-modal__role"></p>
         <h3 class="wedding-party-modal__story-title">How they met the groom</h3>
         <p class="wedding-party-modal__story-text" data-splitting></p>
+      </div>
+    </div>
+
+    <!-- Story Overlay Modal -->
+    <div class="story-overlay" id="storyOverlay">
+      <div class="story-overlay__background"></div>
+      <button class="story-overlay__close" aria-label="Close story"></button>
+      <div class="story-overlay__scroll-container">
+        <div class="story-overlay__content">
+          <h2 class="story-overlay__hashtag" data-splitting>#ANEWRIVERA</h2>
+          <h3 class="story-overlay__subtitle" data-splitting>OUR STORY</h3>
+          <div class="story-overlay__story">
+            <p><span class="story-highlight">Junior</span> and <span class="story-highlight">Shaira</span> met at work in 2018, but really connected outside the office over long conversations, shared dreams, and an ongoing search for the best poke and boba.</p>
+            
+            <p>They started dating a year later and moved in together not long after. They quickly learned that "when you know, you know" is especially true when you survive being stuck indoors together in a loft during the early days of the pandemic, with no third person to blame for not washing the dishes. They became a steady team who loves traveling, eating good food, building a life together, and spending time with their Husky, Charlie, who, let's be honest, runs the house.</p>
+            
+            <p>Japan became one of their favorite places early on, which made getting engaged there in December 2024 especially meaningful. Now they're excited to keep traveling, trying new restaurants, coming home to Charlie, and tackling big ideas and adventures with the people they love by their side.</p>
+          </div>
+        </div>
       </div>
     </div>
 
