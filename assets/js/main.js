@@ -607,10 +607,11 @@
       jennie: "At Intuit's new hire orientation, Shaira learned that Jennie was also a designer and randomly decided to brave her social anxiety by coming up to her to chat. She's so glad she did because they've now bonded for years over good food, cozy games and endless memes.",
       hannah: "Shaira and Hannah were introduced over boba one day through Junior's good friend and groomsman, Anthony. If you see them together, you'll probably catch them bopping at a concert or festival, coloring Bobbie Goods books, drinking matcha, or eating ice cream.",
       kimberly: "Kim and Shaira were introduced to each other by someone in Intervarsity, their college org, thinking they might bond over both growing up in the Philippines. And while their shared background did start it all, years of late night car conversations and shared life changes kept their friendship going strong to this day.",
-      fabian: "Junior and Fabian met in elementary school and have been best friends ever since. From playground adventures to life's biggest moments, Fabian has always been there.",
-      anthony: "They met playing basketball in high school and became instant friends. Anthony's loyalty and sense of humor have made him a brother to Junior.",
-      eddie: "Junior and Eddie met at work and quickly bonded over their shared interests. Eddie's support and genuine friendship mean the world to us.",
-      jc: "They met through mutual friends and hit it off immediately. JC's positive energy and dependability have made him an invaluable friend to Junior."
+      fabian: "One night while going to a car meet, Fabian ended up parking next to Junior, they both started talking about their cars and the stuff they had done to them. Since then they've gone on many adventures through mountains and deserts with their cars.",
+      anthony: "During high school Anthony would always see Junior's car drive by, one day he saw Junior at a gas station and came up to him to say hello. After that, they bonded over cars and have been supporting each other ever since.",
+      eddie: "One day while driving, Junior noticed a car behind him following him closely, he exited into an alley and the car followed him, it turns out the car was Eddie and he wanted to race for fun. The two ended up racing in the alleyway and that's how their friendship started.",
+      jc: "JC met Junior at a car meet one random night, but their friendship grew over time as they bonded and tested their driving skills on the mountains, since then they have been there for each other and continue to race down mountains.",
+      charlie: "Junior picked up Charlie from the back of a stranger's trunk. The moment Junior held Charlie up, was the moment he knew they would both have a bond for life. Ever since then both Charlie and Junior have traveled everywhere and have also grown up together from a small apartment to their new home with their backyard they always wanted."
     };
     
     // Open modal function
@@ -642,7 +643,13 @@
       // Set story title based on role (bride vs groom)
       const role = roleEl ? roleEl.textContent.toLowerCase() : '';
       const isBridesmaid = role.includes('bridesmaid') || role.includes('dama');
-      modalStoryTitle.textContent = isBridesmaid ? 'How they met the bride' : 'How they met the groom';
+      const isCharlie = person === 'charlie';
+      
+      if (isCharlie) {
+        modalStoryTitle.textContent = 'How they met the groom';
+      } else {
+        modalStoryTitle.textContent = isBridesmaid ? 'How they met the bride' : 'How they met the groom';
+      }
       
       // Apply Splitting.js to story text for word-by-word blur animation
       if (typeof Splitting !== 'undefined') {
@@ -1208,7 +1215,7 @@
               opacity: 1,
               filter: 'blur(0px)',
               y: 0,
-              duration: 0.8,
+              duration: 0.4,
               ease: 'power2.out',
               stagger: 0.04,
               scrollTrigger: {
