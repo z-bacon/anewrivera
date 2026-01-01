@@ -970,6 +970,19 @@
       
       console.log('🎯 Initializing smooth scroll for overlay');
       
+      // Detect if device is touch-capable
+      const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+      
+      if (isTouchDevice) {
+        // On touch devices, use native smooth scrolling
+        console.log('📱 Touch device detected - using native scroll');
+        scrollContainer.style.scrollBehavior = 'smooth';
+        return; // Don't add custom scroll handlers on mobile
+      }
+      
+      // Desktop-only custom smooth scroll
+      console.log('🖥️ Desktop device - using custom smooth scroll');
+      
       // Handle wheel events
       const handleWheel = (e) => {
         e.preventDefault();
@@ -1610,6 +1623,10 @@
         <label for="member-${selectedGuest.id}-${index}">${member}</label>
       </div>
     `).join('');
+    
+    // Store whether this is a single-person party
+    selectedGuest.isSinglePerson = selectedGuest.party.length === 1;
+    console.log(`👤 Party size: ${selectedGuest.party.length}, Single person: ${selectedGuest.isSinglePerson}`);
   };
 
   // Handle form submission
@@ -1619,15 +1636,33 @@
     const attendingYesSection = document.getElementById('attending-yes-section');
     const attendingYesRadio = document.getElementById('attending-yes');
     const attendingNoRadio = document.getElementById('attending-no');
+    const messageLabel = document.getElementById('message-label');
 
     if (!form) return;
 
     // Show/hide "Who will be attending" section based on Yes/No selection
     const handleAttendanceChange = () => {
+      // Check if the selected guest has a single-person party
+      const isSinglePerson = selectedGuest && selectedGuest.isSinglePerson;
+      
       if (attendingYesRadio && attendingYesRadio.checked) {
-        attendingYesSection.style.display = 'block';
+        // Only show the attending section if there's more than 1 person in the party
+        if (!isSinglePerson) {
+          attendingYesSection.style.display = 'block';
+        } else {
+          attendingYesSection.style.display = 'none';
+          console.log('👤 Single person party - hiding "Who will be attending" section');
+        }
+        // Update label text for "Yes" selection
+        if (messageLabel) {
+          messageLabel.textContent = 'Leave a message or song request (Optional)';
+        }
       } else {
         attendingYesSection.style.display = 'none';
+        // Update label text for "No" selection
+        if (messageLabel) {
+          messageLabel.textContent = 'Leave a message (Optional)';
+        }
       }
       
       // Refresh ScrollTrigger after layout change
