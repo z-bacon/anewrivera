@@ -63,10 +63,10 @@
           <div class="site-nav__glass-container">
             <ul class="site-nav__links">
               <li><a href="#" class="active" data-i18n="nav.home">HOME</a></li>
-              <li><a href="#rsvp" data-i18n="nav.rsvp">RSVP</a></li>
               <li><a href="#details" data-i18n="nav.details">DETAILS</a></li>
               <li><a href="#wedding-party" data-i18n="nav.wedding_party">WEDDING PARTY</a></li>
               <li><a href="#accommodations" data-i18n="nav.accommodations">ACCOMMODATIONS</a></li>
+              <li><a href="#registry" data-i18n="nav.registry">REGISTRY</a></li>
               <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
             </ul>
           </div>
@@ -206,7 +206,9 @@
                   <span data-i18n="form.who_attending">Who will be attending</span>
                   <div id="party-members" class="party-members"></div>
                 </label>
+              </div>
 
+              <div id="dietary-section" style="display: none;">
                 <label class="form__field form__field--full">
                   <span data-i18n="form.dietary">Any dietary restrictions? (Optional)</span>
                   <input
@@ -245,11 +247,11 @@
         <div class="container">
           <div class="details__info">
             <div class="details__info-left">
-              <p class="details__label" data-splitting>Details</p>
+              <p class="details__label" data-splitting data-i18n="details.title">Details</p>
             </div>
             <div class="details__info-right">
-              <p class="details__text" data-splitting>The ceremony, cocktail hour and reception will take place at <a href="https://maps.app.goo.gl/7fdsRi3ya9c8hG5D7" target="_blank" rel="noopener noreferrer" class="details__highlight">Grand Tradition Estate and Gardens in Fallbrook, CA</a>. When you arrive, please head to Arbor Terrace.</p>
-              <p class="details__text" data-splitting>Our wedding will be from <span class="details__highlight">2:30</span> to <span class="details__highlight">10PM</span>. The ceremony will start promptly at 3PM. We're unfortunately unable to accommodate late arrivals, so please plan accordingly.</p>
+              <p class="details__text details__text--p1" data-splitting>The ceremony, cocktail hour and reception will take place at <a href="https://maps.app.goo.gl/7fdsRi3ya9c8hG5D7" target="_blank" rel="noopener noreferrer" class="details__highlight">Grand Tradition Estate and Gardens in Fallbrook, CA</a>. When you arrive, please head to Arbor Terrace.</p>
+              <p class="details__text details__text--p2" data-splitting>Our wedding will be from <span class="details__highlight">2:30</span> to <span class="details__highlight">10PM</span>. The ceremony will start promptly at 3PM. We're unfortunately unable to accommodate late arrivals, so please plan accordingly.</p>
             </div>
           </div>
         </div>
@@ -259,8 +261,8 @@
       <section class="section section--wedding-party" id="wedding-party">
         <div class="container">
           <div class="wedding-party__header">
-            <h2>WEDDING PARTY</h2>
-            <p>The people standing with us on our day</p>
+            <h2 data-i18n="weddingParty.title">WEDDING PARTY</h2>
+            <p data-i18n="weddingParty.desc">The people standing with us on our day</p>
           </div>
         </div>
         
@@ -415,7 +417,7 @@
               <div class="accommodation-card__gradient"></div>
               <div class="accommodation-card__content">
                 <h3 class="accommodation-card__name" data-i18n="accommodations.springhill.name">SPRINGHILL SUITES</h3>
-                <p class="accommodation-card__distance" data-i18n="accommodations.springhill.distance">22 mins away</p>
+                <p class="accommodation-card__distance" data-i18n="accommodations.springhill.distance">30 mins away</p>
                 <p class="accommodation-card__description" data-i18n="accommodations.springhill.description">Hotel right on the coast, steps away from the beach. Located in lively downtown Oceanside.</p>
               </div>
             </a>
@@ -431,6 +433,30 @@
               </div>
             </a>
           </div>
+      </section>
+
+      <!-- Registry Section -->
+      <section class="section section--registry" id="registry">
+        <div class="container">
+          <div class="registry__content">
+            <div class="registry__left">
+              <p class="registry__label" data-splitting data-i18n="registry.title">Registry</p>
+            </div>
+            <div class="registry__right">
+              <p class="registry__text" data-splitting data-i18n="registry.text1">Your presence celebrating with us is truly the greatest gift.</p>
+              <p class="registry__text" data-splitting data-i18n="registry.text2">If you'd still like to give, you're welcome to contribute toward our future together including our honeymoon and other goals on the links below.</p>
+              
+              <div class="registry__buttons">
+                <a href="https://www.honeyfund.com/site/anewrivera-321" target="_blank" rel="noopener noreferrer" class="registry__button registry__button--honeyfund" data-i18n="registry.honeyfund">
+                  Honeyfund
+                </a>
+                <a href="https://venmo.com/u/ShairaTuazon" target="_blank" rel="noopener noreferrer" class="registry__button registry__button--venmo" data-i18n="registry.venmo">
+                  Venmo
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- FAQ Section -->
@@ -498,12 +524,6 @@
             <div class="faq__item">
               <h3 class="faq__question" data-i18n="faq.q9.question">Can I bring my kids?</h3>
               <p class="faq__answer" data-i18n="faq.q9.answer">We love your little ones, but we have decided to have our wedding be mostly child-free, with the exception of a few select family members. Unless noted on your invite, we kindly ask that only named guests aged 12 and up attend.</p>
-            </div>
-
-            <!-- FAQ Item 10 -->
-            <div class="faq__item">
-              <h3 class="faq__question" data-i18n="faq.q10.question">Do you have a wedding registry?</h3>
-              <p class="faq__answer" data-i18n="faq.q10.answer">Your presence celebrating with us is truly the greatest gift. If you'd still like to give, a contribution toward our future together would be so appreciated. You can do so via our <a href="https://www.honeyfund.com/site/anewrivera-321" target="_blank" rel="noopener noreferrer" class="faq__link">Honeyfund site</a> or Venmo (@ShairaTuazon).</p>
             </div>
           </div>
         </div>

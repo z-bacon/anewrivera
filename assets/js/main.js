@@ -535,6 +535,7 @@
       initParallax();
       initCardAnimations();
       initDetailsAnimations();
+      initRegistryAnimations();
       initWeddingPartyAnimations();
       
       // Refresh ScrollTrigger after all animations are set up
@@ -611,7 +612,7 @@
       anthony: "During high school Anthony would always see Junior's car drive by, one day he saw Junior at a gas station and came up to him to say hello. After that, they bonded over cars and have been supporting each other ever since.",
       eddie: "One day while driving, Junior noticed a car behind him following him closely, he exited into an alley and the car followed him, it turns out the car was Eddie and he wanted to race for fun. The two ended up racing in the alleyway and that's how their friendship started.",
       jc: "JC met Junior at a car meet one random night, but their friendship grew over time as they bonded and tested their driving skills on the mountains, since then they have been there for each other and continue to race down mountains.",
-      charlie: "Junior picked up Charlie from the back of a stranger's trunk. The moment Junior held Charlie up, was the moment he knew they would both have a bond for life. Ever since then both Charlie and Junior have traveled everywhere and have also grown up together from a small apartment to their new home with their backyard they always wanted."
+      charlie: "Junior picked up Charlie from the back of a stranger's trunk in 2017. The moment he held Charlie, he knew they would both have a bond for life. Since then, Charlie has moved from Junior and Shaira's small apartments to the house with the yard he's always wanted. Charlie's favorite things to do are go on runs with Junior and take afternoon naps with Shaira."
     };
     
     // Open modal function
@@ -646,7 +647,7 @@
       const isCharlie = person === 'charlie';
       
       if (isCharlie) {
-        modalStoryTitle.textContent = 'How they met the groom';
+        modalStoryTitle.textContent = 'How they met the groom and bride';
       } else {
         modalStoryTitle.textContent = isBridesmaid ? 'How they met the bride' : 'How they met the groom';
       }
@@ -873,8 +874,15 @@
         lenis.stop();
       }
       
-      // Disable body scroll
+      // Disable body scroll (but allow overlay to scroll)
+      const scrollY = window.scrollY;
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = `-${scrollY}px`;
+      
+      // Store scroll position for restoration
+      overlay.setAttribute('data-scroll-y', scrollY);
       
       // Ensure subtitle is reset (Splitting.js works with original text)
       const subtitleOriginalText = 'OUR STORY';
@@ -1118,8 +1126,16 @@
             lenis.start();
           }
           
-          // Re-enable body scroll
+          // Re-enable body scroll and restore position
+          const scrollY = overlay.getAttribute('data-scroll-y');
+          document.body.style.position = '';
+          document.body.style.width = '';
+          document.body.style.top = '';
           document.body.style.overflow = '';
+          
+          if (scrollY) {
+            window.scrollTo(0, parseInt(scrollY));
+          }
           
           // Reset all elements to initial state
           gsap.set(background, {
@@ -1241,6 +1257,75 @@
         }
       });
     });
+  };
+
+  // ============================================
+  // REGISTRY SECTION ANIMATIONS
+  // ============================================
+  const initRegistryAnimations = () => {
+    const registrySection = document.querySelector('.section--registry');
+    const registryLabel = document.querySelector('.registry__label');
+    const registryTexts = document.querySelectorAll('.registry__text');
+    
+    if (!registrySection || typeof gsap === 'undefined' || typeof Splitting === 'undefined') return;
+    
+    // Apply Splitting.js to label (characters)
+    if (registryLabel) {
+      Splitting({ target: registryLabel, by: 'chars' });
+      
+      requestAnimationFrame(() => {
+        const chars = registryLabel.querySelectorAll('.char');
+        
+        if (chars.length > 0) {
+          gsap.fromTo(chars,
+            { opacity: 0, filter: 'blur(10px)', y: 20 },
+            {
+              opacity: 1,
+              filter: 'blur(0px)',
+              y: 0,
+              duration: 0.6,
+              ease: 'power2.out',
+              stagger: 0.03,
+              scrollTrigger: {
+                trigger: registrySection,
+                start: 'top 80%',
+                toggleActions: 'play none none reverse'
+              }
+            }
+          );
+        }
+      });
+    }
+    
+    // Apply Splitting.js to text paragraphs (words)
+    registryTexts.forEach((text, index) => {
+      Splitting({ target: text, by: 'words' });
+      
+      requestAnimationFrame(() => {
+        const words = text.querySelectorAll('.word');
+        
+        if (words.length > 0) {
+          gsap.fromTo(words,
+            { opacity: 0, filter: 'blur(10px)', y: 20 },
+            {
+              opacity: 1,
+              filter: 'blur(0px)',
+              y: 0,
+              duration: 0.4,
+              ease: 'power2.out',
+              stagger: 0.04,
+              scrollTrigger: {
+                trigger: text,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+              }
+            }
+          );
+        }
+      });
+    });
+    
+    console.log('✨ Registry animations initialized');
   };
 
   const initWeddingPartyAnimations = () => {
@@ -1599,10 +1684,12 @@
     const attendingYes = document.getElementById('attending-yes');
     const attendingNo = document.getElementById('attending-no');
     const attendingYesSection = document.getElementById('attending-yes-section');
+    const dietarySection = document.getElementById('dietary-section');
     
     if (attendingYes) attendingYes.checked = false;
     if (attendingNo) attendingNo.checked = false;
     if (attendingYesSection) attendingYesSection.style.display = 'none';
+    if (dietarySection) dietarySection.style.display = 'none';
 
     // Update UI
     searchInput.value = selectedGuest.name;
@@ -1634,6 +1721,7 @@
     const form = document.getElementById('rsvp-form');
     const formStatus = document.getElementById('form-status');
     const attendingYesSection = document.getElementById('attending-yes-section');
+    const dietarySection = document.getElementById('dietary-section');
     const attendingYesRadio = document.getElementById('attending-yes');
     const attendingNoRadio = document.getElementById('attending-no');
     const messageLabel = document.getElementById('message-label');
@@ -1646,19 +1734,30 @@
       const isSinglePerson = selectedGuest && selectedGuest.isSinglePerson;
       
       if (attendingYesRadio && attendingYesRadio.checked) {
-        // Only show the attending section if there's more than 1 person in the party
+        // Only show "Who will be attending" section if there's more than 1 person in the party
         if (!isSinglePerson) {
           attendingYesSection.style.display = 'block';
         } else {
           attendingYesSection.style.display = 'none';
           console.log('👤 Single person party - hiding "Who will be attending" section');
         }
+        
+        // Always show dietary section when "Yes" is selected
+        if (dietarySection) {
+          dietarySection.style.display = 'block';
+        }
+        
         // Update label text for "Yes" selection
         if (messageLabel) {
           messageLabel.textContent = 'Leave a message or song request (Optional)';
         }
       } else {
+        // Hide both sections when "No" is selected or nothing is selected
         attendingYesSection.style.display = 'none';
+        if (dietarySection) {
+          dietarySection.style.display = 'none';
+        }
+        
         // Update label text for "No" selection
         if (messageLabel) {
           messageLabel.textContent = 'Leave a message (Optional)';
@@ -1754,6 +1853,7 @@
           form.reset();
           document.getElementById('guest-info').style.display = 'none';
           attendingYesSection.style.display = 'none';
+          if (dietarySection) dietarySection.style.display = 'none';
           selectedGuest = null;
           submitButton.textContent = originalText;
           submitButton.disabled = false;
