@@ -1887,6 +1887,17 @@
   // Start RSVP system
   initRSVP();
 
+  // ============================================
+  // GAME INITIALIZATION
+  // ============================================
+  
+  // Initialize game if function exists
+  if (typeof window.initGame === 'function') {
+    console.log('🎮 Initializing wedding game...');
+    window.initGame();
+  } else {
+    console.warn('⚠️ initGame function not found');
+  }
 
   // ============================================
   // SCROLL FADE IN/OUT ANIMATIONS

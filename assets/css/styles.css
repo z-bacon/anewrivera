@@ -209,10 +209,11 @@ a {
   background-color: #916dad;
   transition: all 0.3s ease;
   border-radius: 2px;
+  position: relative;
 }
 
 .hamburger-menu.is-active .hamburger-menu__line:nth-child(1) {
-  transform: rotate(45deg) translate(7px, 7px);
+  transform: rotate(45deg) translate(5px, 5px);
 }
 
 .hamburger-menu.is-active .hamburger-menu__line:nth-child(2) {
@@ -220,7 +221,7 @@ a {
 }
 
 .hamburger-menu.is-active .hamburger-menu__line:nth-child(3) {
-  transform: rotate(-45deg) translate(7px, -7px);
+  transform: rotate(-45deg) translate(5px, -5px);
 }
 
 /* Sticky Navigation - Only the glass container scrolls */
@@ -275,6 +276,13 @@ a {
 
 .site-nav__links a.active {
   color: #5e5e5e;
+}
+
+/* Mobile active state - more visible on dark background */
+@media (max-width: 768px) {
+  .site-nav__links a.active {
+    color: #DEB3FF;
+  }
 }
 
 /* Inverted state for dark backgrounds */
@@ -1603,7 +1611,7 @@ body.story-active .site-header {
 @media (max-width: 768px) {
   .story-overlay__scroll-container {
     position: fixed;
-    overflow-y: scroll; /* Force scroll on mobile */
+    overflow-y: scroll !important; /* Force scroll on mobile */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
   }
@@ -1615,54 +1623,28 @@ body.story-active .site-header {
     width: 100%;
     height: 100vh;
     height: 100dvh;
+    overflow: hidden; /* Prevent body scroll */
+  }
+  
+  .story-overlay__content {
+    padding: 6rem 1.5rem 20rem; /* Significantly increased bottom padding */
+    min-height: 200vh; /* Ensure way more than enough height to scroll */
+  }
+  
+  .story-overlay__story {
+    font-size: 1.25rem;
+  }
+  
+  .story-overlay__story p {
+    margin: 0 0 2rem;
+    padding-bottom: 1rem; /* Extra spacing between paragraphs */
+  }
+  
+  /* Last paragraph extra padding */
+  .story-overlay__story p:last-child {
+    padding-bottom: 10rem;
   }
 }
-
-/* Custom scrollbar */
-.story-overlay__scroll-container::-webkit-scrollbar {
-  width: 8px;
-}
-
-.story-overlay__scroll-container::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.story-overlay__scroll-container::-webkit-scrollbar-thumb {
-  background: rgba(197, 173, 255, 0.4);
-  border-radius: 4px;
-}
-
-.story-overlay__scroll-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(197, 173, 255, 0.6);
-}
-
-/* Content container */
-.story-overlay__content {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 8rem 2rem 12rem;
-  min-height: 100vh;
-}
-
-/* Hashtag (will animate from hero position) */
-.story-overlay__hashtag {
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
-  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-align: center;
-  margin: 0 0 1.5rem;
-  color: #ffffff;
-  opacity: 0;
-  position: relative;
-  z-index: 1;
-}
-
-.story-overlay__hashtag .char {
-  display: inline-block;
-}
-
-/* Our Story subtitle */
 .story-overlay__subtitle {
   font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: clamp(1rem, 2vw, 1.25rem);
@@ -1750,20 +1732,51 @@ body.story-active .site-header {
 }
 
 /* Mobile responsive */
-@media (max-width: 768px) {
-  .story-overlay__content {
-    padding: 6rem 1.5rem 15rem; /* Increased bottom padding for scroll space */
-    min-height: 150vh; /* Ensure enough height to scroll */
-  }
-  
-  .story-overlay__story {
-    font-size: 1.25rem;
-  }
-  
-  .story-overlay__story p {
-    margin: 0 0 2rem;
-  }
+/* Custom scrollbar */
+.story-overlay__scroll-container::-webkit-scrollbar {
+  width: 8px;
 }
+
+.story-overlay__scroll-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.story-overlay__scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(197, 173, 255, 0.4);
+  border-radius: 4px;
+}
+
+.story-overlay__scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(197, 173, 255, 0.6);
+}
+
+/* Content container */
+.story-overlay__content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 8rem 2rem 12rem;
+  min-height: 100vh;
+}
+
+/* Hashtag (will animate from hero position) */
+.story-overlay__hashtag {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-align: center;
+  margin: 0 0 1.5rem;
+  color: #ffffff;
+  opacity: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.story-overlay__hashtag .char {
+  display: inline-block;
+}
+
+/* Our Story subtitle */
 
 .section--rsvp {
   background-color: #523e83;
@@ -3259,6 +3272,291 @@ body.story-active .site-header {
   
   .faq__answer {
     font-size: 1rem;
+  }
+}
+
+/* ============================================
+   GAME SECTION
+   ============================================ */
+
+.section--game {
+  background-color: #faf8ff;
+  padding: clamp(4rem, 8vw, 8rem) 0 0;
+  overflow: hidden;
+}
+
+.game__container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 2rem);
+}
+
+/* Header */
+.game__header {
+  text-align: left;
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
+}
+
+.game__title {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(2rem, 4vw, 3.125rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #785fb1;
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+}
+
+.game__subtitle {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 400;
+  color: #686868;
+  margin: 0;
+}
+
+/* Canvas Wrapper */
+.game__canvas-wrapper {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  height: clamp(600px, 70vh, 800px);
+  background-color: #faf8ff;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.game__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: default;
+}
+
+/* Start Screen Overlay */
+.game__start-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background-color: transparent;
+  pointer-events: all;
+  z-index: 10;
+}
+
+.game__instruction {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #785fb1;
+  margin: 0 0 0.5rem 0;
+}
+
+.game__instruction-tip {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: #916dad;
+  margin: 0 0 1.5rem 0;
+  opacity: 0.9;
+}
+
+.game__start-btn {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 1.25rem 3.5rem;
+  background-color: #785fb1;
+  color: #ffffff;
+  border: none;
+  border-radius: 32px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(120, 95, 177, 0.3);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.game__start-btn:hover {
+  background-color: #6a5099;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(120, 95, 177, 0.5);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.02);
+  }
+}
+
+/* Game Over Screen */
+.game__game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(120, 95, 177, 0.95);
+  padding: clamp(2rem, 4vw, 3rem);
+  border-radius: 20px;
+  text-align: center;
+  z-index: 20;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.game__game-over-title {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0 0 1rem 0;
+}
+
+.game__game-over-score {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  margin: 0 0 1rem 0;
+}
+
+.game__game-over-tip {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #ffffff;
+  margin: 0 0 2rem 0;
+  opacity: 0.9;
+}
+
+.game__restart-btn {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 1rem 3rem;
+  background-color: #ffffff;
+  color: #785fb1;
+  border: none;
+  border-radius: 32px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.game__restart-btn:hover {
+  background-color: #ffc6b8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Score Display Overlay (positioned on canvas) */
+.game__score-display {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #785fb1;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 0.75rem 2rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.game__score-label {
+  margin-right: 0.5rem;
+}
+
+.game__score-value {
+  font-weight: 900;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .game__canvas-wrapper {
+    height: clamp(500px, 60vh, 600px);
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .game__score-display {
+    font-size: 1.25rem;
+    padding: 0.5rem 1.5rem;
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+  
+  .game__start-btn {
+    font-size: 1.25rem;
+    padding: 1rem 2.5rem;
+  }
+  
+  .game__instruction {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .game__instruction-tip {
+    font-size: 0.75rem;
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .game__title {
+    font-size: 1.75rem;
+  }
+
+  .game__subtitle {
+    font-size: 0.875rem;
+  }
+
+  .game__canvas-wrapper {
+    height: 450px;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .game__score-display {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  .game__instruction {
+    font-size: 0.875rem;
+  }
+  
+  .game__instruction-tip {
+    font-size: 0.7rem;
+  }
+  
+  .game__start-btn {
+    font-size: 1rem;
+    padding: 0.875rem 2rem;
   }
 }
 

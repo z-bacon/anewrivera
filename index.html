@@ -436,6 +436,7 @@
       </section>
 
       <!-- Registry Section -->
+      <!-- Registry Section -->
       <section class="section section--registry" id="registry">
         <div class="container">
           <div class="registry__content">
@@ -516,6 +517,12 @@
 
             <!-- FAQ Item 8 -->
             <div class="faq__item">
+              <h3 class="faq__question">Are there any cultural traditions you're incorporating into the wedding?</h3>
+              <p class="faq__answer">We're doing a money dance during our reception!</p>
+            </div>
+
+            <!-- FAQ Item 9 -->
+            <div class="faq__item">
               <h3 class="faq__question" data-i18n="faq.q8.question">Can I bring a Plus One / Date? Can (another person) come?</h3>
               <p class="faq__answer" data-i18n="faq.q8.answer">The number of seats and names of guests in your party are listed on your invitation. Your invitation will be made out to {Your name} and Guest if a plus one has been added to your party. Unfortunately, due to space constraints, we can't accommodate any additional guests.</p>
             </div>
@@ -524,6 +531,40 @@
             <div class="faq__item">
               <h3 class="faq__question" data-i18n="faq.q9.question">Can I bring my kids?</h3>
               <p class="faq__answer" data-i18n="faq.q9.answer">We love your little ones, but we have decided to have our wedding be mostly child-free, with the exception of a few select family members. Unless noted on your invite, we kindly ask that only named guests aged 12 and up attend.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Game Section -->
+      <section class="section section--game" id="game">
+        <div class="game__container">
+          <!-- Header -->
+          <div class="game__header">
+            <h2 class="game__title" data-splitting>We hope to see you all soon!</h2>
+            <p class="game__subtitle">In the meantime, see how many bobas you can collect.</p>
+          </div>
+
+          <!-- Game Canvas Container -->
+          <div class="game__canvas-wrapper">
+            <canvas id="gameCanvas" class="game__canvas"></canvas>
+            
+            <!-- Game UI Overlays -->
+            <div class="game__start-screen" id="startScreen">
+              <button class="game__start-btn" id="startGameBtn">START GAME</button>
+            </div>
+            
+            <div class="game__game-over" id="gameOverScreen" style="display: none;">
+              <h3 class="game__game-over-title">GAME OVER</h3>
+              <p class="game__game-over-score">SCORE: <span id="finalScore">0</span></p>
+              <p class="game__game-over-tip">Did you know you can double jump?</p>
+              <button class="game__restart-btn" id="restartBtn">PLAY AGAIN</button>
+            </div>
+            
+            <!-- Score Display Overlay (inside canvas wrapper) -->
+            <div class="game__score-display">
+              <span class="game__score-label">SCORE:</span>
+              <span class="game__score-value" id="gameScore">0</span>
             </div>
           </div>
         </div>
@@ -568,6 +609,7 @@
       </div>
     </div>
 
+    <script src="assets/js/game.js"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>
