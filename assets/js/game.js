@@ -220,11 +220,21 @@ class WeddingGame {
       console.warn('⚠️ Start button not found');
     }
     
-    // Space bar to jump (only during gameplay)
+    // Space bar to jump (only during gameplay, and not when typing in inputs)
     document.addEventListener('keydown', (e) => {
       if (e.code === 'Space') {
-        e.preventDefault();
-        this.handleJump();
+        // Don't interfere if user is typing in an input field or textarea
+        const activeElement = document.activeElement;
+        const isTyping = activeElement && (
+          activeElement.tagName === 'INPUT' || 
+          activeElement.tagName === 'TEXTAREA' ||
+          activeElement.isContentEditable
+        );
+        
+        if (!isTyping) {
+          e.preventDefault();
+          this.handleJump();
+        }
       }
     });
     

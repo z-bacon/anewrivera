@@ -1040,6 +1040,15 @@
       
       // Handle keyboard scrolling
       const handleKeyboard = (e) => {
+        // Don't intercept keyboard events when user is typing in an input field
+        const activeElement = document.activeElement;
+        const isTyping = activeElement && (
+          activeElement.tagName === 'INPUT' || 
+          activeElement.tagName === 'TEXTAREA' || 
+          activeElement.isContentEditable
+        );
+        if (isTyping) return;
+        
         const keyScrollAmount = 100; // pixels per key press
         const maxScroll = scrollContainer.scrollHeight - scrollContainer.clientHeight;
         
