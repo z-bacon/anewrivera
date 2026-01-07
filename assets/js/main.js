@@ -874,15 +874,23 @@
         lenis.stop();
       }
       
+      // Detect mobile for different body lock approach
+      const isMobile = window.innerWidth <= 768;
+      
       // Disable body scroll (but allow overlay to scroll)
       const scrollY = window.scrollY;
       document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.top = `-${scrollY}px`;
+      
+      if (!isMobile) {
+        // Desktop: Use position fixed to prevent scroll
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.top = `-${scrollY}px`;
+      }
       
       // Store scroll position for restoration
       overlay.setAttribute('data-scroll-y', scrollY);
+      overlay.setAttribute('data-is-mobile', isMobile);
       
       // Ensure subtitle is reset (Splitting.js works with original text)
       const subtitleOriginalText = 'OUR STORY';
@@ -978,14 +986,27 @@
       
       console.log('🎯 Initializing smooth scroll for overlay');
       
-      // Detect if device is touch-capable
+      // Detect if device is touch-capable OR mobile screen size
       const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+      const isMobileScreen = window.innerWidth <= 768;
       
-      if (isTouchDevice) {
-        // On touch devices, use native smooth scrolling
-        console.log('📱 Touch device detected - using native scroll');
-        scrollContainer.style.scrollBehavior = 'smooth';
-        return; // Don't add custom scroll handlers on mobile
+      if (isTouchDevice || isMobileScreen) {
+        // On touch devices, use native scrolling only - no custom scroll
+        console.log('📱 Touch/Mobile device detected - using native scroll');
+        scrollContainer.style.scrollBehavior = 'auto'; // Use native scroll
+        scrollContainer.style.overflowY = 'scroll';
+        // Explicitly allow touch scrolling
+        scrollContainer.style.touchAction = 'pan-y';
+        scrollContainer.style.webkitOverflowScrolling = 'auto';
+        
+        // Force a scroll event to ensure container is scrollable
+        setTimeout(() => {
+          console.log('📏 Scroll container height:', scrollContainer.scrollHeight);
+          console.log('📏 Container client height:', scrollContainer.clientHeight);
+          console.log('📏 Is scrollable:', scrollContainer.scrollHeight > scrollContainer.clientHeight);
+        }, 100);
+        
+        return; // Don't add ANY custom scroll handlers on mobile
       }
       
       // Desktop-only custom smooth scroll
@@ -1137,12 +1158,18 @@
           
           // Re-enable body scroll and restore position
           const scrollY = overlay.getAttribute('data-scroll-y');
-          document.body.style.position = '';
-          document.body.style.width = '';
-          document.body.style.top = '';
+          const isMobile = overlay.getAttribute('data-is-mobile') === 'true';
+          
+          if (!isMobile) {
+            // Desktop: Remove fixed positioning
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.top = '';
+          }
+          
           document.body.style.overflow = '';
           
-          if (scrollY) {
+          if (scrollY && !isMobile) {
             window.scrollTo(0, parseInt(scrollY));
           }
           
@@ -1214,57 +1241,51 @@
     // Apply Splitting.js to label (characters)
     if (detailsLabel) {
       Splitting({ target: detailsLabel, by: 'chars' });
+      const chars = detailsLabel.querySelectorAll('.char');
       
-      requestAnimationFrame(() => {
-        const chars = detailsLabel.querySelectorAll('.char');
-        
-        if (chars.length > 0) {
-          gsap.fromTo(chars,
-            { opacity: 0, filter: 'blur(10px)', y: 20 },
-            {
-              opacity: 1,
-              filter: 'blur(0px)',
-              y: 0,
-              duration: 0.6,
-              ease: 'power2.out',
-              stagger: 0.03,
-              scrollTrigger: {
-                trigger: detailsSection,
-                start: 'top 80%',
-                toggleActions: 'play none none reverse'
-              }
+      if (chars.length > 0) {
+        gsap.fromTo(chars,
+          { opacity: 0, filter: 'blur(10px)', y: 20 },
+          {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            duration: 0.6,
+            ease: 'power2.out',
+            stagger: 0.03,
+            scrollTrigger: {
+              trigger: detailsSection,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
             }
-          );
-        }
-      });
+          }
+        );
+      }
     }
     
     // Apply Splitting.js to text paragraphs (words)
     detailsTexts.forEach((text, index) => {
       Splitting({ target: text, by: 'words' });
+      const words = text.querySelectorAll('.word');
       
-      requestAnimationFrame(() => {
-        const words = text.querySelectorAll('.word');
-        
-        if (words.length > 0) {
-          gsap.fromTo(words,
-            { opacity: 0, filter: 'blur(10px)', y: 20 },
-            {
-              opacity: 1,
-              filter: 'blur(0px)',
-              y: 0,
-              duration: 0.4,
-              ease: 'power2.out',
-              stagger: 0.04,
-              scrollTrigger: {
-                trigger: text,
-                start: 'top 85%',
-                toggleActions: 'play none none reverse'
-              }
+      if (words.length > 0) {
+        gsap.fromTo(words,
+          { opacity: 0, filter: 'blur(10px)', y: 20 },
+          {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            duration: 0.4,
+            ease: 'power2.out',
+            stagger: 0.04,
+            scrollTrigger: {
+              trigger: text,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse'
             }
-          );
-        }
-      });
+          }
+        );
+      }
     });
   };
 
@@ -1281,57 +1302,51 @@
     // Apply Splitting.js to label (characters)
     if (registryLabel) {
       Splitting({ target: registryLabel, by: 'chars' });
+      const chars = registryLabel.querySelectorAll('.char');
       
-      requestAnimationFrame(() => {
-        const chars = registryLabel.querySelectorAll('.char');
-        
-        if (chars.length > 0) {
-          gsap.fromTo(chars,
-            { opacity: 0, filter: 'blur(10px)', y: 20 },
-            {
-              opacity: 1,
-              filter: 'blur(0px)',
-              y: 0,
-              duration: 0.6,
-              ease: 'power2.out',
-              stagger: 0.03,
-              scrollTrigger: {
-                trigger: registrySection,
-                start: 'top 80%',
-                toggleActions: 'play none none reverse'
-              }
+      if (chars.length > 0) {
+        gsap.fromTo(chars,
+          { opacity: 0, filter: 'blur(10px)', y: 20 },
+          {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            duration: 0.6,
+            ease: 'power2.out',
+            stagger: 0.03,
+            scrollTrigger: {
+              trigger: registrySection,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
             }
-          );
-        }
-      });
+          }
+        );
+      }
     }
     
     // Apply Splitting.js to text paragraphs (words)
     registryTexts.forEach((text, index) => {
       Splitting({ target: text, by: 'words' });
+      const words = text.querySelectorAll('.word');
       
-      requestAnimationFrame(() => {
-        const words = text.querySelectorAll('.word');
-        
-        if (words.length > 0) {
-          gsap.fromTo(words,
-            { opacity: 0, filter: 'blur(10px)', y: 20 },
-            {
-              opacity: 1,
-              filter: 'blur(0px)',
-              y: 0,
-              duration: 0.4,
-              ease: 'power2.out',
-              stagger: 0.04,
-              scrollTrigger: {
-                trigger: text,
-                start: 'top 85%',
-                toggleActions: 'play none none reverse'
-              }
+      if (words.length > 0) {
+        gsap.fromTo(words,
+          { opacity: 0, filter: 'blur(10px)', y: 20 },
+          {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            duration: 0.4,
+            ease: 'power2.out',
+            stagger: 0.04,
+            scrollTrigger: {
+              trigger: text,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse'
             }
-          );
-        }
-      });
+          }
+        );
+      }
     });
     
     console.log('✨ Registry animations initialized');
@@ -1723,6 +1738,14 @@
     // Store whether this is a single-person party
     selectedGuest.isSinglePerson = selectedGuest.party.length === 1;
     console.log(`👤 Party size: ${selectedGuest.party.length}, Single person: ${selectedGuest.isSinglePerson}`);
+    
+    // Refresh ScrollTrigger after form expands
+    if (typeof ScrollTrigger !== 'undefined') {
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+        console.log('🔄 ScrollTrigger refreshed after guest selection');
+      }, 100);
+    }
   };
 
   // Handle form submission
@@ -1854,20 +1877,26 @@
 
         // Note: With no-cors mode, we can't read the response
         // We'll assume success if no error is thrown
-        showFormStatus('success', '✓ Thank you! Your RSVP has been received.');
-        submitButton.textContent = 'RSVP Sent!';
         
-        // Reset form after delay
-        setTimeout(() => {
-          form.reset();
-          document.getElementById('guest-info').style.display = 'none';
-          attendingYesSection.style.display = 'none';
-          if (dietarySection) dietarySection.style.display = 'none';
-          selectedGuest = null;
-          submitButton.textContent = originalText;
-          submitButton.disabled = false;
-          formStatus.style.display = 'none';
-        }, 5000);
+        // Hide all form fields
+        const guestSearchField = form.querySelector('.form__field--full:first-child');
+        const guestInfo = document.getElementById('guest-info');
+        
+        if (guestSearchField) guestSearchField.style.display = 'none';
+        if (guestInfo) guestInfo.style.display = 'none';
+        
+        // Show only the success message
+        showFormStatus('success', '✓ Thank you! Your RSVP has been received.');
+        
+        // Refresh ScrollTrigger after form changes size
+        if (typeof ScrollTrigger !== 'undefined') {
+          setTimeout(() => {
+            ScrollTrigger.refresh();
+            console.log('🔄 ScrollTrigger refreshed after RSVP success');
+          }, 100);
+        }
+        
+        // Success state is now persistent - no reset or timeout
 
       } catch (error) {
         console.error('❌ Submission error:', error);

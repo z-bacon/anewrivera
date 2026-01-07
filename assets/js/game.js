@@ -21,14 +21,20 @@ class WeddingGame {
     this.resizeCanvas();
     window.addEventListener('resize', () => this.resizeCanvas());
     
+    // Detect mobile device
+    this.isMobile = window.innerWidth <= 768;
+    
     // Game state
     this.gameState = 'start'; // 'start', 'playing', 'gameOver'
     this.score = 0;
-    this.gameSpeed = 6;
+    this.baseGameSpeed = this.isMobile ? 3.0 : 6; // 50% slower on mobile
+    this.gameSpeed = this.baseGameSpeed;
     this.gravity = 0.8;
     this.groundHeight = 200; // Height of the ground from bottom (increased)
     this.gameLoopStarted = false; // Flag to log game loop start once
     this.drawLogged = false; // Flag to log draw function once
+    
+    console.log(`📱 Device: ${this.isMobile ? 'Mobile' : 'Desktop'}, Base Speed: ${this.baseGameSpeed}`)
     
     // Character
     this.player = {
@@ -111,6 +117,26 @@ class WeddingGame {
     this.canvas.height = wrapper.offsetHeight;
     
     console.log(`📐 Canvas resized to: ${this.canvas.width}x${this.canvas.height}`);
+    
+    // Recalculate mobile status and base speed on resize
+    const wasMobile = this.isMobile;
+    this.isMobile = window.innerWidth <= 768;
+    
+    if (wasMobile !== this.isMobile) {
+      // Device type changed (e.g., rotated or window resized across breakpoint)
+      const oldBaseSpeed = this.baseGameSpeed;
+      this.baseGameSpeed = this.isMobile ? 3.0 : 6;
+      
+      // Adjust current speed proportionally if game is running
+      if (this.gameState === 'playing') {
+        const speedMultiplier = this.gameSpeed / oldBaseSpeed;
+        this.gameSpeed = this.baseGameSpeed * speedMultiplier;
+      } else {
+        this.gameSpeed = this.baseGameSpeed;
+      }
+      
+      console.log(`📱 Device changed: ${this.isMobile ? 'Mobile' : 'Desktop'}, New Base Speed: ${this.baseGameSpeed}`);
+    }
     
     // Recalculate ground position on resize
     this.groundY = this.canvas.height - this.groundHeight;
@@ -281,7 +307,7 @@ class WeddingGame {
       console.warn('⚠️ Start screen not found');
     }
     this.score = 0;
-    this.gameSpeed = 6;
+    this.gameSpeed = this.baseGameSpeed; // Use mobile-aware base speed
     this.difficultyLevel = 0;
     this.obstacleSpawnInterval = this.baseObstacleInterval;
     this.bobas = [];
@@ -298,7 +324,7 @@ class WeddingGame {
     this.gameState = 'playing';
     this.gameOverScreen.style.display = 'none';
     this.score = 0;
-    this.gameSpeed = 6;
+    this.gameSpeed = this.baseGameSpeed; // Use mobile-aware base speed
     this.difficultyLevel = 0;
     this.obstacleSpawnInterval = this.baseObstacleInterval;
     this.bobas = [];
@@ -443,9 +469,13 @@ class WeddingGame {
         this.updateScore();
         
         // Progressive difficulty scaling
+        // Calculate proportional speed increases based on device type
+        const speedIncreaseHigh = this.isMobile ? 0.2 : 0.4; // ~6.67% increase
+        const speedIncreaseLow = this.isMobile ? 0.1 : 0.2;  // ~3.33% increase
+        
         // Start increasing difficulty after 20 bobas collected
         if (this.score >= 20 && this.score % 2 === 0) {
-          this.gameSpeed += 0.4;
+          this.gameSpeed += speedIncreaseHigh;
           this.difficultyLevel++;
           
           // Decrease obstacle spawn interval (more frequent obstacles)
@@ -455,7 +485,7 @@ class WeddingGame {
           console.log(`🎯 Difficulty increased! Level: ${this.difficultyLevel}, Speed: ${this.gameSpeed.toFixed(1)}, Obstacle Interval: ${this.obstacleSpawnInterval}`);
         } else if (this.score < 20 && this.score % 5 === 0 && this.score > 0) {
           // Gentle difficulty increase before level 20
-          this.gameSpeed += 0.2;
+          this.gameSpeed += speedIncreaseLow;
           console.log(`🎮 Gentle speed increase: ${this.gameSpeed.toFixed(1)}`);
         }
       }
