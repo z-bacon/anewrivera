@@ -27,7 +27,7 @@ class WeddingGame {
     // Game state
     this.gameState = 'start'; // 'start', 'playing', 'gameOver'
     this.score = 0;
-    this.baseGameSpeed = this.isMobile ? 3.0 : 6; // 50% slower on mobile
+    this.baseGameSpeed = 6; // Same speed for both mobile and desktop
     this.gameSpeed = this.baseGameSpeed;
     this.gravity = 0.8;
     this.groundHeight = 200; // Height of the ground from bottom (increased)
@@ -125,7 +125,7 @@ class WeddingGame {
     if (wasMobile !== this.isMobile) {
       // Device type changed (e.g., rotated or window resized across breakpoint)
       const oldBaseSpeed = this.baseGameSpeed;
-      this.baseGameSpeed = this.isMobile ? 3.0 : 6;
+      this.baseGameSpeed = 6; // Same speed for both mobile and desktop
       
       // Adjust current speed proportionally if game is running
       if (this.gameState === 'playing') {
@@ -368,9 +368,9 @@ class WeddingGame {
   spawnObstacle() {
     const obstacle = {
       x: this.canvas.width,
-      y: this.groundY - 40, // Changed from -60 to -40 (moved down 20px)
-      width: 60,
-      height: 60
+      y: this.groundY - 24, // Adjusted for smaller crate (40% reduction)
+      width: 36, // Reduced by 40% (from 60)
+      height: 36 // Reduced by 40% (from 60)
     };
     this.obstacles.push(obstacle);
     this.lastSpawnType = 'obstacle';
@@ -469,9 +469,8 @@ class WeddingGame {
         this.updateScore();
         
         // Progressive difficulty scaling
-        // Calculate proportional speed increases based on device type
-        const speedIncreaseHigh = this.isMobile ? 0.2 : 0.4; // ~6.67% increase
-        const speedIncreaseLow = this.isMobile ? 0.1 : 0.2;  // ~3.33% increase
+        const speedIncreaseHigh = 0.4; // ~6.67% increase
+        const speedIncreaseLow = 0.2;  // ~3.33% increase
         
         // Start increasing difficulty after 20 bobas collected
         if (this.score >= 20 && this.score % 2 === 0) {

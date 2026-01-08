@@ -1353,6 +1353,8 @@ a {
   opacity: 0;
   pointer-events: none;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: auto;
 }
 
 .wedding-party-modal.active {
@@ -1504,9 +1506,21 @@ a {
 }
 
 /* Responsive: Mobile */
+@media (max-width: 768px) {
+  .wedding-party-modal {
+    overflow-y: scroll !important;
+    touch-action: pan-y;
+  }
+  
+  .wedding-party-modal__content {
+    min-height: calc(100vh + 50vh); /* Extra height to ensure scrollability */
+    padding: 4rem 1.5rem 8rem; /* Extra bottom padding */
+  }
+}
+
 @media (max-width: 600px) {
   .wedding-party-modal__content {
-    padding: 4rem 1.5rem;
+    padding: 4rem 1.5rem 8rem; /* Extra bottom padding */
   }
 
   .wedding-party-modal__photo-circle {

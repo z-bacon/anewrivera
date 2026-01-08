@@ -664,7 +664,28 @@
       
       // Show modal
       modal.classList.add('active');
+      
+      // Reset modal scroll position
+      modal.scrollTop = 0;
+      
+      // Detect mobile device
+      const isMobile = window.innerWidth <= 768;
+      
+      // Handle body scroll lock
       document.body.style.overflow = 'hidden';
+      if (!isMobile) {
+        // Desktop only: lock body with position fixed
+        const scrollY = window.scrollY;
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.top = `-${scrollY}px`;
+        modal.dataset.scrollY = scrollY;
+      } else {
+        // Mobile: ensure modal can scroll
+        modal.style.overflowY = 'scroll';
+        modal.style.touchAction = 'pan-y';
+        console.log('📱 Mobile wedding party modal - native scroll enabled');
+      }
       
       // Set initial states explicitly
       gsap.set(photoCircle, { opacity: 0, scale: 0.8 });
@@ -750,6 +771,22 @@
       const tl = gsap.timeline({
         onComplete: () => {
           modal.classList.remove('active');
+          
+          // Detect mobile device
+          const isMobile = window.innerWidth <= 768;
+          const scrollY = modal.dataset.scrollY;
+          
+          // Restore body scroll
+          if (!isMobile) {
+            // Desktop only: restore body scroll
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.top = '';
+            if (scrollY) {
+              window.scrollTo(0, parseInt(scrollY));
+            }
+          }
+          
           document.body.style.overflow = '';
           
           // Reset all words
